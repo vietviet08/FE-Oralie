@@ -5,6 +5,9 @@ import { LOGIN_VIEW } from "../template/login-template";
 import ErrorMessage from "@/components/common/error-message";
 import { SubmitButton } from "@/components/common/submit-button";
 import Input from "@/components/common/input";
+import { signIn, signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
 
 type Props = {
   setCurrentView: (view: LOGIN_VIEW) => void;
@@ -12,6 +15,14 @@ type Props = {
 
 const Login = ({ setCurrentView }: Props) => {
   //   const [message, formAction] = useFormState(logCustomerIn, null)
+  const router = useRouter();
+
+  const handleSignIn = async (provider: string) => {
+    const result = await signIn(provider, { redirect: false });
+    if (result?.ok) {
+      router.push("/");
+    }
+  };
 
   return (
     <div
@@ -50,10 +61,39 @@ const Login = ({ setCurrentView }: Props) => {
           error={"Invalid email or password."}
           data-testid="login-error-message"
         />
-        <SubmitButton data-testid="sign-in-button" className="w-full mt-6">
+        <SubmitButton
+          onClick={() => handleSignIn("google")}
+          data-testid="sign-in-button"
+          className="w-full mt-6"
+        >
           Sign in
         </SubmitButton>
       </form>
+      <Button
+        className="w-full mt-6"
+        variant={"outline"}
+        onClick={() => handleSignIn("google")}
+      >
+        <img
+          src="/images/google.svg"
+          alt="Google Icon"
+          className="w-6 inline-block mr-2"
+        />
+        Login with Google
+      </Button>
+
+      <Button
+        className="w-full mt-2"
+        variant={"outline"}
+        onClick={() => handleSignIn("facebook")}
+      >
+        <img
+          src="/images/facebook.svg"
+          alt="Facebook Icon"
+          className="w-6 inline-block mr-2"
+        />
+        Login with Facebook
+      </Button>
       <span className="text-center text-ui-fg-base text-small-regular mt-6">
         Not a member?{" "}
         <button

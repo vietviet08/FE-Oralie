@@ -16,17 +16,6 @@ const LoginPage: React.FC = () => {
     }
   }, [status, router]);
 
-  if (status === "loading") {
-    return <p>Loading...</p>;
-  }
-
-  const handleSignIn = async (provider: string) => {
-    const result = await signIn(provider, { redirect: false });
-    if (result?.ok) {
-      router.push("/");
-    }
-  };
-
   return <LoginTemplate />;
 };
 
