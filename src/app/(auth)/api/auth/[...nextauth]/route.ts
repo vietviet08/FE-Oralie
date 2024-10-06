@@ -1,5 +1,6 @@
 import NextAuth, { NextAuthOptions, TokenSet, Account } from "next-auth";
 import KeycloakProvider from "next-auth/providers/keycloak";
+import GoogleProvider from "next-auth/providers/google";
 import { jwtDecode } from "jwt-decode"; 
 import { encrypt } from "@/utils/encryption";
 
@@ -12,7 +13,6 @@ interface JWTToken {
   error?: string;
 }
 
-// This will refresh an expired access token when needed
 async function refreshAccessToken(token: JWTToken): Promise<JWTToken> {
   const resp = await fetch(`${process.env.KEYCLOAK_REFRESH_TOKEN_URL}`, {
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -46,6 +46,10 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.KEYCLOAK_CLIENT_SECRET!,
       issuer: process.env.KEYCLOAK_DOMAIN!,
     }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }),
   ],
 
   callbacks: {
@@ -53,7 +57,6 @@ export const authOptions: NextAuthOptions = {
       const nowTimeStamp = Math.floor(Date.now() / 1000);
 
       if (account) {
-        // Account is available the first time this callback is called after sign-in
         token.decoded = jwtDecode(account.access_token!);
         token.access_token = account.access_token!;
         token.id_token = account.id_token!;
@@ -61,10 +64,8 @@ export const authOptions: NextAuthOptions = {
         token.refresh_token = account.refresh_token!;
         return token;
       } else if (nowTimeStamp < (token.expires_at || 0)) {
-        // Token has not expired yet, return it
         return token;
       } else {
-        // Token has expired, try to refresh it
         console.log("Token has expired. Will refresh...");
         try {
           const refreshedToken = await refreshAccessToken(token);

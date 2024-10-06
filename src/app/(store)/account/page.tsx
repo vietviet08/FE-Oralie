@@ -1,45 +1,53 @@
-import React from "react";
+"use client";
+
+import { useRouter } from "next/navigation";
 import Head from "next/head";
 import Link from "next/link";
+import { signOut, useSession } from "next-auth/react";
 
-const HomePage: React.FC = () => {
+async function SessionLogOut() {
+  try {
+    await fetch(`/api/auth/logout`, { method: "GET" });
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+const AccountPage: React.FC = () => {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+
   return (
     <div>
       <Head>
-        <title>Home - E-commerce System</title>
-        <meta name="description" content="Welcome to our e-commerce store" />
+        <title>Account</title>
       </Head>
-      <header>
-        <h1>Welcome to Our E-commerce Store</h1>
-        <nav>
-          <ul>
-            <li>
-              <Link href="/products">Products</Link>
-            </li>
-            <li>
-              <Link href="/cart">Cart</Link>
-            </li>
-            <li>
-              <Link href="/account">Account</Link>
-            </li>
-          </ul>
-        </nav>
-      </header>
-      <main>
-        <section>
-          <h2>Featured Products</h2>
-          {/* Add code to display featured products here */}
-        </section>
-        <section>
-          <h2>Latest Products</h2>
-          {/* Add code to display latest products here */}
-        </section>
-      </main>
-      <footer>
-        <p>&copy; 2023 E-commerce System. All rights reserved.</p>
-      </footer>
+
+      <h1>Account</h1>
+      <p>
+        {status === "loading" && "Loading..."}
+        {status === "unauthenticated" && (
+          <>
+            You need to be signed in to view this page.{" "}
+            <Link href="/login">Sign in</Link>
+          </>
+        )}
+        {status === "authenticated" && (
+          <>
+            Welcome, {session?.user?.name}! <br />
+            <button
+              // onClick={() => router.push("/api/auth/signout")}
+              onClick={() =>
+                SessionLogOut().then(() => signOut({ callbackUrl: "/" }))
+              }
+            >
+              Sign out
+            </button>
+          </>
+        )}
+      </p>
     </div>
   );
 };
 
-export default HomePage;
+export default AccountPage;

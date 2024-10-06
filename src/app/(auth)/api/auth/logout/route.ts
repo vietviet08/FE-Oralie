@@ -9,9 +9,8 @@ export async function GET() {
 
     const idToken = await getIdToken();
 
-    // this will log out the user on Keycloak side
-    const endSessionUrl = process.env.END_SESSION_URL || '';
-    const nextAuthUrl = process.env.NEXTAUTH_URL || '';
+    const endSessionUrl = process.env.KEYCLOAK_END_SESSION_URL || '';
+    const nextAuthUrl = process.env.NEXT_PUBLIC_URL || '';
     var url = `${endSessionUrl}?id_token_hint=${idToken}&post_logout_redirect_uri=${encodeURIComponent(nextAuthUrl)}`;
 
     try {
