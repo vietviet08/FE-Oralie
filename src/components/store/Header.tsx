@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import Logo from "../icons/logo";
 import Image from "next/image";
+import { ModeToggle } from "../ui/theme-mode";
 
 const components: { title: string; href: string; description: string }[] = [
   {
@@ -177,6 +178,8 @@ export function Header() {
         </div>
 
         <div className="flex items-center max-lg:ml-auto space-x-5">
+          <ModeToggle />
+
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="20px"
@@ -217,9 +220,9 @@ export function Header() {
               xmlns="http://www.w3.org/2000/svg"
             >
               <path
-                fill-rule="evenodd"
+                fillRule="evenodd"
                 d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-                clip-rule="evenodd"
+                clipRule="evenodd"
               ></path>
             </svg>
           </button>

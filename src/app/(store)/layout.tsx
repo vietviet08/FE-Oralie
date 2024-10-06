@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
 import SessionProviderWrapper from "@/components/SessionProviderWrapper";
+import { Header } from "@/components/store/Header";
+import Footer from "@/components/store/Footer";
 import { ThemeProvider } from "@/components/common/theme-provider";
 
 const inter = Inter({
@@ -21,20 +22,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        <link rel="icon" href="/images/oralie.ico" />
-      </head>
-      <body className={`${inter.className} antialiased`}>
-        <SessionProviderWrapper>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            {children}
-          </ThemeProvider>
-        </SessionProviderWrapper>
+      <body>
+        <Header />
+        {children}
+        <Footer />
       </body>
     </html>
   );

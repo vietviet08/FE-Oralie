@@ -6,11 +6,6 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-// export const metadata: Metadata = {
-//   title: "Sign in",
-//   description: "Sign in to Oralie.",
-// };
-
 const LoginPage: React.FC = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -32,28 +27,7 @@ const LoginPage: React.FC = () => {
     }
   };
 
-  return (
-    // <div>
-    //   {!session ? (
-    //     <>
-    //       <h1>You are not logged in</h1>
-    //       <button onClick={() => handleSignIn("keycloak")}>
-    //         Login with Keycloak
-    //       </button>
-    //       <br />
-    //       <button onClick={() => handleSignIn("google")}>
-    //         Login with Google
-    //       </button>
-    //     </>
-    //   ) : (
-    //     <>
-    //       <h1>Welcome, {session.user?.name}</h1>
-    //       <button onClick={() => signOut()}>Logout</button>
-    //     </>
-    //   )}
-    // </div>
-    <LoginTemplate />
-  );
+  return <LoginTemplate />;
 };
 
 export default LoginPage;
