@@ -1,5 +1,5 @@
 export type Brand = {
-    brand_id: number;
+    id: number;
     name: string;
     description: string;
     isActive: boolean;
