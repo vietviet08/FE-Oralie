@@ -9,18 +9,18 @@ export async function getAddresses(): Promise<UserAddress[]> {
     return response.json();
 }
 
-export  async function getAddressById(id: number): Promise<UserAddress> {
+export async function getAddressById(id: number): Promise<UserAddress> {
     const response = await apiClientService.get(`${baseUrl}/store/user-address/${id}`);
     return response.json();
 }
 
-export async function  saveAddress(address: UserAddress): Promise<UserAddress> {
-    const response = await apiClientService.post(`${baseUrl}/store/user-address`, JSON.stringify({ address}));
+export async function saveAddress(address: UserAddress): Promise<UserAddress> {
+    const response = await apiClientService.post(`${baseUrl}/store/user-address`, JSON.stringify({address}));
     return response.json();
 }
 
 export async function updateAddress(address: UserAddress): Promise<UserAddress> {
-    const response = await apiClientService.put(`${baseUrl}/store/user-address`, JSON.stringify({ address}));
+    const response = await apiClientService.put(`${baseUrl}/store/user-address`, JSON.stringify({address}));
     return response.json();
 }
 
@@ -41,12 +41,12 @@ export async function getAddressByIdDash(id: number): Promise<UserAddress> {
 }
 
 export async function saveAddressDash(address: UserAddress): Promise<UserAddress> {
-    const response = await apiClientService.post(`${baseUrl}/dash/user-address`, JSON.stringify({ address}));
+    const response = await apiClientService.post(`${baseUrl}/dash/user-address`, JSON.stringify({address}));
     return response.json();
 }
 
 export async function updateAddressDash(address: UserAddress): Promise<UserAddress> {
-    const response = await apiClientService.put(`${baseUrl}/dash/user-address`, JSON.stringify({ address}));
+    const response = await apiClientService.put(`${baseUrl}/dash/user-address`, JSON.stringify({address}));
     return response.json();
 }
 
@@ -66,12 +66,12 @@ export async function getAddressByIdSelf(id: number): Promise<UserAddress> {
 }
 
 export async function saveAddressSelf(address: UserAddress): Promise<UserAddress> {
-    const response = await apiClientService.post(`${baseUrl}/dash/profile/address`, JSON.stringify({ address}));
+    const response = await apiClientService.post(`${baseUrl}/dash/profile/address`, JSON.stringify({address}));
     return response.json();
 }
 
 export async function updateAddressSelf(address: UserAddress): Promise<UserAddress> {
-    const response = await apiClientService.put(`${baseUrl}/dash/profile/address`, JSON.stringify({ address}));
+    const response = await apiClientService.put(`${baseUrl}/dash/profile/address`, JSON.stringify({address}));
     return response.json();
 }
 

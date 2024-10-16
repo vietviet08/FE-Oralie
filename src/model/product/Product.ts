@@ -15,8 +15,8 @@ export type Product = {
     isDiscount: boolean;
     discount: number;
     quantity: number;
-    isAvailable: boolean;
-    isDeleted: boolean;
+    isAvailable?: boolean;
+    isDeleted?: boolean;
     isFeatured: boolean;
     isPromoted: boolean;
 

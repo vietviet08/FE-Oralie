@@ -44,10 +44,8 @@ const sendRequest = async (
 
 const apiClientService = {
     get: (endpoint: string) => sendRequest('GET', endpoint),
-    post: (endpoint: string, data: any, contentType: string | null = null) =>
-        sendRequest('POST', endpoint, data, contentType),
-    put: (endpoint: string, data: any, contentType: string | null = null) =>
-        sendRequest('PUT', endpoint, data, contentType),
+    post: (endpoint: string, data: any, contentType: string | null = null) => sendRequest('POST', endpoint, data, contentType),
+    put: (endpoint: string, data: any, contentType: string | null = null) => sendRequest('PUT', endpoint, data, contentType),
     delete: (endpoint: string) => sendRequest('DELETE', endpoint),
 };
 
