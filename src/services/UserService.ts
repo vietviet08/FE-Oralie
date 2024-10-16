@@ -1,5 +1,5 @@
 import apiClientService from "@/utils/ApiClientService";
-import {UserGet} from "@/model/user/UserGet";
+import {UserRes} from "@/model/user/UserRes";
 import {UserPage} from "@/model/user/UserPage";
 import {User} from "@/model/user/User";
 import {AssignRole} from "@/model/user/AssignRole";
@@ -9,7 +9,7 @@ const baseUrl = process.env.NEXT_PUBLIC_API_URL + '/api/accounts';
 //store
 
 
-export async function getProfileUser(): Promise<UserGet> {
+export async function getProfileUser(): Promise<UserRes> {
     const response = await apiClientService.get(`${baseUrl}/store/accounts/profile`);
     return response.json();
 }
@@ -38,23 +38,23 @@ export async function getUsers(page: number,
     return response.json();
 }
 
-export async function getUserById(id: number): Promise<UserGet> {
+export async function getUserById(id: number): Promise<UserRes> {
     const response = await apiClientService.get(`${baseUrl}/dash/accounts/${id}`);
     return response.json();
 }
 
-export async function getUserByUserName(username: string): Promise<UserGet> {
+export async function getUserByUserName(username: string): Promise<UserRes> {
     const response = await apiClientService.get(`${baseUrl}/dash/accounts/user/${username}`);
     return response.json();
 }
 
 
-export async function getUserByUserId(username: string): Promise<UserGet> {
+export async function getUserByUserId(username: string): Promise<UserRes> {
     const response = await apiClientService.get(`${baseUrl}/dash/accounts/userId/${username}`);
     return response.json();
 }
 
-export async function createUser(user: User): Promise<UserGet> {
+export async function createUser(user: User): Promise<UserRes> {
     const response = await apiClientService.post(`${baseUrl}/dash/accounts/create`, JSON.stringify(user));
     return response.json();
 }
@@ -75,7 +75,7 @@ export async function unAssignRole(userId: number, roleName: string): Promise<As
     return response.json();
 }
 
-export async function updateUser(user: User): Promise<UserGet> {
+export async function updateUser(user: User): Promise<UserRes> {
     const response = await apiClientService.put(`${baseUrl}/dash/accounts`, JSON.stringify(user));
     return response.json();
 }
@@ -89,7 +89,7 @@ export async function deleteUser(id: number) {
 }
 
 // dash for self
-export async function getProfileAdmin(): Promise<UserGet> {
+export async function getProfileAdmin(): Promise<UserRes> {
     const response = await apiClientService.get(`${baseUrl}/dash/profile`);
     return response.json();
 }

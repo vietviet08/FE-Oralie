@@ -1,7 +1,7 @@
-import {UserGet} from "@/model/user/UserGet";
+import {UserRes} from "@/model/user/UserRes";
 
 export type UserPage = {
-    data: UserGet[];
+    data: UserRes[];
     pageNo: number;
     pageSize: number;
     totalElements: number;
