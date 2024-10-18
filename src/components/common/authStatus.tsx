@@ -13,9 +13,6 @@ export default async function AuthStatus() {
                 <span className=" text-yellow-500">
                     {session.user?.name || session.user?.email || "User"}
                 </span>{" "}
-                <span className=" text-red-500" >
-                    {session.access_token || "none"}
-                </span>{" "}
                 <Logout/>
             </div>
         );

@@ -35,6 +35,8 @@ const AccountPage: React.FC = () => {
         {status === "authenticated" && (
           <>
             Welcome, {session?.user?.name}! <br />
+              session.access_token: {session?.access_token} <br />
+              session.role: {session?.roles} <br />
             <button
               // onClick={() => router.push("/api/auth/signout")}
               onClick={() =>

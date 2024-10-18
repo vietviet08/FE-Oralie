@@ -104,7 +104,8 @@
 import {AuthOptions, TokenSet} from "next-auth";
 import KeycloakProvider from "next-auth/providers/keycloak"
 import NextAuth from "next-auth";
-import {JWT} from "next-auth/jwt";
+import {decode, JWT} from "next-auth/jwt";
+
 
 function requestRefreshOfAccessToken(token: JWT) {
     return fetch(`${process.env.KEYCLOAK_DOMAIN}/protocol/openid-connect/token`, {
@@ -165,7 +166,16 @@ export const authOptions: AuthOptions = {
                 }
             }
         },
-    }
+        session: async ({ session, token, user }) => {
+            session.access_token = token.accessToken as string;
+            // session.roles = decode(token.accessToken as string).realm_access.roles;
+            session.error = token.error as string;
+            console.log("[session callback] token " + JSON.stringify(token))
+
+            return session;
+        },
+    },
+    cookies:
 }
 
 const handler = NextAuth(authOptions);
