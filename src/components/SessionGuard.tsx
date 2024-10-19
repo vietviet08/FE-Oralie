@@ -1,21 +1,24 @@
 "use client"
 
-import { useSession, signIn } from "next-auth/react";
-import { ReactNode, useEffect } from "react";
+import {useSession, signIn} from "next-auth/react";
+import {ReactNode, useEffect} from "react";
+import {OrbitProgress} from "react-loading-indicators";
 
-export default function SessionGuard({ children }: { children: ReactNode }) {
-    const { data: session, status } = useSession(); // No need to redefine the type of data
+export default function SessionGuard({children}: { children: ReactNode }) {
+    const {data: session, status} = useSession();
 
     useEffect(() => {
-        // Check if data is defined and has an error
         if (session?.error === "RefreshAccessTokenError") {
-            signIn("keycloak");
+            signIn("keycloak").then((r) => {
+                console.log(r)
+            });
         }
     }, [session]);
 
-    // Optionally, handle loading state or redirect unauthorized users here
     if (status === "loading") {
-        return <div>Loading...</div>; // You can customize this as needed
+        return <div className={"flex justify-center items-center h-screen"}>
+            <OrbitProgress color="#DA2119" size="small" text="" textColor=""/>
+        </div>
     }
 
     return <>{children}</>;
