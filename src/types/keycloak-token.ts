@@ -1,7 +1,7 @@
-export interface KeycloakToken {
-    exp: number;
-    iat: number;
-    realm_access?: {
-        roles: string[];
-    };
-}
+// declare module "next-auth/providers/keycloak" {
+//     import {KeycloakProfile} from "keycloak-js";
+//
+//     export interface KeycloakProfileToken extends KeycloakProfile {
+//         realm_access: {roles: [string]}
+//     }
+// }

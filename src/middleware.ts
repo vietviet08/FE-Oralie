@@ -1,5 +1,6 @@
 import {NextRequest, NextResponse} from "next/server"
 import {getToken} from "next-auth/jwt";
+import {parseJwt} from "@/utils/encryption";
 
 const privatePath = ["/account", "/cart"]
 const authPath = ["/login", "/register"]
@@ -8,18 +9,11 @@ const secret = process.env.NEXTAUTH_SECRET;
 
 export async function middleware(req: NextRequest) {
 
-    const access_token = await getToken({req, secret});
-
-    const roles: string[] = Array.isArray(access_token?.roles) ? access_token.roles : [];
+    const token = await getToken({req, secret});
+    const access_token = token?.accessToken;
+    const roles = token ? parseJwt(access_token).realm_access.roles : []
 
     const {pathname} = req.nextUrl
-
-    // const access_token = req.cookies.get("access_token")?.value
-
-    // const session = access_token ? jwtDecode<CustomJwtPayload>(access_token) : null;
-
-    // const role = session?.role;
-    // const role = access_token ? jwtDecode<CustomJwtPayload>(access_token).role : null;
 
     if (privatePath.some((path) => pathname.startsWith(path)) && !access_token) {
         return NextResponse.redirect(new URL('/login', req.url))
@@ -31,8 +25,7 @@ export async function middleware(req: NextRequest) {
 
     if ((!access_token && adminPath === pathname)) {
         return NextResponse.redirect(new URL('/login', req.url))
-        // return NextResponse.redirect(new URL(`${process.env.KEYCLOAK_URL}/realms/oralie/protocol/openid-connect/auth`, req.url));
-    } else if ((adminPath === pathname && !roles.includes("ROLE_ADMIN")))
+    } else if ((adminPath === pathname && !roles.includes("ADMIN")))
         return NextResponse.redirect(new URL('/', req.url))
 
     return NextResponse.next()

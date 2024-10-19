@@ -101,10 +101,11 @@
 // export {handler as GET, handler as POST};
 
 
-import {AuthOptions, TokenSet} from "next-auth";
+import {AuthOptions, getServerSession, TokenSet} from "next-auth";
 import KeycloakProvider from "next-auth/providers/keycloak"
 import NextAuth from "next-auth";
-import {decode, JWT} from "next-auth/jwt";
+import { JWT} from "next-auth/jwt";
+import {GetServerSidePropsContext, NextApiRequest, NextApiResponse} from "next";
 
 
 function requestRefreshOfAccessToken(token: JWT) {
@@ -175,8 +176,16 @@ export const authOptions: AuthOptions = {
             return session;
         },
     },
-    cookies:
 }
+export function auth(
+    ...args:
+        | [GetServerSidePropsContext['req'], GetServerSidePropsContext['res']]
+        | [NextApiRequest, NextApiResponse]
+        | []
+) {
+    return getServerSession(...args, authOptions)
+}
+
 
 const handler = NextAuth(authOptions);
 

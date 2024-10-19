@@ -21,3 +21,17 @@ export function decrypt(encryptedString: string) {
     const text = cryptr.decrypt(encryptedString);
     return text;
 }
+
+export function parseJwt(token: any) {
+    console.log(token);
+    try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = Buffer.from(base64, 'base64').toString('utf-8');
+
+        return JSON.parse(jsonPayload);
+    } catch (error) {
+        console.error('Error parsing JWT:', error);
+        return null;
+    }
+}
