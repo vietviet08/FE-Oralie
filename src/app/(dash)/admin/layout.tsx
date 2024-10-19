@@ -6,7 +6,7 @@ import Sidebar from "@/components/dash/sidebar";
 import Header from "@/components/dash/header";
 
 export const metadata: Metadata = {
-    title: "Login & Signup",
+    title: "Dashboards - Oralie",
     description: "The ecommerce platform for the future",
 };
 
