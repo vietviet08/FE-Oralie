@@ -6,7 +6,7 @@ import {
 } from 'nuqs/server';
 
 export const searchParams = {
-    page: parseAsInteger.withDefault(1),
+    page: parseAsInteger.withDefault(0),
     size: parseAsInteger.withDefault(10),
     sortBy: parseAsString.withDefault('id'),
     sort: parseAsString.withDefault('asc'),

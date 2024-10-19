@@ -1,3 +1,5 @@
+"use client"
+
 import { buttonVariants } from '@/components/ui/button';
 import { Heading } from '@/components/ui/heading';
 import { Separator } from '@/components/ui/separator';
@@ -10,6 +12,7 @@ import PageContainer from "@/components/dash/page-container";
 import {Breadcrumbs} from "@/components/common/breadcrumbs";
 import ProductTable from "@/components/dash/product/product-tables";
 import {getProducts} from "@/services/ProductService";
+import {useEffect, useState} from "react";
 
 const breadcrumbItems = [
     { title: 'Dashboard', link: '/admin' },
@@ -18,17 +21,39 @@ const breadcrumbItems = [
 
 type ProductListPage= {};
 
-export default async function ProductListPage({}: ProductListPage) {
+export default  function ProductListPage({}: ProductListPage) {
     // const search = searchParamsCache.get('q');
     // const categories = searchParamsCache.get('categories');
-    const page = searchParamsCache.get('page');
-    const size = searchParamsCache.get('size');
-    const sortBy = searchParamsCache.get('sortBy');
-    const sort = searchParamsCache.get('sort');
+    // const page = searchParamsCache.get('page');
+    // const size = searchParamsCache.get('size');
+    // const sortBy = searchParamsCache.get('sortBy');
+    // const sort = searchParamsCache.get('sort');
+    // const data =  getProducts(page, size, sortBy, sort);
 
-    const data = await getProducts(page, size, sortBy, sort);
-    const totalProducts = data.totalElements;
-    const products: Product[] = data.data;
+    const [page, setPage] = useState<number>(0);
+    const [size, setSize] = useState<number>(10);
+    const [sortBy, setSortBy] = useState<string>('id');
+    const [sort, setSort] = useState<string>('asc');
+    const [products, setProducts] = useState<Product[]>([]);
+
+    const [totalProducts, setTotalProducts] = useState<number>(0);
+
+
+    useEffect(() => {
+        getProducts(page, size, sortBy, sort).then((data) => {
+            console.log(data);
+            setProducts(data.data);
+            setTotalProducts(data.totalElements);
+
+        });
+        }, [page, size, sortBy, sort]);
+
+    console.log(products);
+    // const totalProducts = totalProducts;
+    console.log(totalProducts);
+    // const products: Product[] = data.data;
+
+
 
     return (
         <PageContainer>

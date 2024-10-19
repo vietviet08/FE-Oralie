@@ -16,20 +16,15 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en">
-        <body>
-        <NextTopLoader showSpinner={false}/>
-
-        <Toaster/>
         <div className="flex">
+            <NextTopLoader showSpinner={false}/>
+            <Toaster/>
             <Sidebar/>
             <main className="w-full flex-1 overflow-hidden">
                 <Header/>
                 {children}
             </main>
         </div>
-        </body>
-        </html>
     );
 }
 
