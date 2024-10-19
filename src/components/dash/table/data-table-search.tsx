@@ -28,7 +28,7 @@ export function DataTableSearch({
 
     const handleSearch = (value: string) => {
         setSearchQuery(value, {startTransition});
-        setPage(1); // Reset page to 1 when search changes
+        setPage(1);
     };
 
     return (

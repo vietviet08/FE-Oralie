@@ -19,13 +19,25 @@ export default function ProductTable({
     totalData: number;
 }) {
     const {
-        categoriesFilter,
-        setCategoriesFilter,
+        // categoriesFilter,
+        // setCategoriesFilter,
         isAnyFilterActive,
         resetFilters,
-        searchQuery,
+        // searchQuery,
+        // setPage,
+        // setSearchQuery
+
+        page,
         setPage,
-        setSearchQuery
+        size,
+        setSize,
+        sortBy,
+        setSortBy,
+        sort,
+        setSort,
+        searchQuery,
+        setSearchQuery,
+
     } = useProductTableFilters();
 
     return (
@@ -37,13 +49,13 @@ export default function ProductTable({
                     setSearchQuery={setSearchQuery}
                     setPage={setPage}
                 />
-                <DataTableFilterBox
-                    filterKey="categories"
-                    title="Categories"
-                    options={CATEGORY_OPTIONS}
-                    setFilterValue={setCategoriesFilter}
-                    filterValue={categoriesFilter}
-                />
+                {/*<DataTableFilterBox*/}
+                {/*    filterKey="categories"*/}
+                {/*    title="Categories"*/}
+                {/*    options={CATEGORY_OPTIONS}*/}
+                {/*    setFilterValue={setCategoriesFilter}*/}
+                {/*    filterValue={categoriesFilter}*/}
+                {/*/>*/}
                 <DataTableResetFilter
                     isFilterActive={isAnyFilterActive}
                     onReset={resetFilters}

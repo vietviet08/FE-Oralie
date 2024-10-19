@@ -1,11 +1,11 @@
 export const metadata = {
-    title: 'Dash - Profile',
+    title: "Dash - Users",
 }
 
 export default function Page() {
     return (
         <div>
-            <h1>Page Profile</h1>
+            <h1>Page Users</h1>
         </div>
     );
 }

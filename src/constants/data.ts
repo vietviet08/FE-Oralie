@@ -13,6 +13,12 @@ export const navItems: NavItem[] = [
         label: 'users'
     },
     {
+        title: 'Orders',
+        href: '/admin/orders',
+        icon: 'receipt',
+        label: 'orders'
+    },
+    {
         title: 'Product',
         href: '/admin/products',
         icon: 'product',

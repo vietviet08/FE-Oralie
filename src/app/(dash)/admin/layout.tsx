@@ -28,10 +28,3 @@ export default function RootLayout({
     );
 }
 
-{/*<SidebarProvider>*/
-}
-{/*    <AppSidebar/>*/
-}
-{/*</SidebarProvider>*/
-}
-

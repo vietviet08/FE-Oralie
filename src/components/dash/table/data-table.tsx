@@ -48,14 +48,14 @@ export function DataTable<TData, TValue>({
         parseAsInteger.withOptions({shallow: false}).withDefault(1)
     );
     const [pageSize, setPageSize] = useQueryState(
-        'limit',
+        'size',
         parseAsInteger
             .withOptions({shallow: false, history: 'push'})
             .withDefault(10)
     );
 
     const paginationState = {
-        pageIndex: currentPage - 1, // zero-based index for React Table
+        pageIndex: currentPage - 1,
         pageSize: pageSize
     };
 

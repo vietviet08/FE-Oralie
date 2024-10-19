@@ -14,7 +14,7 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <div className="flex">
+        <div className="">
             <Header/>
             <main className="w-full flex-1 overflow-hidden">
                 {children}

@@ -17,41 +17,68 @@ export const CATEGORY_OPTIONS = [
 
 export function useProductTableFilters() {
     const [searchQuery, setSearchQuery] = useQueryState(
-        'q',
-        searchParams.q
+        'search',
+        searchParams.search
             .withOptions({shallow: false, throttleMs: 1000})
             .withDefault('')
     );
 
-    const [categoriesFilter, setCategoriesFilter] = useQueryState(
-        'categories',
-        searchParams.categories.withOptions({shallow: false}).withDefault('')
-    );
+    // const [categoriesFilter, setCategoriesFilter] = useQueryState(
+    //     'categories',
+    //     searchParams.categories.withOptions({shallow: false}).withDefault('')
+    // );
 
     const [page, setPage] = useQueryState(
         'page',
         searchParams.page.withDefault(1)
     );
 
+    const [size, setSize] = useQueryState(
+        'size',
+        searchParams.size.withDefault(10)
+    );
+
+    const [sortBy, setSortBy] = useQueryState(
+        'sortBy',
+        searchParams.sortBy.withDefault('id')
+    );
+
+    const [sort, setSort] = useQueryState(
+        'sort',
+        searchParams.sort.withDefault('asc')
+    );
+
     const resetFilters = useCallback(() => {
-        setSearchQuery(null);
-        setCategoriesFilter(null);
+        setSearchQuery('');
+        setSortBy('id');
+        setSort('asc');
+        setSize(10);
+        setPage(0);
+        // setCategoriesFilter(null);
+    }, [setSearchQuery, setPage, setSize, setSortBy, setSort]);
 
-        setPage(1);
-    }, [setSearchQuery, setCategoriesFilter, setPage]);
-
+    // const isAnyFilterActive = useMemo(() => {
+    //     return !!searchQuery || !!categoriesFilter;
+    // }, [searchQuery, categoriesFilter]);
     const isAnyFilterActive = useMemo(() => {
-        return !!searchQuery || !!categoriesFilter;
-    }, [searchQuery, categoriesFilter]);
+            return !!searchQuery ;
+        }, [searchQuery]);
+
 
     return {
         searchQuery,
         setSearchQuery,
         page,
         setPage,
+        size,
+        setSize,
+        sortBy,
+        setSortBy,
+        sort,
+        setSort,
         resetFilters,
         isAnyFilterActive,
-        categoriesFilter,
-        setCategoriesFilter
+        // categoriesFilter,
+        // setCategoriesFilter
     };
 }
