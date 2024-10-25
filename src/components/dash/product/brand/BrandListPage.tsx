@@ -1,9 +1,6 @@
-import {buttonVariants} from '@/components/ui/button';
 import {Heading} from '@/components/ui/heading';
 import {Separator} from '@/components/ui/separator';
-import {cn} from '@/lib/utils';
 import {Plus} from 'lucide-react';
-import Link from 'next/link';
 import {searchParamsCache} from "@/lib/searchparam";
 import PageContainer from "@/components/dash/page-container";
 import {Breadcrumbs} from "@/components/common/breadcrumbs";
@@ -12,6 +9,7 @@ import {getListBrand} from "@/services/BrandService";
 import BrandTable from "@/components/dash/product/brand/brand-table";
 import {getServerSession, Session} from "next-auth";
 import {authOptions} from "@/app/(auth)/api/auth/[...nextauth]/route";
+import {BrandDialog} from "@/components/dash/product/brand/BrandDialog";
 
 const breadcrumbItems = [
     {title: 'Dashboard', link: '/admin'},
@@ -31,8 +29,8 @@ export default async function BrandListPage() {
 
     const data = await getListBrand(page, size, sortBy, sort, token?.toString());
 
-    const brands: Brand[] = data.data;
-    const totalBrands = data.totalElements;
+    const brands: Brand[] = data?.data;
+    const totalBrands = data?.totalElements;
 
     console.log(brands);
 
@@ -42,15 +40,11 @@ export default async function BrandListPage() {
                 <Breadcrumbs items={breadcrumbItems}/>
                 <div className="flex items-start justify-between">
                     <Heading
-                        title={`Categories (${totalBrands})`}
-                        description="Manage categories (Server side table functionalities.)"
+                        title={`Brand (${totalBrands})`}
+                        description="Manage brands (Server side table functionalities.)"
                     />
-                    <Link
-                        href={'/admin/brands/create'}
-                        className={cn(buttonVariants(), 'text-xs md:text-sm')}
-                    >
-                        <Plus className="mr-2 h-4 w-4"/> Add New
-                    </Link>
+                    <BrandDialog icon={<Plus className="mr-2 h-4 w-4"/>}/>
+
                 </div>
                 <Separator/>
                 <BrandTable data={brands} totalData={totalBrands}/>

@@ -9,7 +9,7 @@ const breadcrumbItems = [
     {title: 'Create', link: '/admin/products/create'}
 ];
 
-export default function ProductViewPage() {
+export default function ProductCreatePage() {
     return (
         <PageContainer scrollable>
             <div className="flex-1 space-y-4">

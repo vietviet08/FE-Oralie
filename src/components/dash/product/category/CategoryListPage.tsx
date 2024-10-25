@@ -12,6 +12,7 @@ import {getListCategory} from "@/services/CategoryService";
 import {CategoryGet} from "@/model/category/CategoryGet";
 import {getServerSession, Session} from "next-auth";
 import {authOptions} from "@/app/(auth)/api/auth/[...nextauth]/route";
+import {CategoryDialog} from "@/components/dash/product/category/CategoryDialog";
 
 const breadcrumbItems = [
     {title: 'Dashboard', link: '/admin'},
@@ -46,12 +47,7 @@ export default async function CategoryListPage() {
                         title={`Categories (${totalCategories})`}
                         description="Manage categories (Server side table functionalities.)"
                     />
-                    <Link
-                        href={'/admin/categories/create'}
-                        className={cn(buttonVariants(), 'text-xs md:text-sm')}
-                    >
-                        <Plus className="mr-2 h-4 w-4"/> Add New
-                    </Link>
+                    <CategoryDialog icon={<Plus className="mr-2 h-4 w-4"/>}/>
                 </div>
                 <Separator/>
                 <CategoryTable data={categories} totalData={totalCategories}/>
