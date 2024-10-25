@@ -1,5 +1,5 @@
 import {SearchParams} from "nuqs/parsers";
-import {searchParamsCache} from "@/lib/searchparam";
+import {searchParamsCacheProduct} from "@/lib/searchparam";
 import ProductListPage from "@/components/dash/product/ProductListPage";
 
 type pageProps = {
@@ -11,7 +11,7 @@ export const metadata = {
 }
 
 export default function Page({searchParams}: pageProps) {
-    searchParamsCache.parse(searchParams);
+    searchParamsCacheProduct.parse(searchParams);
 
     return (
         <ProductListPage />

@@ -6,7 +6,8 @@ const baseUrl = process.env.NEXT_PUBLIC_API_URL + '/api/products';
 export async function getListCategory(page: number,
                                       size: number,
                                       sortBy: string,
-                                      sort: string) {
+                                      sort: string,
+                                      token: string) {
     try {
         const res = await axios.get(`${baseUrl}/dash/categories`, {
             params: {
@@ -14,6 +15,9 @@ export async function getListCategory(page: number,
                 size,
                 sortBy,
                 sort,
+            },
+            headers: {
+                Authorization: `Bearer ${token}`
             }
         });
 
@@ -26,9 +30,13 @@ export async function getListCategory(page: number,
     }
 }
 
-export async function getCategoryById(id: number) {
+export async function getCategoryById(id: number, token: string) {
     try {
-        const res = await axios.get(`${baseUrl}/dash/categories/${id}`);
+        const res = await axios.get(`${baseUrl}/dash/categories/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
         if (res) {
             console.log(res.data);
             return res.data;
@@ -38,9 +46,13 @@ export async function getCategoryById(id: number) {
     }
 }
 
-export async function createCategory(category: Category) {
+export async function createCategory(category: Category, token: string) {
     try {
-        const res = await axios.post(`${baseUrl}/dash/categories`, category);
+        const res = await axios.post(`${baseUrl}/dash/categories`, category, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
         if (res) {
             console.log(res.data);
             return res.data;

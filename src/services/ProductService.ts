@@ -6,12 +6,12 @@ import axios from "axios";
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL + '/api/products';
 
-export async function getListProduct (page: number
-                              , size: number
-                              , sortBy: string
-                              , sort: string
-                              , search: string
-                              , category: string )   {
+export async function getListProduct(page: number,
+                                     size: number,
+                                     sortBy: string,
+                                     sort: string,
+                                     search: string,
+                                     category: string) {
     try {
         const res = await axios.get(`${baseUrl}/store/products`, {
             params: {

@@ -4,7 +4,7 @@ import {Separator} from '@/components/ui/separator';
 import {cn} from '@/lib/utils';
 import {Plus} from 'lucide-react';
 import Link from 'next/link';
-import {searchParamsCache} from "@/lib/searchparam";
+import {searchParamsCacheProduct} from "@/lib/searchparam";
 import {Product} from "@/model/product/Product";
 import PageContainer from "@/components/dash/page-container";
 import {Breadcrumbs} from "@/components/common/breadcrumbs";
@@ -38,12 +38,12 @@ export default async function ProductListPage() {
     //
     //     });
     //     }, [page, size, sortBy, sort]);
-    const search = searchParamsCache.get('search');
-    const category = searchParamsCache.get('category');
-    const page = searchParamsCache.get('page') - 1;
-    const size = searchParamsCache.get('size');
-    const sortBy = searchParamsCache.get('sortBy');
-    const sort = searchParamsCache.get('sort');
+    const search = searchParamsCacheProduct.get('search');
+    const category = searchParamsCacheProduct.get('category');
+    const page = searchParamsCacheProduct.get('page') - 1;
+    const size = searchParamsCacheProduct.get('size');
+    const sortBy = searchParamsCacheProduct.get('sortBy');
+    const sort = searchParamsCacheProduct.get('sort');
 
     const data = await getListProduct(page, size, sortBy, sort, search, category);
     const products: Product[] = data.data;

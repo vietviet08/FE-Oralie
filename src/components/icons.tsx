@@ -33,6 +33,8 @@ import {
     X,
     ListOrdered,
     ReceiptText,
+    ChartBarStacked,
+    BadgeCheck
 } from 'lucide-react';
 
 export type Icon = LucideIcon;
@@ -68,6 +70,8 @@ export const Icons = {
     laptop: Laptop,
     order: ListOrdered,
     receipt: ReceiptText,
+    category: ChartBarStacked,
+    brand: BadgeCheck,
     gitHub: ({ ...props }: LucideProps) => (
         <svg
             aria-hidden="true"

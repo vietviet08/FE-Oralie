@@ -25,6 +25,18 @@ export const navItems: NavItem[] = [
         label: 'product'
     },
     {
+        title: 'Brand',
+        href: '/admin/brands',
+        icon: 'brand',
+        label: 'brand'
+    },
+    {
+        title: 'Category',
+        href: '/admin/categories',
+        icon: 'category',
+        label: 'category'
+    },
+    {
         title: 'Account',
         icon: 'user',
         label: 'account',

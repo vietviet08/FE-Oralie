@@ -1,6 +1,7 @@
 
 import {User} from "@/model/user/User";
 import apiClientService from "@/utils/ApiClientService";
+import {getSession} from "next-auth/react";
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL + '/api/accounts';
 
@@ -16,5 +17,13 @@ export async function register(user: User): Promise<User> {
 
 export async function logout() {
     return await apiClientService.post(`${baseUrl}/logout`, {});
+}
+
+export async function getAccessToken(): Promise<string | null> {
+    const session = await getSession();
+    if (session && session.access_token) {
+        return session.access_token;
+    }
+    return null;
 }
 

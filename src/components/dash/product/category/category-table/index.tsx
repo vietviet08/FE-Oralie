@@ -1,30 +1,24 @@
 'use client';
 
 import {
-    useProductTableFilters
-} from './use-product-table-filters';
+    useTableFilters
+} from '../../use-table-filters';
 import {columns} from './columns';
-import {Product} from "@/model/product/Product";
 import {DataTableSearch} from "@/components/dash/table/data-table-search";
 import {DataTableResetFilter} from "@/components/dash/table/data-table-reset-filter";
 import {DataTable} from "@/components/dash/table/data-table";
+import {CategoryGet} from "@/model/category/CategoryGet";
 
-export default function ProductTable({
+export default function CategoryTable({
                                          data,
                                          totalData
                                      }: {
-    data: Product[];
+    data: CategoryGet[];
     totalData: number;
 }) {
     const {
-        // categoriesFilter,
-        // setCategoriesFilter,
         isAnyFilterActive,
         resetFilters,
-        // searchQuery,
-        // setPage,
-        // setSearchQuery
-
         page,
         setPage,
         size,
@@ -35,8 +29,7 @@ export default function ProductTable({
         setSort,
         searchQuery,
         setSearchQuery,
-
-    } = useProductTableFilters();
+    } = useTableFilters();
 
     return (
         <div className="space-y-4 ">

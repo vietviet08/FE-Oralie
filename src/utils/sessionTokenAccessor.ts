@@ -17,7 +17,6 @@ export async function getAccessToken(): Promise<string | null> {
         const accessTokenDecrypted = decrypt(session.access_token);
         return accessTokenDecrypted;
     }
-
     return null;
 }
 
