@@ -27,11 +27,13 @@ import {Card, CardHeader, CardTitle, CardContent} from '@/components/ui/card';
 import {FileUploader} from "@/components/common/file-uploader";
 import {useEffect, useState} from "react";
 import {Category} from "@/model/category/Category";
-import {createCategory, getListCategory} from "@/services/CategoryService";
+import {getListCategory} from "@/services/CategoryService";
 import {createProduct} from "@/services/ProductService";
 import {Product} from "@/model/product/Product";
 import {Brand} from "@/model/brand/Brand";
 import {getListBrand} from "@/services/BrandService";
+import {getServerSession, Session} from "next-auth";
+import {authOptions} from "@/app/(auth)/api/auth/[...nextauth]/route";
 
 const MAX_FILE_SIZE = 5000000;
 const ACCEPTED_IMAGE_TYPES = [
@@ -82,14 +84,20 @@ export default function ProductForm() {
         }
     });
 
+
     const [categories, setCategories] = useState<Category[]>([]);
     const [brands, setBrands] = useState<Brand[]>([]);
     const [brandSelected, setBrandSelected] = useState<Brand>();
 
     useEffect(() => {
         async function fetchCategories() {
+
             try {
-                const response = await getListCategory(0, 100, 'id', 'asc');
+                const session: Session | null = await getServerSession(authOptions);
+                const token = session?.access_token as string;
+
+
+                const response = await getListCategory(0, 100, 'id', 'asc', token);
                 const data = await response.data.json();
                 setCategories(data);
             } catch (error) {
@@ -100,8 +108,13 @@ export default function ProductForm() {
         fetchCategories().then(r => r);
 
         async function fetchBrands() {
+
             try {
-                const response = await getListBrand(0, 100, 'id', 'asc');
+
+                const session: Session | null = await getServerSession(authOptions);
+                const token = session?.access_token as string;
+
+                const response = await getListBrand(0, 100, 'id', 'asc', token);
                 const data = await response.data.json();
                 setBrands(data);
             } catch (error) {
