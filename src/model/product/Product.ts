@@ -3,13 +3,14 @@ import {Brand} from "@/model/brand/Brand";
 import {ProductOption} from "@/model/product/ProductOption";
 
 export type Product = {
+
     id?: number;
     name: string;
     slug: string;
     description: string;
     sku: string;
-    productCategories: ProductCategory[];
-    brand: Brand;
+    productCategories?: ProductCategory[];
+    brand?: Brand;
     options: ProductOption[];
     price: number;
     isDiscount: boolean;

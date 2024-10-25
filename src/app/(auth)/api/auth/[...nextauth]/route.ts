@@ -169,9 +169,10 @@ export const authOptions: AuthOptions = {
         },
         session: async ({ session, token, user }) => {
             session.access_token = token.accessToken as string;
+            session.sub = token.sub;
             // session.roles = decode(token.accessToken as string).realm_access.roles;
             session.error = token.error as string;
-            console.log("[session callback] token " + JSON.stringify(token))
+            // console.log("[session callback] token " + JSON.stringify(token))
 
             return session;
         },

@@ -62,7 +62,7 @@ export default async function ProductListPage() {
                         description="Manage products (Server side table functionalities.)"
                     />
                     <Link
-                        href={'/admin/product/new'}
+                        href={'/admin/products/create'}
                         className={cn(buttonVariants(), 'text-xs md:text-sm')}
                     >
                         <Plus className="mr-2 h-4 w-4"/> Add New
