@@ -1,5 +1,6 @@
 import axios from "axios";
 import {Category} from "@/model/category/Category";
+import apiClientService from "@/utils/ApiClientService";
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL + '/api/products';
 
@@ -53,11 +54,17 @@ export async function createCategory(category: Category, token: string) {
                 Authorization: `Bearer ${token}`
             }
         });
-        if (res) {
+        if (res && res.data) {
             console.log(res.data);
-            return res.data;
+            return res;
         }
     } catch (error) {
         console.log(error);
     }
+}
+
+
+export async function createCate(category: Category, token: string) {
+    const response = await apiClientService.post(`${baseUrl}/dash/categories`, JSON.stringify(category), token);
+    return response.json();
 }

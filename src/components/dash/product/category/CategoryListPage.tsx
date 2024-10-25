@@ -1,9 +1,6 @@
-import {buttonVariants} from '@/components/ui/button';
 import {Heading} from '@/components/ui/heading';
 import {Separator} from '@/components/ui/separator';
-import {cn} from '@/lib/utils';
 import {Plus} from 'lucide-react';
-import Link from 'next/link';
 import {searchParamsCache} from "@/lib/searchparam";
 import PageContainer from "@/components/dash/page-container";
 import {Breadcrumbs} from "@/components/common/breadcrumbs";
@@ -36,7 +33,6 @@ export default async function CategoryListPage() {
     const totalCategories = data.totalElements;
 
     console.log(data);
-    console.log(token);
 
     return (
         <PageContainer>
@@ -47,7 +43,7 @@ export default async function CategoryListPage() {
                         title={`Categories (${totalCategories})`}
                         description="Manage categories (Server side table functionalities.)"
                     />
-                    <CategoryDialog icon={<Plus className="mr-2 h-4 w-4"/>}/>
+                    <CategoryDialog icon={<Plus className="mr-2 h-4 w-4"/>} accessToken={token}/>
                 </div>
                 <Separator/>
                 <CategoryTable data={categories} totalData={totalCategories}/>
