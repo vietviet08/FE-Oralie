@@ -14,7 +14,7 @@ import {Input} from "@/components/ui/input"
 import {Label} from "@/components/ui/label"
 import {ReactNode, useState} from "react";
 import {cn} from "@/lib/utils";
-import {createCategory} from "@/services/CategoryService";
+import {createCate, createCategory} from "@/services/CategoryService";
 import {useToast} from "@/hooks/use-toast";
 
 type Props = {
@@ -45,6 +45,14 @@ export function CategoryDialog({icon, accessToken}: Props) {
                 slug: slug,
                 isDeleted: false
             }, accessToken);
+
+            // const res = await createCate({
+            //     name: name,
+            //     description: description,
+            //     slug: slug,
+            //     isDeleted: false
+            // })
+
             if (res) {
                 toast({
                     title: "Category Created",
@@ -62,48 +70,48 @@ export function CategoryDialog({icon, accessToken}: Props) {
         }
     }
 
-        return (
-            <Dialog>
-                <DialogTrigger asChild>
-                    <Button className={cn(buttonVariants(), 'text-xs md:text-sm')}> {icon} <span>Add New</span></Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-[425px]">
-                    <DialogHeader>
-                        <DialogTitle>New Category</DialogTitle>
-                        <DialogDescription>
-                            Create new category for your products here.
-                        </DialogDescription>
-                    </DialogHeader>
-                    <div className="grid gap-4 py-4">
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="name" className="text-right">
-                                Name
-                            </Label>
-                            <Input id="name"
-                                   value={name}
-                                   className="col-span-3"
-                                   onChange={(e) => {
-                                       setName(e.target.value)
-                                   }}/>
-                        </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="desciption" className="text-right">
-                                Description
-                            </Label>
-                            <Input id="desciption"
-                                   value={description}
-                                   className="col-span-3"
-                                   onChange={(e) => {
-                                       setDescription(e.target.value)
-                                   }}
-                            />
-                        </div>
+    return (
+        <Dialog>
+            <DialogTrigger asChild>
+                <Button className={cn(buttonVariants(), 'text-xs md:text-sm')}> {icon} <span>Add New</span></Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                    <DialogTitle>New Category</DialogTitle>
+                    <DialogDescription>
+                        Create new category for your products here.
+                    </DialogDescription>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                    <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="name" className="text-right">
+                            Name
+                        </Label>
+                        <Input id="name"
+                               value={name}
+                               className="col-span-3"
+                               onChange={(e) => {
+                                   setName(e.target.value)
+                               }}/>
                     </div>
-                    <DialogFooter>
-                        <Button type="button" onClick={handleSubmit}>Create</Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
-        )
-    }
+                    <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="desciption" className="text-right">
+                            Description
+                        </Label>
+                        <Input id="desciption"
+                               value={description}
+                               className="col-span-3"
+                               onChange={(e) => {
+                                   setDescription(e.target.value)
+                               }}
+                        />
+                    </div>
+                </div>
+                <DialogFooter>
+                    <Button type="button" onClick={handleSubmit}>Create</Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    )
+}
 

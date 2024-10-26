@@ -45,22 +45,40 @@ export async function middleware(req: NextRequest) {
     if (access_token && adminPath === pathname && !roles.includes("ADMIN"))
         return NextResponse.redirect(new URL('/', req.url))
 
-    const origin = req.headers.get('origin') ?? '';
-    if (corsOptions.allowedOrigins.includes('*') || corsOptions.allowedOrigins.includes(origin)) {
-        req.headers.set('Access-Control-Allow-Origin', origin);
+    const res = NextResponse.next();
+
+    // if (pathname.startsWith("/api/")) {
+
+        // res.headers.append('Access-Control-Allow-Credentials', "false")
+        // res.headers.append('Access-Control-Allow-Origin', '*')
+        // res.headers.append('Access-Control-Allow-Methods', '*')
+        // res.headers.append(
+        //     'Access-Control-Allow-Headers',
+        //     'Content-Type, Origin, X-Auth-Token, Authorization, X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Date, X-Api-Version'
+        // )
+
+
+        // const origin = req.headers.get('origin') ?? '';
+        // if (corsOptions.allowedOrigins.includes('*') || corsOptions.allowedOrigins.includes(origin)) {
+        // req.headers.set('Access-Control-Allow-Origin', '*');
+        // }
+
+        // req.headers.set('Access-Control-Allow-Origin', '*');
+        // req.headers.set("Access-Control-Allow-Credentials", corsOptions.credentials.toString());
+        // req.headers.set("Access-Control-Allow-Methods", corsOptions.allowedMethods.join(","));
+        // req.headers.set("Access-Control-Allow-Headers", corsOptions.allowedHeaders.join(","));
+        // req.headers.set("Access-Control-Expose-Headers", corsOptions.exposedHeaders.join(","));
+        // req.headers.set("Access-Control-Max-Age", corsOptions.maxAge?.toString() ?? "");
+
+
+        // }
+
+        return res;
+
     }
 
-    req.headers.set("Access-Control-Allow-Credentials", corsOptions.credentials.toString());
-    req.headers.set("Access-Control-Allow-Methods", corsOptions.allowedMethods.join(","));
-    req.headers.set("Access-Control-Allow-Headers", corsOptions.allowedHeaders.join(","));
-    req.headers.set("Access-Control-Expose-Headers", corsOptions.exposedHeaders.join(","));
-    req.headers.set("Access-Control-Max-Age", corsOptions.maxAge?.toString() ?? "");
-
-
-    return NextResponse.next()
-
-}
-
-export const config = {
-    matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
-};
+    export const config = {
+        matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+        // matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
+        // matcher: '/api/:path*',
+    };

@@ -1,6 +1,7 @@
 import axios from "axios";
 import {Category} from "@/model/category/Category";
 import apiClientService from "@/utils/ApiClientService";
+import {applyCors} from "@/utils/cors";
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL + '/api/products';
 
@@ -49,9 +50,10 @@ export async function getCategoryById(id: number, token: string) {
 
 export async function createCategory(category: Category, token: string) {
     try {
+
         const res = await axios.post(`${baseUrl}/dash/categories`, category, {
             headers: {
-                Authorization: `Bearer ${token}`
+                Authorization: `Bearer ${token}`,
             }
         });
         if (res && res.data) {
@@ -64,7 +66,7 @@ export async function createCategory(category: Category, token: string) {
 }
 
 
-export async function createCate(category: Category, token: string) {
-    const response = await apiClientService.post(`${baseUrl}/dash/categories`, JSON.stringify(category), token);
+export async function createCate(category: Category) {
+    const response = await apiClientService.post(`${baseUrl}/dash/categories`, JSON.stringify(category));
     return response.json();
 }
