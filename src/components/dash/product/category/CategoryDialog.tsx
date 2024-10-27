@@ -50,7 +50,6 @@ export function CategoryDialog({icon, accessToken}: Props) {
                     description: "Category has been created successfully",
                     duration: 5000,
                 });
-                setIsOpen(false);
             }
             if (res && res.status === 400) {
                 toast({
@@ -59,7 +58,6 @@ export function CategoryDialog({icon, accessToken}: Props) {
                     description: "Name category already exists",
                     duration: 5000,
                 });
-                setIsOpen(false);
             }
         } catch (e) {
             console.log(e)
@@ -69,7 +67,9 @@ export function CategoryDialog({icon, accessToken}: Props) {
                 description: "Category creation failed",
                 duration: 5000,
             });
+        }finally {
             setIsOpen(false);
+            router.refresh();
         }
     }
 

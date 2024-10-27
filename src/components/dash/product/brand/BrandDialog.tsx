@@ -17,6 +17,7 @@ import {cn} from "@/lib/utils";
 import {createBrand} from "@/services/BrandService";
 import {useSession} from "next-auth/react";
 import {useToast} from "@/hooks/use-toast";
+import {useRouter} from "next/navigation";
 
 type Props = {
     icon: ReactNode;
@@ -27,6 +28,7 @@ export function BrandDialog({icon}: Props) {
     const [name, setName] = useState<string>("");
     const [description, setDescription] = useState<string>("");
     const [isOpen, setIsOpen] = useState(false);
+    const router = useRouter();
     const {toast} = useToast();
 
     const {data: session} = useSession();
@@ -47,7 +49,6 @@ export function BrandDialog({icon}: Props) {
                     description: "Brand has been created successfully",
                     duration: 5000,
                 });
-                setIsOpen(false);
             }
             if (res && res.status === 400) {
                 toast({
@@ -56,7 +57,6 @@ export function BrandDialog({icon}: Props) {
                     description: "Name brand already exists",
                     duration: 5000,
                 });
-                setIsOpen(false);
             }
         } catch (e) {
             console.log(e)
@@ -66,7 +66,9 @@ export function BrandDialog({icon}: Props) {
                 description: "Brand creation failed",
                 duration: 5000,
             });
+        } finally {
             setIsOpen(false);
+            router.refresh();
         }
     }
 

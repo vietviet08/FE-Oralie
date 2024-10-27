@@ -59,7 +59,7 @@ export async function createBrand(brand: Brand, token: string) {
         });
         if (res && res.data) {
             console.log(res.data);
-            return res.data;
+            return res;
         }
     } catch (error) {
         console.log(error);
