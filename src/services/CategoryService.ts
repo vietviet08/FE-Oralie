@@ -4,6 +4,8 @@ import apiClientService from "@/utils/ApiClientService";
 import {applyCors} from "@/utils/cors";
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL + '/api/products';
+const baseUrlTest = "http://localhost:8081";
+
 
 export async function getListCategory(page: number,
                                       size: number,
