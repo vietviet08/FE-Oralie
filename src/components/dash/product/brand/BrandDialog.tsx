@@ -14,6 +14,9 @@ import {Input} from "@/components/ui/input"
 import {Label} from "@/components/ui/label"
 import {ReactNode, useState} from "react";
 import {cn} from "@/lib/utils";
+import {createBrand} from "@/services/BrandService";
+import {useSession} from "next-auth/react";
+import {useToast} from "@/hooks/use-toast";
 
 type Props = {
     icon: ReactNode;
@@ -23,9 +26,52 @@ export function BrandDialog({icon}: Props) {
 
     const [name, setName] = useState<string>("");
     const [description, setDescription] = useState<string>("");
+    const [isOpen, setIsOpen] = useState(false);
+    const {toast} = useToast();
+
+    const {data: session} = useSession();
+    const token = session?.access_token as string;
+
+    async function handleSubmit() {
+
+        try {
+            const res = await createBrand({
+                name: name,
+                description: description,
+                isActive: true,
+            }, token);
+
+            if (res && res.status === 201) {
+                toast({
+                    title: "Brand Created",
+                    description: "Brand has been created successfully",
+                    duration: 5000,
+                });
+                setIsOpen(false);
+            }
+            if (res && res.status === 400) {
+                toast({
+                    variant: "destructive",
+                    title: "Brand Creation Failed",
+                    description: "Name brand already exists",
+                    duration: 5000,
+                });
+                setIsOpen(false);
+            }
+        } catch (e) {
+            console.log(e)
+            toast({
+                variant: "destructive",
+                title: "Brand Creation Failed",
+                description: "Brand creation failed",
+                duration: 5000,
+            });
+            setIsOpen(false);
+        }
+    }
 
     return (
-        <Dialog>
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
                 <Button className={cn(buttonVariants(), 'text-xs md:text-sm')}> {icon} <span>Add New</span></Button>
             </DialogTrigger>
@@ -62,7 +108,7 @@ export function BrandDialog({icon}: Props) {
                     </div>
                 </div>
                 <DialogFooter>
-                    <Button type="submit">Create</Button>
+                    <Button type="button" onClick={handleSubmit}>Create</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

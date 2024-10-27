@@ -16,7 +16,6 @@ const breadcrumbItems = [
     {title: 'Categories', link: '/admin/categories'}
 ];
 
-
 export default async function CategoryListPage() {
 
     const page = searchParamsCache.get('page') - 1;

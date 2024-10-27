@@ -14,8 +14,9 @@ import {Input} from "@/components/ui/input"
 import {Label} from "@/components/ui/label"
 import {ReactNode, useState} from "react";
 import {cn} from "@/lib/utils";
-import {createCate, createCategory} from "@/services/CategoryService";
+import {createCategory} from "@/services/CategoryService";
 import {useToast} from "@/hooks/use-toast";
+import {useRouter} from "next/navigation";
 
 type Props = {
     icon: ReactNode;
@@ -24,21 +25,18 @@ type Props = {
 
 export function CategoryDialog({icon, accessToken}: Props) {
 
+    const [isOpen, setIsOpen] = useState(false);
     const [name, setName] = useState<string>("");
     const [description, setDescription] = useState<string>("");
 
+    const router = useRouter()
     const {toast} = useToast();
 
 
     async function handleSubmit() {
         const slug = name.toLowerCase().replace(/ /g, '-');
 
-        console.log(accessToken)
-        // const session: Session | null = await getServerSession(authOptions);
-        // const token = session?.access_token as string;
         try {
-
-
             const res = await createCategory({
                 name: name,
                 description: description,
@@ -46,32 +44,37 @@ export function CategoryDialog({icon, accessToken}: Props) {
                 isDeleted: false
             }, accessToken);
 
-            // const res = await createCate({
-            //     name: name,
-            //     description: description,
-            //     slug: slug,
-            //     isDeleted: false
-            // })
-
-            if (res) {
+            if (res && res.status === 201) {
                 toast({
                     title: "Category Created",
                     description: "Category has been created successfully",
                     duration: 5000,
                 });
+                setIsOpen(false);
+            }
+            if (res && res.status === 400) {
+                toast({
+                    variant: "destructive",
+                    title: "Category Creation Failed",
+                    description: "Name category already exists",
+                    duration: 5000,
+                });
+                setIsOpen(false);
             }
         } catch (e) {
             console.log(e)
             toast({
+                variant: "destructive",
                 title: "Category Creation Failed",
                 description: "Category creation failed",
                 duration: 5000,
             });
+            setIsOpen(false);
         }
     }
 
     return (
-        <Dialog>
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
                 <Button className={cn(buttonVariants(), 'text-xs md:text-sm')}> {icon} <span>Add New</span></Button>
             </DialogTrigger>

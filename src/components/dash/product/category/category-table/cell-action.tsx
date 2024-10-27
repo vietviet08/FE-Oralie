@@ -10,9 +10,11 @@ import {
 import {Edit, MoreHorizontal, Trash} from 'lucide-react';
 import {useRouter} from 'next/navigation';
 import React, {useState} from 'react';
-import {Product} from "@/model/product/Product";
 import {AlertModal} from "@/components/dash/modal/alert-modal";
 import {Category} from "@/model/category/Category";
+import {deleteCategory} from "@/services/CategoryService";
+import { useToast} from "@/hooks/use-toast";
+import {useSession} from "next-auth/react";
 
 interface CellActionProps {
     data: Category;
@@ -22,8 +24,34 @@ export const CellAction: React.FC<CellActionProps> = ({data}) => {
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
     const router = useRouter();
+    const {toast} = useToast();
+    const {data: session} = useSession();
 
     const onConfirm = async () => {
+        const token = session?.access_token as string;
+
+        try {
+            const res = await deleteCategory(data.id as number, token);
+            if (res && res.status === 200) {
+                toast({
+                    title: "Category deleted",
+                    description: "Category has been deleted successfully",
+                    duration: 5000,
+                });
+            }
+        } catch (error) {
+            console.log(error);
+            toast({
+                variant: "destructive",
+                title: "Category cant be deleted",
+                description: "Category cant be deleted, please try again",
+                duration: 5000,
+            });
+        }finally {
+            setOpen(false);
+            setLoading(false);
+            router.refresh();
+        }
     };
 
     return (
@@ -45,7 +73,7 @@ export const CellAction: React.FC<CellActionProps> = ({data}) => {
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
                     <DropdownMenuItem
-                        onClick={() => router.push(`/admin/user/${data.id}`)}
+                        onClick={() => router.push(`/admin/categories/${data.id}`)}
                     >
                         <Edit className="mr-2 h-4 w-4"/> Update
                     </DropdownMenuItem>

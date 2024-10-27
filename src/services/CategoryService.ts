@@ -2,6 +2,7 @@ import axios from "axios";
 import {Category} from "@/model/category/Category";
 import apiClientService from "@/utils/ApiClientService";
 import {applyCors} from "@/utils/cors";
+import {CategoryGet} from "@/model/category/CategoryGet";
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL + '/api/products';
 const baseUrlTest = "http://localhost:8081";
@@ -31,6 +32,7 @@ export async function getListCategory(page: number,
         }
     } catch (error) {
         console.log(error);
+        throw error;
     }
 }
 
@@ -47,6 +49,7 @@ export async function getCategoryById(id: number, token: string) {
         }
     } catch (error) {
         console.log(error);
+        throw error;
     }
 }
 
@@ -64,11 +67,40 @@ export async function createCategory(category: Category, token: string) {
         }
     } catch (error) {
         console.log(error);
+        throw error;
     }
 }
 
+export async function updateCategory(id: number, category: CategoryGet, token: string) {
+    try {
+        const res = await axios.put(`${baseUrl}/dash/categories/${id}`, category, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        });
+        if (res && res.data) {
+            console.log(res.data);
+            return res;
+        }
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
 
-export async function createCate(category: Category) {
-    const response = await apiClientService.post(`${baseUrl}/dash/categories`, JSON.stringify(category));
-    return response.json();
+export async function deleteCategory(id: number, token: string) {
+    try {
+        const res = await axios.delete(`${baseUrl}/dash/categories/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        });
+        if (res && res.status === 204) {
+            console.log(res);
+            return res;
+        }
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
 }
