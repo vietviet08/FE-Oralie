@@ -62,3 +62,6 @@ export const navItems: NavItem[] = [
         label: 'kanban'
     }
 ];
+
+export const SUCCESS_MESSAGE = "Payment successful";
+export const ERROR_MESSAGE = "Payment has an error"

@@ -17,6 +17,7 @@ import {cn} from "@/lib/utils";
 import {createCategory} from "@/services/CategoryService";
 import {useToast} from "@/hooks/use-toast";
 import {useRouter} from "next/navigation";
+import {FileUploader} from "@/components/common/file-uploader";
 
 type Props = {
     icon: ReactNode;
@@ -87,34 +88,47 @@ export function CategoryDialog({icon, accessToken}: Props) {
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
                     <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="name" className="text-right">
-                            Name
-                        </Label>
-                        <Input id="name"
-                               value={name}
-                               className="col-span-3"
-                               onChange={(e) => {
-                                   setName(e.target.value)
-                               }}/>
+                        {/*<FileUploader*/}
+                        {/*    value={field.value}*/}
+                        {/*    onValueChange={field.onChange}*/}
+                        {/*    maxFiles={1}*/}
+                        {/*    maxSize={4 * 1024 * 1024}*/}
+                        {/*    // disabled={loading}*/}
+                        {/*    // progresses={progresses}*/}
+                        {/*    // pass the onUpload function here for direct upload*/}
+                        {/*    // onUpload={uploadFiles}*/}
+                        {/*    // disabled={isUploading}*/}
+                        {/*/>*/}
                     </div>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="desciption" className="text-right">
-                            Description
-                        </Label>
-                        <Input id="desciption"
-                               value={description}
-                               className="col-span-3"
-                               onChange={(e) => {
-                                   setDescription(e.target.value)
-                               }}
-                        />
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="name" className="text-right">
+                                Name
+                            </Label>
+                            <Input id="name"
+                                   value={name}
+                                   className="col-span-3"
+                                   onChange={(e) => {
+                                       setName(e.target.value)
+                                   }}/>
+                        </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="desciption" className="text-right">
+                                Description
+                            </Label>
+                            <Input id="desciption"
+                                   value={description}
+                                   className="col-span-3"
+                                   onChange={(e) => {
+                                       setDescription(e.target.value)
+                                   }}
+                            />
+                        </div>
                     </div>
-                </div>
-                <DialogFooter>
-                    <Button type="button" onClick={handleSubmit}>Create</Button>
-                </DialogFooter>
+                    <DialogFooter>
+                        <Button type="button" onClick={handleSubmit}>Create</Button>
+                    </DialogFooter>
             </DialogContent>
         </Dialog>
-    )
+)
 }
 
