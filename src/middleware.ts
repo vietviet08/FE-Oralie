@@ -23,10 +23,10 @@ export async function middleware(req: NextRequest) {
         return NextResponse.redirect(new URL('/', req.url))
     }
 
-    if (!access_token && adminPath === pathname) {
+    if (!access_token && pathname.startsWith(adminPath)) {
         return NextResponse.redirect(new URL('/login', req.url))
     }
-    if (access_token && adminPath === pathname && !roles.includes("ADMIN"))
+    if (access_token && pathname.startsWith(adminPath) && !roles.includes("ADMIN"))
         return NextResponse.redirect(new URL('/', req.url))
 
     return NextResponse.next();

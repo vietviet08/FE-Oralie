@@ -31,8 +31,6 @@ export default async function CategoryListPage() {
     const categories: CategoryGet[] = data.data;
     const totalCategories = data.totalElements;
 
-    console.log(data);
-
     return (
         <PageContainer>
             <div className="space-y-4">

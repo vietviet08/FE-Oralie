@@ -18,6 +18,7 @@ import {createCategory} from "@/services/CategoryService";
 import {useToast} from "@/hooks/use-toast";
 import {useRouter} from "next/navigation";
 import {FileUploader} from "@/components/common/file-uploader";
+import {Switch} from "@/components/ui/switch";
 
 type Props = {
     icon: ReactNode;
@@ -29,6 +30,8 @@ export function CategoryDialog({icon, accessToken}: Props) {
     const [isOpen, setIsOpen] = useState(false);
     const [name, setName] = useState<string>("");
     const [description, setDescription] = useState<string>("");
+    const [file, setFile] = useState<File[]>([]);
+    const [isChecked, setChecked] = useState(true);
 
     const router = useRouter()
     const {toast} = useToast();
@@ -41,8 +44,10 @@ export function CategoryDialog({icon, accessToken}: Props) {
             const res = await createCategory({
                 name: name,
                 description: description,
+                image: file[0],
                 slug: slug,
-                isDeleted: false
+                isDeleted: !isChecked,
+                parentId: undefined,
             }, accessToken);
 
             if (res && res.status === 201) {
@@ -87,20 +92,13 @@ export function CategoryDialog({icon, accessToken}: Props) {
                     </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
+                    <FileUploader value={file}
+                                  maxFiles={1}
+                                  multiple={false}
+                                  maxSize={4 * 1024 * 1024}
+                                  onValueChange={setFile} />
+
                     <div className="grid grid-cols-4 items-center gap-4">
-                        {/*<FileUploader*/}
-                        {/*    value={field.value}*/}
-                        {/*    onValueChange={field.onChange}*/}
-                        {/*    maxFiles={1}*/}
-                        {/*    maxSize={4 * 1024 * 1024}*/}
-                        {/*    // disabled={loading}*/}
-                        {/*    // progresses={progresses}*/}
-                        {/*    // pass the onUpload function here for direct upload*/}
-                        {/*    // onUpload={uploadFiles}*/}
-                        {/*    // disabled={isUploading}*/}
-                        {/*/>*/}
-                    </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
                             <Label htmlFor="name" className="text-right">
                                 Name
                             </Label>
@@ -123,10 +121,15 @@ export function CategoryDialog({icon, accessToken}: Props) {
                                    }}
                             />
                         </div>
+
                     </div>
-                    <DialogFooter>
+                <DialogFooter className={"flex items-center justify-between"}>
+                    <div className="flex items-center space-x-2">
+                        <Switch id="button-checked" name={"Activate"} checked={isChecked} onCheckedChange={setChecked}/>
+                        <Label htmlFor="button-checked">Activate</Label>
+                    </div>
                         <Button type="button" onClick={handleSubmit}>Create</Button>
-                    </DialogFooter>
+                </DialogFooter>
             </DialogContent>
         </Dialog>
 )

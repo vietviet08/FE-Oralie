@@ -1,8 +1,7 @@
 import axios from "axios";
 import {Category} from "@/model/category/Category";
-import apiClientService from "@/utils/ApiClientService";
-import {applyCors} from "@/utils/cors";
 import {CategoryGet} from "@/model/category/CategoryGet";
+import {CategoryPost} from "@/model/category/CategoryPost";
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL + '/api/products';
 const baseUrlTest = "http://localhost:8081";
@@ -53,12 +52,29 @@ export async function getCategoryById(id: number, token: string) {
     }
 }
 
-export async function createCategory(category: Category, token: string) {
+export async function createCategory(category: CategoryPost, token: string) {
     try {
+        const formData = new FormData();
 
-        const res = await axios.post(`${baseUrl}/dash/categories`, category, {
+        Object.keys(category).forEach(key => {
+            const value = category[key as keyof CategoryPost];
+            if (value !== undefined) {
+                if (typeof value === "number" || typeof value === "boolean") {
+                    formData.append(key, value.toString());
+                } else {
+                    formData.append(key, value);
+                }
+            }
+        });
+
+        formData.forEach((value, key) => {
+            console.log(`${key}: ${value}`);
+        });
+
+        const res = await axios.post(`${baseUrl}/dash/categories`, formData, {
             headers: {
                 Authorization: `Bearer ${token}`,
+                'Content-Type': 'multipart/form-data',
             }
         });
         if (res && res.data) {
@@ -66,12 +82,16 @@ export async function createCategory(category: Category, token: string) {
             return res;
         }
     } catch (error) {
-        console.log(error);
+        if (axios.isAxiosError(error)) {
+            console.error('Error response:', error.response?.data);
+        } else {
+            console.error('Unexpected error:', error);
+        }
         throw error;
     }
 }
 
-export async function updateCategory(id: number, category: CategoryGet, token: string) {
+export async function updateCategory(id: number, category: CategoryPost, token: string) {
     try {
         const res = await axios.put(`${baseUrl}/dash/categories/${id}`, category, {
             headers: {

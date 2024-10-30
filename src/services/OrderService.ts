@@ -1,4 +1,6 @@
 import axios from "axios";
+import {PayPalInfoRequest} from "@/model/payment/PayPalInfoRequest";
+import {PAYPAL_CANCEL_URL, PAYPAL_CURRENCY, PAYPAL_INTENT, PAYPAL_SUCCESS_URL} from "@/constants/data";
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL + '/api/orders';
 
@@ -35,14 +37,17 @@ export async function getListOrders(page: number,
 //store
 
 //button payment by paypal
-export async function createOrderWithPayPal(token: string, payPalInfoRequest) {
+export async function createOrderWithPayPal(token: string, payPalInfoRequest: PayPalInfoRequest) {
+    payPalInfoRequest.method = "paypal";
+    payPalInfoRequest.currency = PAYPAL_CURRENCY;
+    payPalInfoRequest.intent = PAYPAL_INTENT;
+    payPalInfoRequest.cancelUrl = PAYPAL_CANCEL_URL;
+    payPalInfoRequest.successUrl = PAYPAL_SUCCESS_URL;
     try {
-        const response = await axios.post("/api/store/orders/paypal", {
-            method: "POST",
+        const response = await axios.post("/api/store/orders/paypal", payPalInfoRequest, {
             headers: {
                 Authorization: `Bearer ${token}`
             },
-            body: JSON.stringify(payPalInfoRequest),
         });
 
         if (response && response.data) {
