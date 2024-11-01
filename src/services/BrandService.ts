@@ -1,5 +1,7 @@
 import axios from "axios";
 import {Brand} from "@/model/brand/Brand";
+import {CategoryPost} from "@/model/category/CategoryPost";
+import {BrandPost} from "@/model/brand/BrandPost";
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL + '/api/products';
 
@@ -49,12 +51,26 @@ export async function getBrandById(id: number, token: string) {
     }
 }
 
-export async function createBrand(brand: Brand, token: string) {
+export async function createBrand(brand: BrandPost, token: string) {
     try {
+
+        const formData = new FormData();
+
+        Object.keys(brand).forEach(key => {
+            const value = brand [key as keyof BrandPost];
+            if (value !== undefined) {
+                if (typeof value === "number" || typeof value === "boolean") {
+                    formData.append(key, value.toString());
+                } else {
+                    formData.append(key, value);
+                }
+            }
+        });
 
         const res = await axios.post(`${baseUrl}/dash/brands`, brand, {
             headers: {
                 Authorization: `Bearer ${token}`,
+                'Content-Type': 'multipart/form-data',
             }
         });
         if (res && res.data) {

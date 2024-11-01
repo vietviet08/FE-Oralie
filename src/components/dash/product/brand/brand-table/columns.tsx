@@ -10,20 +10,20 @@ export const columns: ColumnDef<Brand>[] = [
         header: 'ID'
     },
     {
-        accessorKey: 'photo_url',
+        accessorKey: 'image',
         header: 'IMAGE',
-        // cell: ({row}) => {
-        //     return (
-        //         <div className="relative aspect-square">
-        //             <Image
-        //                 src={row.getValue('photo_url')}
-        //                 alt={row.getValue('name')}
-        //                 fill
-        //                 className="rounded-lg"
-        //             />
-        //         </div>
-        //     );
-        // }
+        cell: ({row}) => {
+            return (
+                <div className="relative aspect-square">
+                    <Image
+                        src={row.getValue('image')}
+                        alt={row.getValue('name')}
+                        fill
+                        className="rounded-lg object-cover"
+                    />
+                </div>
+            );
+        }
     },
     {
         accessorKey: 'name',

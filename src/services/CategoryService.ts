@@ -4,7 +4,6 @@ import {CategoryGet} from "@/model/category/CategoryGet";
 import {CategoryPost} from "@/model/category/CategoryPost";
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL + '/api/products';
-const baseUrlTest = "http://localhost:8081";
 
 
 export async function getListCategory(page: number,

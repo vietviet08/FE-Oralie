@@ -1,8 +1,7 @@
-export type Brand = {
-    id?: number;
+export type BrandPost = {
     name: string;
     description: string;
-    image?: string;
+    image?: File;
     isActive: boolean;
 }
 

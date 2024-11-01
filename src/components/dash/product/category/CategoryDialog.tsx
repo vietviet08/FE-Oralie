@@ -50,7 +50,7 @@ export function CategoryDialog({icon, accessToken}: Props) {
                 parentId: undefined,
             }, accessToken);
 
-            if (res && res.status === 201) {
+            if (res && res.status === 200) {
                 toast({
                     title: "Category Created",
                     description: "Category has been created successfully",
