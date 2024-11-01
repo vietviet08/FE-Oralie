@@ -7,7 +7,7 @@ export type ProductPost = {
     sku?: string;
     categoryIds?: number[];
     brandId?: number;
-    imagesUrl?: string[];
+    images?: File[];
     options?: ProductOption[];
     price: number;
     discount?: number;
