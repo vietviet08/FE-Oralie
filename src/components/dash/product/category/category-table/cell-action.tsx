@@ -12,17 +12,38 @@ import {useRouter} from 'next/navigation';
 import React, {useState} from 'react';
 import {AlertModal} from "@/components/dash/modal/alert-modal";
 import {Category} from "@/model/category/Category";
-import {deleteCategory} from "@/services/CategoryService";
+import { deleteCategory, updateCategory} from "@/services/CategoryService";
 import { useToast} from "@/hooks/use-toast";
 import {useSession} from "next-auth/react";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+
+} from "@/components/ui/dialog";
+import {FileUploader} from "@/components/common/file-uploader";
+import {Label} from "@/components/ui/label";
+import {Input} from "@/components/ui/input";
+import {Switch} from "@/components/ui/switch";
 
 interface CellActionProps {
     data: Category;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({data}) => {
+
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [name, setName] = useState<string>(data.name);
+    const [description, setDescription] = useState<string>(data.description);
+    const [file, setFile] = useState<File[]>([]);
+    const [isChecked, setChecked] = useState(!data.isDeleted);
+
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
+
     const router = useRouter();
     const {toast} = useToast();
     const {data: session} = useSession();
@@ -54,6 +75,53 @@ export const CellAction: React.FC<CellActionProps> = ({data}) => {
         }
     };
 
+    const handleUpdate = () => {
+        setIsDialogOpen(true);
+    };
+
+    const handleSubmit = async () => {
+
+        const accessToken = session?.access_token as string;
+        const slug = name.toLowerCase().replace(/ /g, '-');
+        try {
+            const res = await updateCategory(data.id as number,{
+                name: name,
+                description: description,
+                image: file[0],
+                slug: slug,
+                isDeleted: !isChecked,
+                parentId: undefined,
+            }, accessToken);
+
+            if (res && res.status === 200) {
+                toast({
+                    title: "Category Updated",
+                    description: "Category has been updated successfully",
+                    duration: 5000,
+                });
+            }
+            if (res && res.status === 400) {
+                toast({
+                    variant: "destructive",
+                    title: "Category Update Failed",
+                    description: "Name category already exists",
+                    duration: 5000,
+                });
+            }
+        } catch (e) {
+            console.log(e)
+            toast({
+                variant: "destructive",
+                title: "Category Update Failed",
+                description: "Category update failed",
+                duration: 5000,
+            });
+        }finally {
+            setIsDialogOpen(false);
+            router.refresh();
+        }
+    };
+
     return (
         <>
             <AlertModal
@@ -73,7 +141,8 @@ export const CellAction: React.FC<CellActionProps> = ({data}) => {
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
                     <DropdownMenuItem
-                        onClick={() => router.push(`/admin/categories/${data.id}`)}
+                        // onClick={() => router.push(`/admin/categories/${data.id}`)}
+                    onClick={handleUpdate}
                     >
                         <Edit className="mr-2 h-4 w-4"/> Update
                     </DropdownMenuItem>
@@ -82,6 +151,59 @@ export const CellAction: React.FC<CellActionProps> = ({data}) => {
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
+
+            {/*update*/}
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                        <DialogTitle>Update Category</DialogTitle>
+                        <DialogDescription>
+                            Update category for your products here.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                        <FileUploader value={file}
+                                      maxFiles={1}
+                                      multiple={false}
+                                      maxSize={4 * 1024 * 1024}
+                                      onValueChange={setFile} />
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="name" className="text-right">
+                                Name
+                            </Label>
+                            <Input id="name"
+                                   value={name}
+                                   className="col-span-3"
+                                   onChange={(e) => {
+                                       setName(e.target.value)
+                                   }}/>
+                        </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="desciption" className="text-right">
+                                Description
+                            </Label>
+                            <Input id="desciption"
+                                   value={description}
+                                   className="col-span-3"
+                                   onChange={(e) => {
+                                       setDescription(e.target.value)
+                                   }}
+                            />
+                        </div>
+                    </div>
+                    <DialogFooter className={"flex items-center justify-between"}>
+                        <div className="flex items-center space-x-2">
+                            <Switch id="button-checked" name={"Activate"} checked={isChecked} onCheckedChange={setChecked}/>
+                            <Label htmlFor="button-checked">Activate</Label>
+                        </div>
+                        <Button type="button" onClick={handleSubmit}>Update</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
         </>
     );
+
+
+
 };

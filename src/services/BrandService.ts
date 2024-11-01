@@ -67,7 +67,7 @@ export async function createBrand(brand: BrandPost, token: string) {
             }
         });
 
-        const res = await axios.post(`${baseUrl}/dash/brands`, brand, {
+        const res = await axios.post(`${baseUrl}/dash/brands`, formData, {
             headers: {
                 Authorization: `Bearer ${token}`,
                 'Content-Type': 'multipart/form-data',
@@ -83,12 +83,26 @@ export async function createBrand(brand: BrandPost, token: string) {
     }
 }
 
-export async function updateBrand(id: number, brand: Brand, token: string) {
+export async function updateBrand(id: number, brand: BrandPost, token: string) {
     try {
 
-        const res = await axios.put(`${baseUrl}/dash/brands/${id}`, brand, {
+        const formData = new FormData();
+
+        Object.keys(brand).forEach(key => {
+            const value = brand[key as keyof BrandPost];
+            if (value !== undefined) {
+                if (typeof value === "number" || typeof value === "boolean") {
+                    formData.append(key, value.toString());
+                } else {
+                    formData.append(key, value);
+                }
+            }
+        });
+
+        const res = await axios.put(`${baseUrl}/dash/brands/${id}`, formData, {
             headers: {
                 Authorization: `Bearer ${token}`,
+                'Content-Type': 'multipart/form-data',
             }
         });
         if (res && res.data) {

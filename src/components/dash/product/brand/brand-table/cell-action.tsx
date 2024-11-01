@@ -14,13 +14,32 @@ import {AlertModal} from "@/components/dash/modal/alert-modal";
 import {Brand} from "@/model/brand/Brand";
 import {useToast} from "@/hooks/use-toast";
 import {useSession} from "next-auth/react";
-import {deleteBrand} from "@/services/BrandService";
+import {deleteBrand, updateBrand} from "@/services/BrandService";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle
+} from "@/components/ui/dialog";
+import {FileUploader} from "@/components/common/file-uploader";
+import {Label} from "@/components/ui/label";
+import {Input} from "@/components/ui/input";
+import {Switch} from "@/components/ui/switch";
 
 interface CellActionProps {
     data: Brand;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({data}) => {
+
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [name, setName] = useState<string>(data.name);
+    const [description, setDescription] = useState<string>(data.description);
+    const [file, setFile] = useState<File[]>([]);
+    const [isChecked, setChecked] = useState(data.isActive);
+
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
     const router = useRouter();
@@ -55,6 +74,51 @@ export const CellAction: React.FC<CellActionProps> = ({data}) => {
         }
     };
 
+    const handleUpdate = () => {
+        setIsDialogOpen(true);
+    };
+
+    const handleSubmit = async () => {
+
+        const accessToken = session?.access_token as string;
+
+        try {
+            const res = await updateBrand(data.id as number,{
+                name: name,
+                description: description,
+                image: file[0],
+                isActive: isChecked,
+            }, accessToken);
+
+            if (res && res.status === 200) {
+                toast({
+                    title: "Brand Updated",
+                    description: "Brand has been updated successfully",
+                    duration: 5000,
+                });
+            }
+            if (res && res.status === 400) {
+                toast({
+                    variant: "destructive",
+                    title: "Brand Update Failed",
+                    description: "Name brand already exists",
+                    duration: 5000,
+                });
+            }
+        } catch (e) {
+            console.log(e)
+            toast({
+                variant: "destructive",
+                title: "Brand Update Failed",
+                description: "Brand update failed",
+                duration: 5000,
+            });
+        }finally {
+            setIsDialogOpen(false);
+            router.refresh();
+        }
+    };
+
 
     return (
         <>
@@ -73,10 +137,7 @@ export const CellAction: React.FC<CellActionProps> = ({data}) => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
-
-                    <DropdownMenuItem
-                        onClick={() => router.push(`/admin/brands/${data.id}`)}
-                    >
+                    <DropdownMenuItem onClick={handleUpdate}>
                         <Edit className="mr-2 h-4 w-4"/> Update
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => setOpen(true)}>
@@ -84,6 +145,56 @@ export const CellAction: React.FC<CellActionProps> = ({data}) => {
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
+
+            {/*update*/}
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                        <DialogTitle>Update Brand</DialogTitle>
+                        <DialogDescription>
+                            Update brand for your products here.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                        <FileUploader value={file}
+                                      maxFiles={1}
+                                      multiple={false}
+                                      maxSize={4 * 1024 * 1024}
+                                      onValueChange={setFile} />
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="name" className="text-right">
+                                Name
+                            </Label>
+                            <Input id="name"
+                                   value={name}
+                                   className="col-span-3"
+                                   onChange={(e) => {
+                                       setName(e.target.value)
+                                   }}/>
+                        </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="desciption" className="text-right">
+                                Description
+                            </Label>
+                            <Input id="desciption"
+                                   value={description}
+                                   className="col-span-3"
+                                   onChange={(e) => {
+                                       setDescription(e.target.value)
+                                   }}
+                            />
+                        </div>
+                    </div>
+                    <DialogFooter className={"flex items-center justify-between"}>
+                        <div className="flex items-center space-x-2">
+                            <Switch id="button-checked" name={"Activate"} checked={isChecked} onCheckedChange={setChecked}/>
+                            <Label htmlFor="button-checked">Activate</Label>
+                        </div>
+                        <Button type="button" onClick={handleSubmit}>Update</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
         </>
     );
 };

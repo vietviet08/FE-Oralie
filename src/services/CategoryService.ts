@@ -1,6 +1,4 @@
 import axios from "axios";
-import {Category} from "@/model/category/Category";
-import {CategoryGet} from "@/model/category/CategoryGet";
 import {CategoryPost} from "@/model/category/CategoryPost";
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL + '/api/products';
@@ -92,9 +90,23 @@ export async function createCategory(category: CategoryPost, token: string) {
 
 export async function updateCategory(id: number, category: CategoryPost, token: string) {
     try {
-        const res = await axios.put(`${baseUrl}/dash/categories/${id}`, category, {
+        const formData = new FormData();
+
+        Object.keys(category).forEach(key => {
+            const value = category[key as keyof CategoryPost];
+            if (value !== undefined) {
+                if (typeof value === "number" || typeof value === "boolean") {
+                    formData.append(key, value.toString());
+                } else {
+                    formData.append(key, value);
+                }
+            }
+        });
+
+        const res = await axios.put(`${baseUrl}/dash/categories/${id}`, formData, {
             headers: {
                 Authorization: `Bearer ${token}`,
+                'Content-Type': 'multipart/form-data',
             }
         });
         if (res && res.data) {

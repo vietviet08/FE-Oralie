@@ -14,11 +14,12 @@ export const columns: ColumnDef<Brand>[] = [
         header: 'IMAGE',
         cell: ({row}) => {
             return (
-                <div className="relative aspect-square">
+                <div className="relative aspect-square w-16 h-16">
                     <Image
                         src={row.getValue('image')}
                         alt={row.getValue('name')}
                         fill
+                        sizes={'100%'}
                         className="rounded-lg object-cover"
                     />
                 </div>
