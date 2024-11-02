@@ -108,7 +108,10 @@ export async function createProduct(product: ProductPost, token: string) {
             console.log(`${key}: ${value}`);
         });
 
-        const res = await axios.post(`${baseUrl}/dash/products`, formData, {
+        const temptUrl = "http://localhost:8081/dash/products";
+        const mainUrl = `${baseUrl}/dash/products`;
+
+        const res = await axios.post(mainUrl, formData, {
             headers: {
                 Authorization: `Bearer ${token}`,
                 'Content-Type': 'multipart/form-data',

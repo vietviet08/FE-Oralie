@@ -1,11 +1,13 @@
 import {ProductCategory} from "@/model/product/ProductCategory";
 import {Brand} from "@/model/brand/Brand";
 import {ProductOption} from "@/model/product/ProductOption";
+import { ProductImage } from "./ProductImage";
 
 export type Product = {
 
     id?: number;
     name: string;
+    productImage: ProductImage[];
     slug: string;
     description: string;
     sku: string;
