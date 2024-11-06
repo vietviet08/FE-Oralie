@@ -28,7 +28,7 @@ import { FileUploader } from "@/components/common/file-uploader";
 import { useEffect, useState } from "react";
 import { Category } from "@/model/category/Category";
 import { getListCategory } from "@/services/CategoryService";
-import { createProduct } from "@/services/ProductService";
+import { createProduct, updateProduct } from "@/services/ProductService";
 import { Brand } from "@/model/brand/Brand";
 import { getListBrand } from "@/services/BrandService";
 import { useSession } from "next-auth/react";
@@ -38,8 +38,13 @@ import { List, TrashIcon } from "lucide-react";
 import { MultiSelect } from "@/components/common/multi-select";
 import { PlusIcon } from "@radix-ui/react-icons";
 import { useToast } from "@/hooks/use-toast";
+import { Product } from "@/model/product/Product";
 
-const MAX_FILE_SIZE = 5000000;
+interface ProductFormProps {
+  product?: Product;
+}
+
+const MAX_FILE_SIZE = 8000000;
 const ACCEPTED_IMAGE_TYPES = [
   "image/jpeg",
   "image/jpg",
@@ -55,7 +60,7 @@ const formSchema = z.object({
     .refine(
       (files) =>
         files?.every((file: { size: number }) => file.size <= MAX_FILE_SIZE),
-      `Max file size is 5MB.`
+      `Max file size is 8MB.`
     )
     .refine(
       (files) =>
@@ -89,13 +94,18 @@ const formSchema = z.object({
     .optional(),
 });
 
-export default function ProductForm() {
+export default function ProductForm({ product }: ProductFormProps) {
   const defaultValues = {
-    name: "",
-    category: [],
-    price: "0",
-    description: "",
-    options: [{ name: "", value: "" }],
+    name: product?.name || "",
+    image: product?.images || [],
+    category:
+      product?.productCategories?.map(
+        (category) => category.id?.toString() ?? ""
+      ) || [],
+    brand: product?.brand?.id?.toString() || "",
+    price: product?.price.toString() || "",
+    description: product?.description || "",
+    options: product?.options || [],
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -143,7 +153,7 @@ export default function ProductForm() {
   }, []);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const product: ProductPost = {
+    const productPost: ProductPost = {
       name: values.name,
       images: values.image,
       slug: values.name.toLowerCase().replace(/ /g, "-"),
@@ -164,14 +174,27 @@ export default function ProductForm() {
     console.log("Product data:", product);
 
     try {
-      const res = await createProduct(product, token);
-
-      if (res && res.status === 200) {
-        toast({
-          title: "Product Created",
-          description: `Product has been created successfully with id ${res.data.id}`,
-          duration: 5000,
-        });
+      let res;
+      if (product) {
+        if (product.id !== undefined) {
+          res = await updateProduct(product.id, productPost, token);
+          if (res && res.status === 200) {
+            toast({
+              title: "Product Updated",
+              description: `Product has been updated successfully with id ${res.data.id}`,
+              duration: 5000,
+            });
+          }
+        }
+      } else {
+        res = await createProduct(productPost, token);
+        if (res && res.status === 200) {
+          toast({
+            title: "Product Created",
+            description: `Product has been created successfully with id ${res.data.id}`,
+            duration: 5000,
+          });
+        }
       }
     } catch (error) {
       console.log(error);
@@ -189,7 +212,7 @@ export default function ProductForm() {
     <Card className="mx-auto w-full">
       <CardHeader>
         <CardTitle className="text-left text-2xl font-bold">
-          Add New Product
+          {product ? <>Update Product</> : <>Create Product</>}
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -234,30 +257,7 @@ export default function ProductForm() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Category</FormLabel>
-                    {/* <Select
-                      onValueChange={(value) => {
-                        field.onChange(value);
-                        // setCategorySelected(value);
-                      }}
-                      // value={field.value[field.value.length - 1]}
-                      value={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select category" />
-                        </SelectTrigger>
-                      </FormControl>
-                      {/* <SelectContent>
-                        {categories.map((category) => (
-                          <SelectItem
-                            key={category.id}
-                            value={category.id?.toString() || ""}
-                          >
-                            {category.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent> */}
-                    {/* </Select> */}
+
                     <MultiSelect
                       options={categories.map((category) => ({
                         label: category.name,
@@ -266,14 +266,13 @@ export default function ProductForm() {
                       onValueChange={(value) => {
                         field.onChange(value);
                       }}
+                      defaultValue={field.value}
+                      value={field.value}
                       placeholder="Select Category"
                       variant="inverted"
                       animation={2}
                       maxCount={2}
                     />
-                    {/* <FormDescription>
-                      Selected category: {categorySelected}
-                    </FormDescription> */}
                     <FormMessage />
                   </FormItem>
                 )}
@@ -405,7 +404,7 @@ export default function ProductForm() {
               </button>
             </div>
 
-            <Button type="submit">Add Product</Button>
+            <Button type="submit">{product ? <>Update</> : <>Create</>}</Button>
           </form>
         </Form>
       </CardContent>
