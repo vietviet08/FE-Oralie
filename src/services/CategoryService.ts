@@ -119,6 +119,25 @@ export async function updateCategory(id: number, category: CategoryPost, token: 
     }
 }
 
+export async function updateAvailableCategory(id: number, token: string) {
+
+    try {
+        const res = await axios.put(`${baseUrl}/dash/categories/available/${id}`, {}, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        });
+        if (res && res.status === 200) {
+            console.log(res);
+            return res;
+        }
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+
+}
+
 export async function deleteCategory(id: number, token: string) {
     try {
         const res = await axios.delete(`${baseUrl}/dash/categories/${id}`, {

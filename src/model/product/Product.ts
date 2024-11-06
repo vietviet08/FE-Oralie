@@ -15,7 +15,7 @@ export type Product = {
     brand?: Brand;
     options: ProductOption[];
     price: number;
-    isDiscount: boolean;
+    isDiscounted: boolean;
     discount: number;
     quantity: number;
     isAvailable?: boolean;

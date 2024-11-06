@@ -4,6 +4,14 @@ import Image from "next/image";
 import { CellAction } from "@/components/dash/product/brand/brand-table/cell-action";
 import { Brand } from "@/model/brand/Brand";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Icons } from "@/components/icons";
+
+const truncateText = (text: string, maxLength: number) => {
+  if (text.length > maxLength) {
+    return text.substring(0, maxLength) + "...";
+  }
+  return text;
+};
 
 export const columns: ColumnDef<Brand>[] = [
   {
@@ -42,10 +50,26 @@ export const columns: ColumnDef<Brand>[] = [
   {
     accessorKey: "description",
     header: "DESCRIPTION",
+    cell: ({ row }) => {
+      const description = row.getValue("description") as string;
+      return <span>{truncateText(description, 50)}</span>;
+    },
   },
   {
     accessorKey: "isActive",
-    header: "ACTIVE",
+    header: () => <div className="text-center">ACTIVE</div>,
+    cell: ({ row }) => {
+      const isActive = row.getValue("isActive") as boolean;
+      return (
+        <div className="flex justify-center">
+          {isActive ? (
+            <Icons.check className="text-green-500" />
+          ) : (
+            <Icons.close className="text-red-500" />
+          )}
+        </div>
+      );
+    },
   },
 
   {

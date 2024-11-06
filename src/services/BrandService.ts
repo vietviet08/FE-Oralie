@@ -115,6 +115,23 @@ export async function updateBrand(id: number, brand: BrandPost, token: string) {
     }
 }
 
+export async function updateAvailabelBrand(id: number, token: string){
+    try {
+        const res = await axios.put(`${baseUrl}/dash/brands/available/${id}`,{}, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        if (res) {
+            console.log(res);
+            return res;
+        }
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
 export async function deleteBrand(id: number, token: string) {
     try {
         const res = await axios.delete(`${baseUrl}/dash/brands/${id}`, {
@@ -122,7 +139,7 @@ export async function deleteBrand(id: number, token: string) {
                 Authorization: `Bearer ${token}`
             }
         });
-        if (res) {
+        if (res && res.status === 204) {
             console.log(res);
             return res;
         }

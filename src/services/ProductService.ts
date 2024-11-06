@@ -137,8 +137,38 @@ export async function updateProduct(id: number, product: Product): Promise<Produ
     return response.json();
 }
 
-export async function deleteProduct(id: number) {
-    const response = await apiClientService.delete(`${baseUrl}/dash/products/${id}`);
-    return response;
+export async function updateAvailabelProduct(id: number, token : string) {
+    try {
+        const res = await axios.put(`${baseUrl}/dash/products/available/${id}`, {}, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        });
+        if (res && res.status === 200) {
+            console.log(res);
+            return res;
+        }
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
+
+export async function deleteProduct(id: number, token : string) {
+    try {
+        const res = await axios.delete(`${baseUrl}/dash/products/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        });
+        if (res && res.status === 204) {
+            console.log(res);
+            return res;
+        }
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
 }
 
