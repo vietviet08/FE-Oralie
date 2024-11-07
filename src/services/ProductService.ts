@@ -113,12 +113,15 @@ export async function createProduct(product: ProductPost, token: string) {
             formData.append(`options[${index}].value`, option.value);
         });
 
+        product.specifications?.forEach((specification, index) => {
+            formData.append(`specifications[${index}].name`, specification.name);
+            formData.append(`specifications[${index}].value`, specification.value);
+        });
 
         formData.forEach((value, key) => {
             console.log(`${key}: ${value}`);
         });
 
-        const temptUrl = "http://localhost:8081/dash/products";
         const mainUrl = `${baseUrl}/dash/products`;
 
         const res = await axios.post(mainUrl, formData, {
@@ -173,6 +176,10 @@ export async function updateProduct(id: number, product: ProductPost, token: str
             formData.append(`options[${index}].value`, option.value);
         });
 
+        product.specifications?.forEach((specification, index) => {
+            formData.append(`specifications[${index}].name`, specification.name);
+            formData.append(`specifications[${index}].value`, specification.value);
+        });
 
         formData.forEach((value, key) => {
             console.log(`${key}: ${value}`);

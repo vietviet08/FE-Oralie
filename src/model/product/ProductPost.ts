@@ -1,4 +1,5 @@
-import {ProductOption} from "@/model/product/ProductOption";
+import { ProductOption } from "./ProductOption";
+import { ProductSpecification } from "./ProductSpecification";
 
 export type ProductPost = {
     name?: string;
@@ -9,6 +10,7 @@ export type ProductPost = {
     brandId?: number;
     images?: File[];
     options?: ProductOption[];
+    specifications?: ProductSpecification[];
     price: number;
     discount?: number;
     quantity: number;

@@ -1,5 +1,5 @@
 "use client";
-
+import { EditorContent, EditorRoot } from "novel";
 import * as React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
@@ -34,11 +34,12 @@ import { getListBrand } from "@/services/BrandService";
 import { useSession } from "next-auth/react";
 import { CategoryGet } from "@/model/category/CategoryGet";
 import { ProductPost } from "@/model/product/ProductPost";
-import { List, TrashIcon } from "lucide-react";
+import { Edit, List, TrashIcon } from "lucide-react";
 import { MultiSelect } from "@/components/common/multi-select";
 import { PlusIcon } from "@radix-ui/react-icons";
 import { useToast } from "@/hooks/use-toast";
 import { Product } from "@/model/product/Product";
+import { spec } from "node:test/reporters";
 
 interface ProductFormProps {
   product?: Product;
@@ -92,6 +93,14 @@ const formSchema = z.object({
       })
     )
     .optional(),
+  specifications: z
+    .array(
+      z.object({
+        name: z.string().nonempty("Specification name is required"),
+        value: z.string().nonempty("Specification value is required"),
+      })
+    )
+    .optional(),
 });
 
 export default function ProductForm({ product }: ProductFormProps) {
@@ -106,6 +115,7 @@ export default function ProductForm({ product }: ProductFormProps) {
     price: product?.price.toString() || "",
     description: product?.description || "",
     options: product?.options || [],
+    specifications: product?.specifications || [],
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -162,6 +172,7 @@ export default function ProductForm({ product }: ProductFormProps) {
       categoryIds: values.category.map((id) => parseInt(id, 10)),
       brandId: parseInt(values.brand, 10),
       options: values.options || [],
+      specifications: values.specifications || [],
       price: parseFloat(values.price),
       isDiscounted: false,
       discount: 0,
@@ -401,6 +412,55 @@ export default function ProductForm({ product }: ProductFormProps) {
               >
                 <PlusIcon className="h-5 w-5" />
                 Add Option
+              </button>
+            </div>
+
+            <div className="flex flex-col gap-4">
+              <FormLabel>Specifications</FormLabel>
+              {fields.map((field, index) => (
+                <div key={field.id} className="flex gap-4 items-center">
+                  <FormField
+                    control={form.control}
+                    name={`specifications.${index}.name`}
+                    render={({ field }) => (
+                      <FormItem className="flex-1">
+                        <FormLabel>Specification Name</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Specification Name" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name={`specifications.${index}.value`}
+                    render={({ field }) => (
+                      <FormItem className="flex-1">
+                        <FormLabel>Specification Value</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Specification Value" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <Button
+                    type="button"
+                    onClick={() => remove(index)}
+                    className="mt-8 text-red-500 flex items-center bg-transparent hover:bg-rose-200"
+                  >
+                    <TrashIcon className="h-5 w-5 hover:text-white" />
+                  </Button>
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={() => append({ name: "", value: "" })}
+                className="flex items-center gap-2 text-blue-500"
+              >
+                <PlusIcon className="h-5 w-5" />
+                Add Specification
               </button>
             </div>
 

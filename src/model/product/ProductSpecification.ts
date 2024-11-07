@@ -1,4 +1,4 @@
-export type ProductOptionPost = {
+export type ProductSpecification = {
     name: string;
     value: string;
 }
