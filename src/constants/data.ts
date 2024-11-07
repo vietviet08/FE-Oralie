@@ -66,7 +66,6 @@ export const navItems: NavItem[] = [
 
 
 //payment
-
 const urlClient = process.env.NEXT_PUBLIC_BASE_URL;
 export const PAYPAL_SUCCESS_URL = `${urlClient}/payment/success`;
 export const PAYPAL_CANCEL_URL = `${urlClient}/payment/cancel`;
@@ -74,3 +73,6 @@ export const PAYPAL_CURRENCY = "USD";
 export const PAYPAL_INTENT = "sale";
 export const SUCCESS_MESSAGE = "Payment successful";
 export const ERROR_MESSAGE = "Payment has an error";
+
+//api test
+export const testUrlProductService = 'http://localhost:8081';

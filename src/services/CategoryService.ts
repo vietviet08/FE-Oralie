@@ -1,5 +1,6 @@
 import axios from "axios";
 import {CategoryPost} from "@/model/category/CategoryPost";
+import { testUrlProductService } from "@/constants/data";
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL + '/api/products';
 
@@ -9,6 +10,8 @@ export async function getListCategory(page: number,
                                       sortBy: string,
                                       sort: string,
                                       token: string) {
+
+    const testUrl = testUrlProductService + "/dash/categories";
     try {
         const res = await axios.get(`${baseUrl}/dash/categories`, {
             params: {

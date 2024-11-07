@@ -3,8 +3,10 @@ import {ProductPage} from "@/model/product/ProductPage";
 import {ProductPost} from "@/model/product/ProductPost";
 import {Product} from "@/model/product/Product";
 import axios from "axios";
+import { testUrlProductService } from "@/constants/data";
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL + '/api/products';
+const testUrl = testUrlProductService;
 
 export async function getListProduct(page: number,
                                      size: number,
@@ -122,6 +124,7 @@ export async function createProduct(product: ProductPost, token: string) {
             console.log(`${key}: ${value}`);
         });
 
+        const test = `${testUrl}/dash/products`;
         const mainUrl = `${baseUrl}/dash/products`;
 
         const res = await axios.post(mainUrl, formData, {
@@ -184,6 +187,9 @@ export async function updateProduct(id: number, product: ProductPost, token: str
         formData.forEach((value, key) => {
             console.log(`${key}: ${value}`);
         });
+
+
+        const test = `${testUrl}/dash/products/${id}`;
 
         const mainUrl = `${baseUrl}/dash/products/${id}`;
 

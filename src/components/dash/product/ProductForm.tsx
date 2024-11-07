@@ -1,4 +1,5 @@
 "use client";
+import "react-quill/dist/quill.snow.css";
 import { EditorContent, EditorRoot } from "novel";
 import * as React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -40,6 +41,9 @@ import { PlusIcon } from "@radix-ui/react-icons";
 import { useToast } from "@/hooks/use-toast";
 import { Product } from "@/model/product/Product";
 import { spec } from "node:test/reporters";
+import Tiptap from "@/components/common/editor";
+import ReactQuill from "react-quill";
+import { useRouter } from "next/navigation";
 
 interface ProductFormProps {
   product?: Product;
@@ -52,6 +56,16 @@ const ACCEPTED_IMAGE_TYPES = [
   "image/png",
   "image/webp",
 ];
+
+const modulesQuill = {
+  toolbar: [
+    [{ header: [1, 2, 3, 4, 5, 6, false] }],
+    ["bold", "italic", "underline", "strike", "blockquote"],
+    [{ align: ["right", "center", "justify"] }],
+    [{ list: "ordered" }, { list: "bullet" }],
+    ["link", "image"],
+  ],
+};
 
 const formSchema = z.object({
   image: z
@@ -76,7 +90,7 @@ const formSchema = z.object({
   category: z.array(z.string()).nonempty({
     message: "You have to select at least one category.",
   }),
-  brand: z.string().nonempty({
+  brand: z.string().min(1, {
     message: "You have to select at least one brand.",
   }),
   price: z.string().refine((value) => !isNaN(parseFloat(value)), {
@@ -88,25 +102,47 @@ const formSchema = z.object({
   options: z
     .array(
       z.object({
-        name: z.string().nonempty("Option name is required"),
-        value: z.string().nonempty("Option value is required"),
+        name: z.string().min(1, "Option name is required"),
+        value: z.string().min(1, "Option value is required"),
       })
     )
     .optional(),
   specifications: z
     .array(
       z.object({
-        name: z.string().nonempty("Specification name is required"),
-        value: z.string().nonempty("Specification value is required"),
+        name: z.string().min(1, "Specification name is required"),
+        value: z.string().min(1, "Specification value is required"),
       })
     )
     .optional(),
 });
 
 export default function ProductForm({ product }: ProductFormProps) {
-  const defaultValues = {
+  const convertUrlsToFiles = async (urls: string[]) => {
+    const files = await Promise.all(
+      urls.map(async (url) => {
+        const response = await fetch(url);
+        const blob = await response.blob();
+        const filename = url.split("/").pop() || "file";
+        const mimeType = blob.type;
+        return new File([blob], filename, { type: mimeType });
+      })
+    );
+    return files;
+  };
+
+  const [defaultValues, setDefaultValues] = useState<{
+    name: string;
+    image: File[];
+    category: string[];
+    brand: string;
+    price: string;
+    description: string;
+    options: { name: string; value: string }[];
+    specifications: { name: string; value: string }[];
+  }>({
     name: product?.name || "",
-    image: product?.images || [],
+    image: [],
     category:
       product?.productCategories?.map(
         (category) => category.id?.toString() ?? ""
@@ -116,13 +152,14 @@ export default function ProductForm({ product }: ProductFormProps) {
     description: product?.description || "",
     options: product?.options || [],
     specifications: product?.specifications || [],
-  };
+  });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: defaultValues,
   });
 
+  const router = useRouter();
   const { data: session } = useSession();
   const token = session?.access_token as string;
 
@@ -137,6 +174,17 @@ export default function ProductForm({ product }: ProductFormProps) {
   });
 
   useEffect(() => {
+    async function fetchImages() {
+      if (product?.images) {
+        const imageUrls = product.images.map((image) => image.url);
+        const images = await convertUrlsToFiles(imageUrls);
+        setDefaultValues((prevValues) => ({ ...prevValues, image: images }));
+        console.log("Images:", images);
+      }
+    }
+
+    fetchImages();
+
     async function fetchCategories() {
       try {
         const response = await getListCategory(0, 100, "id", "asc", token);
@@ -195,6 +243,8 @@ export default function ProductForm({ product }: ProductFormProps) {
               description: `Product has been updated successfully with id ${res.data.id}`,
               duration: 5000,
             });
+            router.push("/admin/products");
+            router.refresh();
           }
         }
       } else {
@@ -205,6 +255,8 @@ export default function ProductForm({ product }: ProductFormProps) {
             description: `Product has been created successfully with id ${res.data.id}`,
             duration: 5000,
           });
+          router.push("/admin/products");
+          router.refresh();
         }
       }
     } catch (error) {
@@ -239,7 +291,7 @@ export default function ProductForm({ product }: ProductFormProps) {
                     <FileUploader
                       value={field.value}
                       onValueChange={field.onChange}
-                      maxFiles={6}
+                      maxFiles={8}
                       maxSize={4 * 1024 * 1024}
                     />
                   </FormControl>
@@ -355,10 +407,17 @@ export default function ProductForm({ product }: ProductFormProps) {
                 <FormItem>
                   <FormLabel>Description</FormLabel>
                   <FormControl>
-                    <Textarea
+                    {/* <Textarea
                       placeholder="Enter product description"
                       className="resize-none"
                       {...field}
+                    /> */}
+                    <ReactQuill
+                      modules={modulesQuill}
+                      value={field.value}
+                      onChange={field.onChange}
+                      placeholder="Enter product description"
+                      className="resize-none"
                     />
                   </FormControl>
                   <FormMessage />
@@ -417,8 +476,8 @@ export default function ProductForm({ product }: ProductFormProps) {
 
             <div className="flex flex-col gap-4">
               <FormLabel>Specifications</FormLabel>
-              {fields.map((field, index) => (
-                <div key={field.id} className="flex gap-4 items-center">
+              {form.watch("specifications")?.map((field, index) => (
+                <div key={index} className="flex gap-4 items-center">
                   <FormField
                     control={form.control}
                     name={`specifications.${index}.name`}
@@ -447,7 +506,14 @@ export default function ProductForm({ product }: ProductFormProps) {
                   />
                   <Button
                     type="button"
-                    onClick={() => remove(index)}
+                    onClick={() =>
+                      form.setValue(
+                        "specifications",
+                        form
+                          .watch("specifications")
+                          ?.filter((_, i) => i !== index) || []
+                      )
+                    }
                     className="mt-8 text-red-500 flex items-center bg-transparent hover:bg-rose-200"
                   >
                     <TrashIcon className="h-5 w-5 hover:text-white" />
@@ -456,7 +522,12 @@ export default function ProductForm({ product }: ProductFormProps) {
               ))}
               <button
                 type="button"
-                onClick={() => append({ name: "", value: "" })}
+                onClick={() =>
+                  form.setValue("specifications", [
+                    ...(form.watch("specifications") || []),
+                    { name: "", value: "" },
+                  ])
+                }
                 className="flex items-center gap-2 text-blue-500"
               >
                 <PlusIcon className="h-5 w-5" />

@@ -2,6 +2,7 @@ import axios from "axios";
 import {Brand} from "@/model/brand/Brand";
 import {CategoryPost} from "@/model/category/CategoryPost";
 import {BrandPost} from "@/model/brand/BrandPost";
+import { testUrlProductService } from "@/constants/data";
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL + '/api/products';
 
@@ -11,6 +12,8 @@ export async function getListBrand(page: number,
                                    sortBy: string,
                                    sort: string,
                                    token: string) {
+
+    const testUrl = testUrlProductService + "/dash/brands";
     try {
         const res = await axios.get(`${baseUrl}/dash/brands`, {
             params: {
