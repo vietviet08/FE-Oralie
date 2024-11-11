@@ -28,7 +28,7 @@ const AccountPage: React.FC = () => {
     },
     { name: "Orders", icon: <Icons.logs className="w-7 h-7" /> },
     { name: "Settings", icon: <Icons.settings className="w-7 h-7" /> },
-    { name: "Change password", icon: <Icons.key className="w-7 h-7" /> },
+    { name: "Password", icon: <Icons.key className="w-7 h-7" /> },
     {
       name: "Logout",
       icon: <LogOut className="w-7 h-7" />,
@@ -44,7 +44,7 @@ const AccountPage: React.FC = () => {
         return <div>Orders Content</div>;
       case "Setting":
         return <div>Settings Content</div>;
-      case "Change Password":
+      case "Password":
         return <div>Change Password Content</div>;
       default:
         return <div>Select a section</div>;
