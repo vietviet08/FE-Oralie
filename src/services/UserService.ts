@@ -3,10 +3,59 @@ import {UserRes} from "@/model/user/UserRes";
 import {UserPage} from "@/model/user/UserPage";
 import {User} from "@/model/user/User";
 import {AssignRole} from "@/model/user/AssignRole";
+import axios from "axios";
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL + '/api/accounts';
 
 //store
+
+export async function getProfile(token : string) {
+    try {
+        const res = await axios.get(`${baseUrl}/store/accounts/profile`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        if (res && res.status === 200) {
+            return res.data;
+        }
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
+export async function updateProfile(user: User, token: string) {
+    try {
+        const res = await axios.put(`${baseUrl}/store/accounts/profile`, user, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        if (res && res.status === 200) {
+            return res.data;
+        }
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
+export async function updatePassword(password: string, token: string) {
+    try {
+        const res = await axios.put(`${baseUrl}/store/accounts/change-password`, {password}, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        if (res && res.status === 200) {
+            return res.data;
+        }
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
 
 
 export async function getProfileUser(): Promise<UserRes> {
@@ -14,12 +63,12 @@ export async function getProfileUser(): Promise<UserRes> {
     return response.json();
 }
 
-export async function updateProfile(user: User) {
+export async function updateProfileUser(user: User) {
     const response = await apiClientService.put(`${baseUrl}/store/accounts/profile`, JSON.stringify(user));
     return response.json();
 }
 
-export async function updatePassword(password: string) {
+export async function updatePasswordUser(password: string) {
     const response = await apiClientService.put(`${baseUrl}/store/accounts/change-password`, JSON.stringify({password}));
     return response.json();
 }
