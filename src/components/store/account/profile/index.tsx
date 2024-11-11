@@ -11,7 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { User } from "@/model/user/User";
-import { getProfile } from "@/services/UserService";
+import { getImageProfile, getProfile } from "@/services/UserService";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Phone } from "lucide-react";
 import { useSession } from "next-auth/react";
@@ -23,7 +23,21 @@ interface UserFormProps {
   user: User;
 }
 
+const ACCEPTED_IMAGE_TYPES = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+];
+
 const formSchema = z.object({
+  userImage: z
+    .any()
+    .refine(
+      (file) => !file || ACCEPTED_IMAGE_TYPES.includes(file.type),
+      "Invalid image type"
+    )
+    .optional(),
   username: z
     .string()
     .min(3, "Username is too short")
@@ -43,17 +57,19 @@ export default function Profile({ user }: UserFormProps) {
   const { toast } = useToast();
 
   const [defaultValues, setDefaultValues] = useState<{
+    userImage: string;
     username: string;
     fullName: string;
     phone: string;
     email: string;
     address: string;
   }>({
-    username: user.username,
-    fullName: `${user.firstName} ${user.lastName}`,
-    phone: user.phone,
-    email: user.email,
-    address: user.address,
+    userImage: user.urlAvatar as string,
+    username: user.username as string,
+    fullName: `${user.firstName} ${user.lastName}` as string,
+    phone: user.phone as string,
+    email: user.email as string,
+    address: user.address as string,
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -66,6 +82,7 @@ export default function Profile({ user }: UserFormProps) {
       const response = await getProfile(token);
       const data = response.data;
       setDefaultValues({
+        userImage: data.urlAvatar,
         username: data.username,
         fullName: `${data.firstName} ${data.lastName}`,
         phone: data.phone,
@@ -74,12 +91,23 @@ export default function Profile({ user }: UserFormProps) {
       });
     }
     fetchUser();
+
+    async function fetchImage() {
+      const response = await getImageProfile(token);
+      const data = response.data;
+      setDefaultValues({
+        ...defaultValues,
+        userImage: data.urlAvatar,
+      });
+    }
+
+    fetchImage();
   }, []);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {}
 
   return (
-    <>
+    <div className="">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField
@@ -140,6 +168,6 @@ export default function Profile({ user }: UserFormProps) {
           <Button type="submit">Update profile</Button>
         </form>
       </Form>
-    </>
+    </div>
   );
 }

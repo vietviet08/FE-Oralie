@@ -23,13 +23,17 @@ const AccountPage: React.FC = () => {
     { name: "Profile", icon: <Icons.user /> },
     {
       name: "Cart",
-      icon: <Icons.shoppingCart />,
+      icon: <Icons.shoppingCart className="w-7 h-7" />,
       onClick: () => router.push("/store/cart"),
     },
-    { name: "Orders", icon: <Icons.logs /> },
-    { name: "Settings", icon: <Icons.settings /> },
-    { name: "Change Password", icon: <Icons.key /> },
-    { name: "Logout", icon: <LogOut />, onClick: federatedLogout },
+    { name: "Orders", icon: <Icons.logs className="w-7 h-7" /> },
+    { name: "Settings", icon: <Icons.settings className="w-7 h-7" /> },
+    { name: "Change password", icon: <Icons.key className="w-7 h-7" /> },
+    {
+      name: "Logout",
+      icon: <LogOut className="w-7 h-7" />,
+      onClick: federatedLogout,
+    },
   ];
 
   const renderSectionContent = () => {
@@ -48,7 +52,7 @@ const AccountPage: React.FC = () => {
   };
 
   return (
-    <div className="px-4 py-6">
+    <div className="mx-auto w-full sm:px-10 p-4 py-6 lg:py-8">
       <Head>
         <h2>Account Manage</h2>
       </Head>

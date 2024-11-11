@@ -1,5 +1,6 @@
 export type User = {
     id?: number;
+    urlAvatar?: string;
     userId: string;
     username: string;
     email: string;

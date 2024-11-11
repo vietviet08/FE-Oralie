@@ -25,6 +25,7 @@ export async function getProfile(token : string) {
     }
 }
 
+
 export async function updateProfile(user: User, token: string) {
     try {
         const res = await axios.put(`${baseUrl}/store/accounts/profile`, user, {
@@ -44,6 +45,58 @@ export async function updateProfile(user: User, token: string) {
 export async function updatePassword(password: string, token: string) {
     try {
         const res = await axios.put(`${baseUrl}/store/accounts/change-password`, {password}, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        if (res && res.status === 200) {
+            return res.data;
+        }
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
+export async function getImageProfile(token: string) {
+    try {
+        const res = await axios.get(`${baseUrl}/store/accounts/profile/image`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        if (res && res.status === 200) {
+            return res.data;
+        }
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
+export async function uploadImageProfile(image: File, token: string) {
+    try {
+        const formData = new FormData();
+        formData.append('avatar', image);
+        formData.append('userId', '');
+        const res = await axios.post(`${baseUrl}/store/accounts/profile/image`, formData, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'multipart/form-data',
+            }
+        });
+        if (res && res.status === 200) {
+            return res.data;
+        }
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
+export async function deleteImageProfile(token: string) {
+    try {
+        const res = await axios.delete(`${baseUrl}/store/accounts/profile/image`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }

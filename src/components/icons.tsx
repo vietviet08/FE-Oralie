@@ -38,6 +38,9 @@ import {
   Logs,
   KeyRound,
   ShoppingCart,
+  CircleUser,
+  AlignJustify,
+  Search,
 } from "lucide-react";
 
 export type Icon = LucideIcon;
@@ -97,4 +100,7 @@ export const Icons = {
   logs: Logs,
   key: KeyRound,
   shoppingCart: ShoppingCart,
+  circleUser: CircleUser,
+  alignJustify: AlignJustify,
+  search: Search,
 };
