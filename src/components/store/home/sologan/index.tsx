@@ -2,6 +2,7 @@ import React from "react";
 import Menu from "./menu";
 import Slider from "./slider";
 import { MenuIcon } from "lucide-react";
+import dataSlider from "@/constants/slider-data.json";
 
 const SoloGan = () => {
   return (
@@ -10,7 +11,7 @@ const SoloGan = () => {
         <Menu />
       </div>
       <div className="w-full ml-1 rounded-lg sm:w-3/5 shadow-lg">
-        <Slider />
+        <Slider data={dataSlider} />
       </div>
     </div>
   );

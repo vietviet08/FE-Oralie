@@ -1,0 +1,45 @@
+[
+    {
+      "id": 1,
+      "title": "",
+      "tagline": "",
+      "image": "https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/oralie-file-camera-tiandy.webp",
+      "buttons": [
+        {
+          "id": 1,
+          "text": "Roberto Nickson",
+          "link": "https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/oralie-file-camera-tiandy.webp",
+          "type": "btn-dark btn-circle"
+        }
+      ]
+    },
+    {
+      "id": 2,
+     "title": "",
+      "tagline": "",
+      "image": "https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/oralie-file-camera-tiandy.webp",
+      "buttons": [
+        {
+          "id": 1,
+          "text": "Julia M Cameron",
+          "link": "https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/oralie-file-camera-tiandy.webp",
+          "type": "btn-dark btn-circle"
+        }
+      ]
+    },
+    {
+      "id": 3,
+     "title": "",
+      "tagline": "",
+      "image": "https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/oralie-file-camera-tiandy.webp",
+      "buttons": [
+        {
+          "id": 1,
+          "text": "Roberto Nickson",
+          "link": "https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/oralie-file-camera-tiandy.webp",
+          "type": "btn-dark btn-circle"
+        }
+      ]
+    }
+  ]
+  

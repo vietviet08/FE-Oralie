@@ -59,7 +59,7 @@ const components: { title: string; href: string; description: string }[] = [
 
 export function Header() {
   return (
-    <header className="flex shadow-md py-2 px-8 sm:px-10 bg-primaryred font-sans min-h-[70px] tracking-wide relative z-50">
+    <header className="flex shadow-md py-2 sm:px-32 px-6 bg-primaryred font-sans min-h-[70px] tracking-wide relative z-50 w-full">
       <div className="flex  items-center justify-between  w-full">
         <a href="/">
           <Image

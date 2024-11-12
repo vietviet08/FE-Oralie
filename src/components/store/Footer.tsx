@@ -12,7 +12,7 @@ export default async function Footer() {
 
   return (
     <footer className="bg-white dark:bg-gray-900 border-t border-ui-border-base shadow-inner  ">
-      <div className="mx-auto w-full sm:px-10 p-4 py-6 lg:py-8">
+      <div className="mx-auto w-full sm:px-32 px-6 py-8 lg:py-8">
         <div className="md:flex md:justify-between">
           <div className="mb-6 md:mb-0">
             <a href="https://flowbite.com/" className="flex items-center">
@@ -23,7 +23,7 @@ export default async function Footer() {
                 className=""
                 alt="Oralie Logo"
               />
-              <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
+              <span className=" lg:block hidden self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
                 Oralie
               </span>
             </a>
