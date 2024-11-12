@@ -347,7 +347,7 @@ const MenuItemComponent: React.FC<{ item: MenuItem }> = ({ item }) => (
     <div className="absolute left-full top-0 ml-2 h-full w-2 group-hover:block hidden"></div>
 
     {item.subItems && (
-      <ul className="hidden group-hover:flex flex-wrap absolute left-[98%] ml-2 top-0 w-[150%] bg-white shadow-lg rounded-lg">
+      <ul className="hidden group-hover:flex flex-wrap absolute left-[98%] ml-2 top-0 w-[155%] bg-white shadow-lg rounded-lg z-50">
         {item.subItems.map((subItem, index) => (
           <li key={index} className="p-2">
             <a

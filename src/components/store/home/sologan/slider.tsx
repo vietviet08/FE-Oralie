@@ -23,13 +23,13 @@ interface ButtonProps {
   type: string;
 }
 
-interface DemoSliderProps {
+interface SliderProps {
   data: Slide[];
 }
 
-const Slider: React.FC<DemoSliderProps> = ({ data }) => {
+const Slider: React.FC<SliderProps> = ({ data }) => {
   return (
-    <section className="w-full">
+    <section className="w-full rounded-lg  overflow-hidden">
       <div className="">
         <ul className="h-full w-full">
           <Swiper
