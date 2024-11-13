@@ -25,7 +25,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
   return (
     <motion.div
-      className="max-w-sm h-96 bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 transform hover:scale-105 z-50"
+      className="max-w-sm h-96 bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300 transform hover:scale-105 z-50"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
