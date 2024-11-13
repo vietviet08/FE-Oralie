@@ -36,6 +36,7 @@
     "cmdk": "^1.0.0",
     "cors": "^2.8.5",
     "cryptr": "^6.3.0",
+    "framer-motion": "^11.11.15",
     "jwt-decode": "^4.0.0",
     "keycloak-js": "^26.0.0",
     "lucide-react": "^0.447.0",

@@ -1,3 +1,4 @@
+import { Icons } from "@/components/icons";
 import React from "react";
 
 interface MenuItem {
@@ -327,27 +328,30 @@ const menuItems: MenuItem[] = [
 ];
 
 const MenuItemComponent: React.FC<{ item: MenuItem }> = ({ item }) => (
-  <li className="relative group">
+  <li className="relative group ml-2">
     <a
-      className="flex items-center space-x-2 text-gray-700 hover:text-blue-500"
+      className="flex justify-between items-center space-x-2 text-gray-700 hover:text-primaryred"
       href={item.href}
       title={item.title}
     >
-      {item.imgSrc && (
-        <img
-          className="w-8 h-8"
-          src={item.imgSrc}
-          alt={item.title}
-          title={item.title}
-        />
-      )}
-      <span>{item.title}</span>
+      <div className="flex items-center">
+        {item.imgSrc && (
+          <img
+            className="w-8 h-8"
+            src={item.imgSrc}
+            alt={item.title}
+            title={item.title}
+          />
+        )}
+        <span>{item.title}</span>
+      </div>
+      <Icons.chevronRight className="w-5 h-5 mr-2 " />
     </a>
 
     <div className="absolute left-full top-0 ml-2 h-full w-2 group-hover:block hidden"></div>
 
     {item.subItems && (
-      <ul className="hidden group-hover:flex flex-wrap absolute left-[98%] ml-2 top-0 w-[155%] bg-white shadow-lg rounded-lg z-50">
+      <ul className="hidden group-hover:flex flex-wrap absolute left-[98%] ml-2 top-0 w-[318%] bg-white shadow-lg rounded-lg z-50">
         {item.subItems.map((subItem, index) => (
           <li key={index} className="p-2">
             <a

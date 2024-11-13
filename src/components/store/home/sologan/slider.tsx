@@ -5,7 +5,6 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import SliderButtons from "@/components/common/SliderButton";
 import Image from "next/image";
 
 interface Slide {
@@ -40,15 +39,15 @@ const Slider: React.FC<SliderProps> = ({ data }) => {
           >
             {data.map(({ id, image, tagline, title, buttons }) => (
               <SwiperSlide key={id}>
-                <div className="relative w-full h-[300px]">
+                <div className="relative w-full h-[360px]">
                   <Image
                     src={image}
                     alt={title}
+                    sizes="100%"
                     layout="fill"
                     objectFit="cover"
                     className="absolute left-0 top-0"
                   />
-                  {/* <div className="absolute left-0 top-0 h-full w-full bg-black opacity-20"></div> */}
                   <div className="relative z-10 h-full flex items-center justify-center">
                     <div className="text-center">
                       {tagline && (
