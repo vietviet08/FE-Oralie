@@ -41,6 +41,7 @@ import {
   CircleUser,
   AlignJustify,
   Search,
+  PhoneCall,
 } from "lucide-react";
 
 export type Icon = LucideIcon;
@@ -103,4 +104,5 @@ export const Icons = {
   circleUser: CircleUser,
   alignJustify: AlignJustify,
   search: Search,
+  phoneCall: PhoneCall,
 };

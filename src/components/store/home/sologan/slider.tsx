@@ -34,7 +34,7 @@ const Slider: React.FC<SliderProps> = ({ data }) => {
         <ul className="h-full w-full">
           <Swiper
             pagination={{ type: "bullets", clickable: true }}
-            autoplay={false}
+            autoplay={true}
             loop={true}
             modules={[Autoplay, Pagination]}
           >
@@ -48,7 +48,7 @@ const Slider: React.FC<SliderProps> = ({ data }) => {
                     objectFit="cover"
                     className="absolute left-0 top-0"
                   />
-                  <div className="absolute left-0 top-0 h-full w-full bg-black opacity-20"></div>
+                  {/* <div className="absolute left-0 top-0 h-full w-full bg-black opacity-20"></div> */}
                   <div className="relative z-10 h-full flex items-center justify-center">
                     <div className="text-center">
                       {tagline && (
@@ -59,11 +59,11 @@ const Slider: React.FC<SliderProps> = ({ data }) => {
                       <p className="text-3xl sm:text-6xl lg:text-8xl font-bold text-white">
                         {title}
                       </p>
-                      {buttons.length > 0 ? (
+                      {/* {buttons.length > 0 ? (
                         <p className="bg-gray-800 inline-block px-9 py-2 rounded-full text-white mt-10 lg:mt-20">
                           <SliderButtons buttons={buttons} />
                         </p>
-                      ) : null}
+                      ) : null} */}
                     </div>
                   </div>
                 </div>

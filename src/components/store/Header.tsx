@@ -76,7 +76,7 @@ export function Header() {
             <p className="hidden sm:block text-white">Menu</p>
           </Button>
         </div>
-        <div className="relative w-2/5">
+        <div className="relative lg:w-2/5 sm:w-3/5">
           <Input
             placeholder="Input the product need to find"
             className="text-gray bg-white placeholder:text-gray placeholder:text-base rounded-2xl border-0 pr-10 text-ellipsis"
@@ -87,11 +87,24 @@ export function Header() {
         <div className="flex items-center space-x-5">
           <Link
             href="/account"
+            className="hidden lg:block rounded-3xl bg-inherit text-white "
+          >
+            <Button variant="transparent">
+              <Icons.phoneCall className="mr-2 font-light w-7 h-7" />
+              <div className="hidden sm:flex text-xs flex-col justify-center items-start">
+                <p>Hotline</p>
+                <p className="">1800 0000</p>
+              </div>
+            </Button>
+          </Link>
+
+          <Link
+            href="/account"
             className="rounded-3xl  bg-inherit sm:bg-primaryred1  text-white "
           >
             <Button variant="transparent">
               <Icons.circleUser className="mr-1 font-light w-7 h-7" />
-              <p className="hidden sm:block">Account</p>
+              <p className="hidden sm:block text-xs">Account</p>
             </Button>
           </Link>
 

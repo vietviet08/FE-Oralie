@@ -17,7 +17,7 @@
       "id": 2,
      "title": "",
       "tagline": "",
-      "image": "https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/oralie-file-camera-tiandy.webp",
+      "image": "https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/oralie-file-udsv-right-laptop.webp",
       "buttons": [
         {
           "id": 1,
@@ -31,7 +31,21 @@
       "id": 3,
      "title": "",
       "tagline": "",
-      "image": "https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/oralie-file-camera-tiandy.webp",
+      "image": "https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/oralie-file-home-huawei-watch-d2-01-11.webp",
+      "buttons": [
+        {
+          "id": 1,
+          "text": "Roberto Nickson",
+          "link": "https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/oralie-file-camera-tiandy.webp",
+          "type": "btn-dark btn-circle"
+        }
+      ]
+    },
+    {
+      "id": 4,
+     "title": "",
+      "tagline": "",
+      "image": "https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/oralie-file-realme-13%2B-5g-home-11-11.webp",
       "buttons": [
         {
           "id": 1,
