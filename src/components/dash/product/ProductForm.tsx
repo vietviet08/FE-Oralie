@@ -214,7 +214,10 @@ export default function ProductForm({ product }: ProductFormProps) {
     const productPost: ProductPost = {
       name: values.name,
       images: values.image,
-      slug: values.name.toLowerCase().replace(/ /g, "-"),
+      slug: values.name
+        .toLowerCase()
+        .replace(/[^a-z0-9\s]/g, "")
+        .replace(/\s+/g, "-"),
       description: values.description,
       sku: Math.random().toString(36).substr(2, 9).toUpperCase(),
       categoryIds: values.category.map((id) => parseInt(id, 10)),

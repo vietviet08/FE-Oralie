@@ -71,11 +71,19 @@ export async function getProductById(id: number) {
     }
 }
 
-export async function getProductBySlug(slug: string): Promise<Product> {
-    const response = await apiClientService.get(`${baseUrl}/store/products/${slug}`);
-    return response.json();
-}
+export async function getProductBySlug(slug: string) {
 
+    try {
+         const res = await axios.get(`${baseUrl}/store/products/${slug}`);
+         if (res && res.status === 200) {
+             console.log(res.data);
+             return res.data;
+         }
+     } catch (error) {
+         console.log(error);
+         throw error;
+     }
+ }
 
 //dash for manage
 

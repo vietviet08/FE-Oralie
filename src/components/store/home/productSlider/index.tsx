@@ -60,6 +60,24 @@ const ProductSlider: React.FC<ListResponse<Product>> = ({ data }) => {
               pagination={{
                 clickable: true,
               }}
+              breakpoints={{
+                500: {
+                  slidesPerView: 2,
+                  spaceBetween: 10,
+                },
+                740: {
+                  slidesPerView: 3,
+                  spaceBetween: 10,
+                },
+                1024: {
+                  slidesPerView: 4,
+                  spaceBetween: 30,
+                },
+                1340: {
+                  slidesPerView: 5,
+                  spaceBetween: 10,
+                },
+              }}
               modules={[FreeMode, Pagination, Autoplay]}
               className="mySwiper h-full"
             >
