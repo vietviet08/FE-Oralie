@@ -13,7 +13,7 @@ const config: Config = {
 			allower: "#EBFFEB",
 			allowertext: "#1CCE12",
 			primaryred: "#DA2118",
-			primaryred1: "#E2384B",
+			primaryred1: "#e74355",
 			primaryred2: "#f5d6d5",
 			primaryblue: "#3379DB",
   			background: 'hsl(var(--background))',

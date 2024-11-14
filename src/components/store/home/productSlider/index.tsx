@@ -48,7 +48,7 @@ const ProductSlider: React.FC<ListResponse<Product>> = ({ data }) => {
       <div className="flex justify-between items-center my-2">
         <span>
           <h2 className="text-2xl font-semibold text-primaryred">
-            Sản phẩm nổi bật
+            Featured Products
           </h2>
         </span>
 

@@ -59,7 +59,7 @@ const components: { title: string; href: string; description: string }[] = [
 
 export function Header() {
   return (
-    <header className="flex shadow-md py-2 sm:px-32 px-6 bg-primaryred font-sans min-h-[70px] tracking-wide relative z-50 w-full">
+    <header className="flex shadow-md py-2 sm:px-32 px-6 bg-gradient-to-b from-primaryred1 to-primaryred font-sans min-h-[70px] tracking-wide relative z-50 w-full">
       <div className="flex  items-center justify-between  w-full">
         <a href="/">
           <Image
@@ -86,7 +86,7 @@ export function Header() {
 
         <div className="flex items-center space-x-5">
           <Link
-            href="/account"
+            href="/"
             className="hidden lg:block rounded-3xl bg-inherit text-white "
           >
             <Button variant="transparent">

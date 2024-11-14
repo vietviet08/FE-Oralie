@@ -3,20 +3,13 @@
 import { Badge } from "@/components/ui/badge";
 import { Product } from "@/model/product/Product";
 import React, { useEffect, useRef, useState } from "react";
-import {
-  Autoplay,
-  FreeMode,
-  Navigation,
-  Pagination,
-  Thumbs,
-} from "swiper/modules";
+import { Autoplay, FreeMode, Navigation, Thumbs } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
 import "swiper/css/pagination";
-import ProductCard from "../product-card";
 import ProductSlider from "../../home/productSlider";
 
 import "swiper/css";
@@ -235,23 +228,16 @@ const ProductPageDetail = ({ product }: Props) => {
               </div>
             </div>
             <div className="w-full md:w-2/5 ml-0 md:ml-2 mt-0 p-4 rounded-lg shadow-md">
-              <div className="grid grid-cols-3 gap-4 mb-4">
-                <Button className="flex flex-col justify-center items-center rounded-xl text-primaryred1 bg-white  border border-primaryred2 hover:text-white hover:bg-primaryred1 overflow-hidden w-full h-full">
-                  <div className=" font-bold text-sm">16GB - 512GB</div>
-                  <div className=" text-sm">$1111</div>
-                </Button>
-                <Button className="flex flex-col justify-center items-center rounded-xl text-primaryred1 bg-white  border border-primaryred2 hover:text-white hover:bg-primaryred1 overflow-hidden w-full h-full">
-                  <div className=" font-bold text-sm">16GB - 512GB</div>
-                  <div className=" text-sm">$1111</div>
-                </Button>
-                <Button className="flex flex-col justify-center items-center rounded-xl text-primaryred1 bg-white  border border-primaryred2 hover:text-white hover:bg-primaryred1 overflow-hidden w-full h-full">
-                  <div className=" font-bold text-sm">16GB - 512GB</div>
-                  <div className=" text-sm">$1111</div>
-                </Button>
-                <Button className="flex flex-col justify-center items-center rounded-xl text-primaryred1 bg-white  border border-primaryred2 hover:text-white hover:bg-primaryred1 overflow-hidden w-full h-full">
-                  <div className=" font-bold text-sm">16GB - 512GB</div>
-                  <div className=" text-sm">$1111</div>
-                </Button>
+              <div className="grid grid-cols-3 gap-3 mb-4">
+                {product.options.map((option) => (
+                  <Button
+                    key={option.id}
+                    className="flex flex-col justify-center items-center rounded-xl text-primaryred1 bg-white  border border-primaryred2 hover:text-white hover:bg-primaryred1 overflow-hidden w-full h-full"
+                  >
+                    <div className=" font-bold text-sm">{option.name}</div>
+                    <div className=" text-sm">${option.value}</div>
+                  </Button>
+                ))}
               </div>
 
               <div className="flex justify-between items-center space-x-3 my-4">
@@ -332,26 +318,22 @@ const ProductPageDetail = ({ product }: Props) => {
           <h2 className="text-primaryred font-bold text-lg ">
             Outstanding features
           </h2>
+          <div dangerouslySetInnerHTML={{ __html: product.description }} />
         </div>
         <div className="w-2/6 rounded-lg shadow-inner p-4">
           <h2 className=" font-bold text-lg">Specifications</h2>
           <Table>
             <TableCaption>A list of your recent invoices.</TableCaption>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-[100px]">Invoice</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Method</TableHead>
-                <TableHead className="text-right">Amount</TableHead>
-              </TableRow>
-            </TableHeader>
             <TableBody>
-              <TableRow>
-                <TableCell className="font-medium">INV001</TableCell>
-                <TableCell>Paid</TableCell>
-                <TableCell>Credit Card</TableCell>
-                <TableCell className="text-right">$250.00</TableCell>
-              </TableRow>
+              {product.specifications.map((spec, index) => (
+                <TableRow
+                  key={spec.id}
+                  className={index % 2 === 0 ? "bg-white" : "bg-gray-100"}
+                >
+                  <TableCell>{spec.name}</TableCell>
+                  <TableCell className="text-right">{spec.value}</TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </div>
