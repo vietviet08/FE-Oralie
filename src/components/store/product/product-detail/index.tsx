@@ -11,6 +11,11 @@ import {
   Thumbs,
 } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/free-mode";
+import "swiper/css/navigation";
+import "swiper/css/thumbs";
+import "swiper/css/pagination";
 import ProductCard from "../product-card";
 import ProductSlider from "../../home/productSlider";
 
@@ -22,6 +27,15 @@ import { Swiper as SwiperClass } from "swiper/types";
 import { Swiper as SwiperType } from "swiper/types";
 import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 type Props = {
   product: Product;
 };
@@ -43,17 +57,17 @@ const ProductPageDetail = ({ product }: Props) => {
 
   return (
     <div className="sm:px-32 px-6 py-6 ">
-      <div className="flex justify-between items-center w-5/6 py-4">
-        <div>
+      <div className="flex justify-between items-center w-full py-4">
+        <div className="w-3/5">
           <h2 className="text-2xl font-bold text-primaryred">{product.name}</h2>
         </div>
-        <div className="-space-x-8">
+        <div className="">
           {product.isAvailable ? (
             <Badge
               variant={"allower"}
-              className="w-32 h-8 text-center flex justify-center items-center rounded-2xl border-allowertext"
+              className="w-36 h-10 text-center flex justify-center items-center rounded-2xl border-allowertext"
             >
-              <span>Status: Stock</span>
+              <span className="text-[15px]">Status: Stock</span>
             </Badge>
           ) : (
             <Badge
@@ -88,7 +102,6 @@ const ProductPageDetail = ({ product }: Props) => {
                     nextEl: nextRef.current,
                   }}
                   thumbs={{ swiper: thumbsSwiper }}
-                  // pagination={{ type: "bullets", clickable: true }}
                   autoplay={true}
                   loop={true}
                   modules={[Autoplay, Navigation, Thumbs]}
@@ -174,6 +187,27 @@ const ProductPageDetail = ({ product }: Props) => {
                   watchSlidesProgress={true}
                   modules={[FreeMode, Navigation, Thumbs]}
                   className="mySwiper mt-6 px-4"
+                  breakpoints={{
+                    320: {
+                      slidesPerView: 4,
+                      spaceBetween: 5,
+                    },
+                    640: {
+                      slidesPerView: 4,
+                    },
+                    768: {
+                      slidesPerView: 4,
+                    },
+                    1024: {
+                      slidesPerView: 5,
+                    },
+                    1280: {
+                      slidesPerView: 7,
+                    },
+                    1536: {
+                      slidesPerView: 8,
+                    },
+                  }}
                 >
                   {product.images.map((image, index) => (
                     <SwiperSlide
@@ -201,30 +235,32 @@ const ProductPageDetail = ({ product }: Props) => {
               </div>
             </div>
             <div className="w-full md:w-2/5 ml-0 md:ml-2 mt-0 p-4 rounded-lg shadow-md">
-              <div className="flex justify-around space-x-2 mb-4">
-                <div className="flex flex-col justify-center items-center w-1/3  rounded-xl border border-primaryred2 overflow-hidden">
-                  <div className="text-primaryred1 font-bold text-sm">
-                    16GB - 512GB
-                  </div>
-                  <div className="text-primaryred1 text-sm">$1111</div>
-                </div>
-                <div className="flex flex-col justify-center items-center w-1/3  rounded-xl border border-gray-300 overflow-hidden">
-                  <div className="text-primaryred1">16GB - 512GB</div>
-                  <div className="text-primaryred1">$1111</div>
-                </div>
-                <div className="flex flex-col justify-center items-center w-1/3  rounded-xl border border-gray-300 overflow-hidden">
-                  <div className="text-primaryred1">16GB - 512GB</div>
-                  <div className="text-primaryred1">$1111</div>
-                </div>
+              <div className="grid grid-cols-3 gap-4 mb-4">
+                <Button className="flex flex-col justify-center items-center rounded-xl text-primaryred1 bg-white  border border-primaryred2 hover:text-white hover:bg-primaryred1 overflow-hidden w-full h-full">
+                  <div className=" font-bold text-sm">16GB - 512GB</div>
+                  <div className=" text-sm">$1111</div>
+                </Button>
+                <Button className="flex flex-col justify-center items-center rounded-xl text-primaryred1 bg-white  border border-primaryred2 hover:text-white hover:bg-primaryred1 overflow-hidden w-full h-full">
+                  <div className=" font-bold text-sm">16GB - 512GB</div>
+                  <div className=" text-sm">$1111</div>
+                </Button>
+                <Button className="flex flex-col justify-center items-center rounded-xl text-primaryred1 bg-white  border border-primaryred2 hover:text-white hover:bg-primaryred1 overflow-hidden w-full h-full">
+                  <div className=" font-bold text-sm">16GB - 512GB</div>
+                  <div className=" text-sm">$1111</div>
+                </Button>
+                <Button className="flex flex-col justify-center items-center rounded-xl text-primaryred1 bg-white  border border-primaryred2 hover:text-white hover:bg-primaryred1 overflow-hidden w-full h-full">
+                  <div className=" font-bold text-sm">16GB - 512GB</div>
+                  <div className=" text-sm">$1111</div>
+                </Button>
               </div>
 
               <div className="flex justify-between items-center space-x-3 my-4">
-                <div className="rounded-lg bg-primaryred w-5/6 h-14 flex flex-col justify-center items-center">
-                  <span className="text-sm text-white space-y-1 flex flex-col justify-center items-center">
+                <Button className="rounded-lg bg-primaryred w-5/6 h-14 flex flex-col justify-center items-center text-white hover:bg-white hover:text-primaryred border  hover:border-primaryred">
+                  <span className="text-sm space-y-1 flex flex-col justify-center items-center">
                     <span className="font-bold uppercase">Pay now</span>
                     <span>Shiping or take direct in the store</span>
                   </span>
-                </div>
+                </Button>
                 <div className="h-14 flex items-center">
                   <Button className="flex flex-col justify-center items-center rounded-lg border text-primaryred border-primaryred bg-white w-20 h-14 transition-all duration-300 ease-in-out hover:bg-primaryred hover:text-white">
                     <Icons.shoppingCart className="w-10 h-10 text-xl" />
@@ -233,22 +269,45 @@ const ProductPageDetail = ({ product }: Props) => {
                 </div>
               </div>
 
-              <div className="flex flex-col space-y-2">
-                <div>
-                  <h2 className="text-2xl font-bold text-primaryred">
-                    {product.name}
-                  </h2>
+              <div className="my-4 space-x-3 flex justify-center items-center">
+                <div className="rounded-lg bg-primaryblue w-3/6 h-14 flex flex-col justify-center items-center">
+                  <span className="text-sm text-white space-y-1 flex flex-col justify-center items-center">
+                    <span className="font-bold uppercase">INSTALLMENT 0%</span>
+                    <span>0% down payment</span>
+                  </span>
                 </div>
-                <div>
-                  <p className="text-lg font-semibold text-primaryred">
-                    ${product.price}
-                  </p>
+                <div className="rounded-lg bg-primaryblue w-3/6 h-14 flex flex-col justify-center items-center">
+                  <span className="text-sm text-white space-y-1 flex flex-col justify-center items-center">
+                    <span className="font-bold uppercase">
+                      0% installment by card
+                    </span>
+                    <span>(VISA, Mastercard, JCB)</span>
+                  </span>
                 </div>
-                <div>
-                  <p className="text-lg font-semibold text-primaryred">
-                    {product.description}
-                  </p>
-                </div>
+              </div>
+
+              <div className="my-4">
+                <h2 className="text-lg font-bold text-primaryred">
+                  Additional Offers
+                </h2>
+                <ul className="text-sm space-y-1">
+                  <li>
+                    <Icons.check className="text-green-400 size-3 inline-block mr-2" />
+                    Full Accessories Included
+                  </li>
+                  <li>
+                    <Icons.check className="text-green-400 size-3 inline-block mr-2" />
+                    Lifetime Software Support
+                  </li>
+                  <li>
+                    <Icons.check className="text-green-400 size-3 inline-block mr-2" />
+                    Free Windows Installation + Machine Cleaning
+                  </li>
+                  <li>
+                    <Icons.check className="text-green-400 size-3 inline-block mr-2" />
+                    Support for Old-For-New Exchange - Best Price Subsidy
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
@@ -264,6 +323,38 @@ const ProductPageDetail = ({ product }: Props) => {
           totalPages={0}
           isLast={false}
         ></ProductSlider>
+      </div>
+
+      <div className="py-2 my-8 border-b-[1px] border-b-primaryred2"></div>
+
+      <div className="space-x-2 flex justify-between">
+        <div className="w-4/6 rounded-lg shadow-inner p-4">
+          <h2 className="text-primaryred font-bold text-lg ">
+            Outstanding features
+          </h2>
+        </div>
+        <div className="w-2/6 rounded-lg shadow-inner p-4">
+          <h2 className=" font-bold text-lg">Specifications</h2>
+          <Table>
+            <TableCaption>A list of your recent invoices.</TableCaption>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[100px]">Invoice</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Method</TableHead>
+                <TableHead className="text-right">Amount</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <TableRow>
+                <TableCell className="font-medium">INV001</TableCell>
+                <TableCell>Paid</TableCell>
+                <TableCell>Credit Card</TableCell>
+                <TableCell className="text-right">$250.00</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </div>
       </div>
     </div>
   );

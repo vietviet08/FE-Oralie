@@ -15,6 +15,7 @@ const config: Config = {
 			primaryred: "#DA2118",
 			primaryred1: "#E2384B",
 			primaryred2: "#f5d6d5",
+			primaryblue: "#3379DB",
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {

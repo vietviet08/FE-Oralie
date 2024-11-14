@@ -21,6 +21,8 @@ const ProductSlider: React.FC<ListResponse<Product>> = ({ data }) => {
   const nextRef = useRef<HTMLDivElement>(null);
   const swiperRef = useRef<SwiperType>();
 
+  const [progress, setProgress] = useState(0);
+
   useEffect(() => {
     async function fetchData() {
       const response = await getProductById(12);
@@ -34,6 +36,10 @@ const ProductSlider: React.FC<ListResponse<Product>> = ({ data }) => {
     if (swiperRef.current && swiperRef.current.navigation) {
       swiperRef.current.navigation.init();
       swiperRef.current.navigation.update();
+      const swiperInstance = swiperRef.current;
+      swiperInstance.on("slideChange", () => {
+        setProgress(swiperInstance.progress);
+      });
     }
   }, [swiperRef.current]);
 
@@ -63,6 +69,7 @@ const ProductSlider: React.FC<ListResponse<Product>> = ({ data }) => {
         <div className="">
           <ul className="h-[395px] w-full">
             <Swiper
+              onProgress={(swiper) => setProgress(swiper.progress)}
               onSwiper={(swiper) => {
                 swiperRef.current = swiper;
               }}
@@ -70,9 +77,7 @@ const ProductSlider: React.FC<ListResponse<Product>> = ({ data }) => {
               autoplay={true}
               spaceBetween={30}
               freeMode={true}
-              pagination={{
-                clickable: true,
-              }}
+              pagination={false}
               style={
                 {
                   "--swiper-navigation-color": "#DA2118",
@@ -111,6 +116,18 @@ const ProductSlider: React.FC<ListResponse<Product>> = ({ data }) => {
                     <div className="w-full">
                       <ProductCard product={product} />
                     </div>
+                  </SwiperSlide>
+                  <SwiperSlide>
+                    <ProductCard product={product} />
+                  </SwiperSlide>
+                  <SwiperSlide>
+                    <ProductCard product={product} />
+                  </SwiperSlide>
+                  <SwiperSlide>
+                    <ProductCard product={product} />
+                  </SwiperSlide>
+                  <SwiperSlide>
+                    <ProductCard product={product} />
                   </SwiperSlide>
                   <SwiperSlide>
                     <ProductCard product={product} />
@@ -178,6 +195,23 @@ const ProductSlider: React.FC<ListResponse<Product>> = ({ data }) => {
                 onMouseLeave={(e) => (e.currentTarget.style.opacity = "0.5")}
               >
                 &#10095;
+              </div>
+              <div
+                className=" absolute bottom-0 translate-y-2 left-0 right-0 h-2 bg-gray-200 rounded mt-4"
+                style={{
+                  width: "100%",
+                  height: "4px",
+                  position: "absolute",
+                  bottom: "10px",
+                }}
+              >
+                <div
+                  className="h-2 bg-primaryred rounded"
+                  style={{
+                    width: `${progress * 100}%`,
+                    transition: "width 0.3s ease",
+                  }}
+                />
               </div>
             </Swiper>
           </ul>

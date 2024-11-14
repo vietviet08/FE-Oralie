@@ -64,6 +64,8 @@ export async function getProductById(id: number) {
         if (res && res.status === 200) {
             console.log(res.data);
             return res.data;
+        }else if(res.status === 404){
+            return null;
         }
     } catch (error) {
         console.log(error);
@@ -78,10 +80,12 @@ export async function getProductBySlug(slug: string) {
          if (res && res.status === 200) {
              console.log(res.data);
              return res.data;
+         } else if (res.status === 404) {
+             return null;
          }
      } catch (error) {
          console.log(error);
-         throw error;
+        //  throw error;
      }
  }
 
