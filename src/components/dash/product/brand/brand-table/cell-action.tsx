@@ -65,6 +65,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
 
       if (res && res.status === 200) {
         toast({
+          variant: "success",
           title: "Brand deleted",
           description: "Brand has been deleted successfully",
           duration: 5000,
@@ -93,6 +94,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     const accessToken = session?.access_token as string;
 
     try {
+      console.log(accessToken);
       const res = await updateBrand(
         data.id as number,
         {
@@ -106,6 +108,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
 
       if (res && res.status === 200) {
         toast({
+          variant: "success",
           title: "Brand Updated",
           description: "Brand has been updated successfully",
           duration: 5000,

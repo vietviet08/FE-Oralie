@@ -1,11 +1,9 @@
 import axios from "axios";
-import {Brand} from "@/model/brand/Brand";
-import {CategoryPost} from "@/model/category/CategoryPost";
 import {BrandPost} from "@/model/brand/BrandPost";
 import { testUrlProductService } from "@/constants/data";
+import api from "./api/api";
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL + '/api/products';
-
 
 export async function getListBrand(page: number,
                                    size: number,
@@ -15,7 +13,7 @@ export async function getListBrand(page: number,
 
     const testUrl = testUrlProductService + "/dash/brands";
     try {
-        const res = await axios.get(`${baseUrl}/dash/brands`, {
+        const res = await api.get(`/products/dash/brands`, {
             params: {
                 page,
                 size,
@@ -30,10 +28,12 @@ export async function getListBrand(page: number,
         if (res && res.status === 200) {
             console.log(res.data);
             return res.data;
+        }else if(res && res.status === 401){
+            return null;
         }
     } catch (error) {
         console.log(error);
-        throw error;
+        // throw error;
     }
 }
 
@@ -73,7 +73,6 @@ export async function createBrand(brand: BrandPost, token: string) {
         const res = await axios.post(`${baseUrl}/dash/brands`, formData, {
             headers: {
                 Authorization: `Bearer ${token}`,
-                'Content-Type': 'multipart/form-data',
             }
         });
         if (res && res.data) {
@@ -102,10 +101,9 @@ export async function updateBrand(id: number, brand: BrandPost, token: string) {
             }
         });
 
-        const res = await axios.put(`${baseUrl}/dash/brands/${id}`, formData, {
+        const res = await api.put(`/products/dash/brands/${id}`, formData, {
             headers: {
                 Authorization: `Bearer ${token}`,
-                'Content-Type': 'multipart/form-data',
             }
         });
         if (res && res.data) {

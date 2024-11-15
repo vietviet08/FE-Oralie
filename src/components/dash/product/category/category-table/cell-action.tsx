@@ -64,6 +64,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
 
       if (res && res.status === 200) {
         toast({
+          variant: "success",
           title: "Category deleted",
           description: "Category has been deleted successfully",
           duration: 5000,
@@ -107,6 +108,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
 
       if (res && res.status === 200) {
         toast({
+          variant: "success",
           title: "Category Updated",
           description: "Category has been updated successfully",
           duration: 5000,

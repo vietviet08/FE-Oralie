@@ -141,7 +141,7 @@ const ProductPageDetail = ({ product }: Props) => {
                       (e.currentTarget.style.opacity = "0.3")
                     }
                   >
-                    &#10094;
+                    <Icons.chevronLeft width={24} height={24} size={24} />
                   </div>
                   <div
                     ref={nextRef}
@@ -151,7 +151,7 @@ const ProductPageDetail = ({ product }: Props) => {
                       top: "50%",
                       right: "0px",
                       zIndex: 10,
-                      paddingLeft: "10px",
+                      paddingLeft: "5px",
                       width: "50px",
                       height: "50px",
                       backgroundColor: "#DA2118",
@@ -171,7 +171,12 @@ const ProductPageDetail = ({ product }: Props) => {
                       (e.currentTarget.style.opacity = "0.3")
                     }
                   >
-                    &#10095;
+                    <Icons.chevronRight
+                      className="flex justify-center items-center"
+                      width={24}
+                      height={24}
+                      size={24}
+                    />
                   </div>
                 </Swiper>
                 <Swiper

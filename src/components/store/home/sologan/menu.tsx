@@ -334,7 +334,7 @@ const MenuItemComponent: React.FC<{ item: MenuItem }> = ({ item }) => (
       href={item.href}
       title={item.title}
     >
-      <div className="flex items-center ml-3">
+      <div className="flex items-center mx-3 rounded-lg hover:bg-gray-100 w-full">
         {item.imgSrc && (
           <img
             className="w-8 h-8"
@@ -350,7 +350,7 @@ const MenuItemComponent: React.FC<{ item: MenuItem }> = ({ item }) => (
     <div className="absolute left-full top-0 ml-2 h-full w-2 group-hover:block hidden"></div>
 
     {item.subItems && (
-      <ul className="hidden group-hover:flex flex-wrap absolute left-[98%] ml-2 top-0 w-[318%] bg-white shadow-lg rounded-lg z-50">
+      <ul className="hidden group-hover:flex flex-wrap absolute left-[98%] ml-2 top-0 w-[328%] bg-white shadow-lg rounded-lg z-50">
         {item.subItems.map((subItem, index) => (
           <li key={index} className="p-2">
             <a

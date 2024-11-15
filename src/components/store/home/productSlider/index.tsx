@@ -13,6 +13,7 @@ import ProductCard from "../../product/product-card";
 import { getProductById } from "@/services/ProductService";
 import { Button } from "@/components/ui/button";
 import { Swiper as SwiperType } from "swiper/types";
+import { Icons } from "@/components/icons";
 
 const ProductSlider: React.FC<ListResponse<Product>> = ({ data }) => {
   const [product, setProduct] = useState<Product>();
@@ -169,7 +170,7 @@ const ProductSlider: React.FC<ListResponse<Product>> = ({ data }) => {
                 onMouseEnter={(e) => (e.currentTarget.style.opacity = "1")}
                 onMouseLeave={(e) => (e.currentTarget.style.opacity = "0.5")}
               >
-                &#10094;
+                <Icons.chevronLeft width={24} height={24} size={24} />
               </div>
               <div
                 ref={nextRef}
@@ -194,7 +195,7 @@ const ProductSlider: React.FC<ListResponse<Product>> = ({ data }) => {
                 onMouseEnter={(e) => (e.currentTarget.style.opacity = "1")}
                 onMouseLeave={(e) => (e.currentTarget.style.opacity = "0.5")}
               >
-                &#10095;
+                <Icons.chevronRight width={24} height={24} size={24} />
               </div>
               <div
                 className=" absolute bottom-0 translate-y-2 left-0 right-0 h-2 bg-gray-200 rounded mt-4"

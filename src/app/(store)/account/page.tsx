@@ -39,7 +39,16 @@ const AccountPage: React.FC = () => {
   const renderSectionContent = () => {
     switch (selectedSection) {
       case "Profile":
-        return <div>Profile Content</div>;
+        return (
+          <div className="flex flex-col items-center">
+            <span className="text-lg font-bold">
+              {session?.user?.name || "User"}
+            </span>
+            <span className="text-sm">{session?.user?.email}</span>
+            <span className="text-sm">{session?.access_token}</span>
+            <span className="text-sm">{session?.expires}</span>
+          </div>
+        );
       case "Orders":
         return <div>Orders Content</div>;
       case "Setting":
@@ -47,7 +56,14 @@ const AccountPage: React.FC = () => {
       case "Password":
         return <div>Change Password Content</div>;
       default:
-        return <div>Select a section</div>;
+        return (
+          <div className="flex flex-col items-center">
+            <span className="text-lg font-bold">
+              {session?.user?.name || "User"}
+            </span>
+            <span className="text-sm">{session?.user?.email}</span>
+          </div>
+        );
     }
   };
 
@@ -57,7 +73,7 @@ const AccountPage: React.FC = () => {
         <h2>Account Manage</h2>
       </Head>
       <div className="flex flex-col md:flex-row">
-        <div className="w-full md:w-1/4 mr-0   md:mr-2 mt-0 p-4  rounded-lg shadow-md">
+        <div className="w-full md:w-1/4 mr-0 md:mr-2 mt-0 p-4 rounded-lg shadow-md">
           <ul className="space-y-4">
             {links.map((link) => (
               <li
@@ -67,11 +83,15 @@ const AccountPage: React.FC = () => {
                     ? link.onClick
                     : () => handleSectionClick(link.name)
                 }
-                className="cursor-pointer"
+                className={`cursor-pointer ${
+                  selectedSection === link.name
+                    ? "bg-gray-200 rounded-lg shadow-sm"
+                    : ""
+                }`}
               >
                 <Button
                   variant={"ghost"}
-                  className="hover:text-primaryred hover:bg-inherit"
+                  className="hover:text-primaryred hover:bg-gray-100 w-full flex items-center justify-start py-2"
                 >
                   {link.icon} <p className="text-base">{link.name}</p>
                 </Button>
