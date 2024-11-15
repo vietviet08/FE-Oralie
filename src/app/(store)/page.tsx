@@ -4,7 +4,7 @@ import SoloGan from "@/components/store/home/sologan";
 export default function Home() {
   return (
     <div className="sm:px-32 px-6 py-6">
-      <div className="py-1">
+      <div className="py-1 mt-14">
         <SoloGan />
       </div>
       <div className="py-2 pb-4 h-full">

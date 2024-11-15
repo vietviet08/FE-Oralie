@@ -42,6 +42,7 @@ import {
   AlignJustify,
   Search,
   PhoneCall,
+  ChevronUp,
 } from "lucide-react";
 
 export type Icon = LucideIcon;
@@ -105,4 +106,5 @@ export const Icons = {
   alignJustify: AlignJustify,
   search: Search,
   phoneCall: PhoneCall,
+  chevronUp: ChevronUp,
 };

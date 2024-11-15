@@ -50,7 +50,7 @@ const ProductPageDetail = ({ product }: Props) => {
   }, [swiperRef.current]);
 
   return (
-    <div className="sm:px-32 px-6 py-6 ">
+    <div className="sm:px-32 px-6 py-6 mt-14">
       <div className="flex justify-between items-center w-full py-4">
         <div className="w-3/5">
           <h2 className="text-2xl font-bold text-primaryred">{product.name}</h2>
@@ -407,9 +407,9 @@ const ProductPageDetail = ({ product }: Props) => {
       </div>
 
       <div className=" mb:border-t mb:border-neutral-gray-3 my-4 py-4">
-        <div className="FeaturePolicy_wrapper__JYz8b">
+        <div className="">
           <div className="container">
-            <div className="flex flex-col md:flex-row justify-between items-center">
+            <div className=" flex-col md:flex-row justify-between items-center lg:grid-cols-4 grid grid-cols-2 gap-2">
               <div className="FeaturePolicy_item__Y5K8b">
                 <div className="flex justify-center items-center">
                   <Image
@@ -421,8 +421,8 @@ const ProductPageDetail = ({ product }: Props) => {
                   />
                 </div>
                 <div className="text-[14px] text-center mt-4">
-                  <p className="font-bold">Thương hiệu đảm bảo</p>
-                  <p>Nhập khẩu, bảo hành chính hãng</p>
+                  <p className="font-bold">Guaranteed Brand</p>
+                  <p>Imported, Genuine Warranty</p>
                 </div>
               </div>
               <div className="FeaturePolicy_item__Y5K8b">
@@ -436,8 +436,8 @@ const ProductPageDetail = ({ product }: Props) => {
                   />
                 </div>
                 <div className="text-[14px] text-center mt-4">
-                  <p className="font-bold">Đổi trả dễ dàng</p>
-                  <p>Theo chính sách đổi trả tại FPT Shop</p>
+                  <p className="font-bold">Easy Returnsàng</p>
+                  <p>According to Oralie's Return Policy</p>
                 </div>
               </div>
               <div className="FeaturePolicy_item__Y5K8b">
@@ -451,8 +451,8 @@ const ProductPageDetail = ({ product }: Props) => {
                   />
                 </div>
                 <div className="text-[14px] text-center mt-4">
-                  <p className="font-bold">Sản phẩm chất lượng</p>
-                  <p>Đảm bảo tương thích và độ bền cao</p>
+                  <p className="font-bold">Quality Products</p>
+                  <p>Guaranteed Compatibility and Durability</p>
                 </div>
               </div>
               <div className="FeaturePolicy_item__Y5K8b">
@@ -466,8 +466,8 @@ const ProductPageDetail = ({ product }: Props) => {
                   />
                 </div>
                 <div className="text-[14px] text-center mt-4">
-                  <p className="font-bold">Giao hàng tận nơi</p>
-                  <p>Tại 63 tỉnh thành</p>
+                  <p className="font-bold">Delivery to Your Doorstep</p>
+                  <p>In 63 Provinces</p>
                 </div>
               </div>
             </div>

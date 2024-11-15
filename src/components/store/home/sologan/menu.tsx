@@ -330,11 +330,11 @@ const menuItems: MenuItem[] = [
 const MenuItemComponent: React.FC<{ item: MenuItem }> = ({ item }) => (
   <li className="relative group ml-2">
     <a
-      className="flex justify-between items-center space-x-2 text-gray-700 hover:text-primaryred"
+      className="flex justify-between items-center space-x-2 mt-2 text-gray-700 hover:text-primaryred"
       href={item.href}
       title={item.title}
     >
-      <div className="flex items-center">
+      <div className="flex items-center ml-3">
         {item.imgSrc && (
           <img
             className="w-8 h-8"
@@ -343,9 +343,8 @@ const MenuItemComponent: React.FC<{ item: MenuItem }> = ({ item }) => (
             title={item.title}
           />
         )}
-        <span>{item.title}</span>
+        <span className="text-sm font-medium">{item.title}</span>
       </div>
-      <Icons.chevronRight className="w-5 h-5 mr-2 " />
     </a>
 
     <div className="absolute left-full top-0 ml-2 h-full w-2 group-hover:block hidden"></div>
@@ -392,7 +391,7 @@ const MenuItemComponent: React.FC<{ item: MenuItem }> = ({ item }) => (
 );
 
 const Menu: React.FC = () => (
-  <div className="box_menu_home">
+  <div className="box_menu_home ">
     <nav className="menu_nav">
       <ul className="menu_list space-y-4">
         {menuItems.map((item, index) => (

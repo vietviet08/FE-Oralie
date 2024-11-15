@@ -52,7 +52,7 @@ const AccountPage: React.FC = () => {
   };
 
   return (
-    <div className="sm:px-32 px-6 py-6 ">
+    <div className="sm:px-32 px-6 py-6 mt-24">
       <Head>
         <h2>Account Manage</h2>
       </Head>

@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react";
 import Link from "next/link";
 
@@ -18,6 +20,7 @@ import AuthStatus from "@/components/common/authStatus";
 import { Button } from "@medusajs/ui";
 import { Icons } from "../icons";
 import { Input } from "../ui/input";
+import Menu from "./home/sologan/menu";
 
 const components: { title: string; href: string; description: string }[] = [
   {
@@ -58,9 +61,43 @@ const components: { title: string; href: string; description: string }[] = [
 ];
 
 export function Header() {
+  const [openMenu, setOpenMenu] = React.useState(false);
+
+  const menuRef = React.useRef<HTMLDivElement>(null);
+
+  const handleClickOutside = (event: { target: any }) => {
+    if (menuRef.current && !menuRef.current.contains(event.target)) {
+      setOpenMenu(false);
+    }
+  };
+
+  React.useEffect(() => {
+    if (openMenu) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [openMenu]);
+
   return (
-    <header className="flex shadow-md py-2 sm:px-32 px-6 bg-gradient-to-b from-primaryred1 to-primaryred font-sans min-h-[70px] tracking-wide relative z-50 w-full">
-      <div className="flex  items-center justify-between  w-full">
+    <header className=" z-50 fixed flex shadow-md py-2 sm:px-32 px-6 mb-14 bg-gradient-to-b from-primaryred1 to-primaryred font-sans min-h-[70px] tracking-wide w-full">
+      {openMenu && (
+        <>
+          <div className="fixed top-[72px] inset-0 bg-gray-600 opacity-50 z-0"></div>
+
+          <div
+            ref={menuRef}
+            className="absolute top-20 left-32 bg-white rounded-xl shadow-xl w-[16%] mr-5 h-[364px] z-0"
+          >
+            <Menu />
+          </div>
+        </>
+      )}
+
+      <div className="flex items-center justify-between w-full">
         <a href="/">
           <Image
             src="/images/oralie.png"
@@ -70,18 +107,25 @@ export function Header() {
             className="w-14 h-14"
           />
         </a>
+
         <div className="rounded-2xl sm:bg-primaryred1 hidden sm:block">
-          <Button variant="transparent">
+          <Button variant="transparent" onClick={() => setOpenMenu(!openMenu)}>
             <Icons.alignJustify className="w-7 h-7 text-white mr-2" />
             <p className="hidden sm:block text-white">Menu</p>
           </Button>
         </div>
+
         <div className="relative lg:w-2/5 sm:w-3/5">
           <Input
             placeholder="Input the product need to find"
-            className="text-gray bg-white placeholder:text-gray placeholder:text-base rounded-2xl border-0 pr-10 text-ellipsis"
+            className="text-gray font-[14px] outline-none bg-white placeholder:text-gray placeholder:text-base rounded-2xl border-0 pr-10 text-ellipsis focus:outline-none focus:ring-0"
           />
-          <Icons.search className="absolute right-3 top-1/2 transform -translate-y-1/2 w-6 h-6 text-primaryred " />
+          <Button
+            variant="danger"
+            className="absolute right-0 top-1/2 transform -translate-y-1/2 size-10"
+          >
+            <Icons.search className="absolute right-3 top-1/2 transform -translate-y-1/2 w-6 h-6 text-primaryred " />
+          </Button>
         </div>
 
         <div className="flex items-center space-x-5">
