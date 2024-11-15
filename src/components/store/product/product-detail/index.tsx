@@ -29,6 +29,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import Image from "next/image";
 type Props = {
   product: Product;
 };
@@ -75,9 +76,9 @@ const ProductPageDetail = ({ product }: Props) => {
       <div className="py-2 border-b-[1px] border-b-primaryred2"></div>
       <div className="pt-8">
         <main>
-          <div className="flex flex-col md:flex-row">
-            <div className="w-full md:w-3/5 mr-0 md:mr-2 mt-0 p-4 rounded-lg shadow-md">
-              <div className="relative w-full h-full rounded-lg  overflow-hidden">
+          <div className="flex flex-col md:flex-row md:justify-center ">
+            <div className="w-full md:w-3/5 mr-0 md:mr-2 mt-0 m-4 ">
+              <div className="relative w-full h-full ">
                 <Swiper
                   onSwiper={(swiper) => {
                     swiperRef.current = swiper;
@@ -99,6 +100,7 @@ const ProductPageDetail = ({ product }: Props) => {
                   loop={true}
                   modules={[Autoplay, Navigation, Thumbs]}
                   onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
+                  className="rounded-lg border border-gray-300 shadow-sm overflow-hidden"
                 >
                   {product.images.map((image, index) => (
                     <SwiperSlide key={index}>
@@ -179,7 +181,7 @@ const ProductPageDetail = ({ product }: Props) => {
                   freeMode={true}
                   watchSlidesProgress={true}
                   modules={[FreeMode, Navigation, Thumbs]}
-                  className="mySwiper mt-6 px-4"
+                  className="mySwiper mt-3 px-4"
                   breakpoints={{
                     320: {
                       slidesPerView: 4,
@@ -227,7 +229,7 @@ const ProductPageDetail = ({ product }: Props) => {
                 </Swiper>
               </div>
             </div>
-            <div className="w-full md:w-2/5 ml-0 md:ml-2 mt-0 p-4 rounded-lg shadow-md">
+            <div className="w-full md:w-2/5 ml-0 md:ml-2 mt-0 p-4 rounded-lg shadow-sm">
               <div className="grid grid-cols-3 gap-3 mb-4">
                 {product.options.map((option) => (
                   <Button
@@ -299,6 +301,72 @@ const ProductPageDetail = ({ product }: Props) => {
           </div>
         </main>
       </div>
+
+      <div className="my-4 w-full md:w-2/5">
+        <h2 className="font-bold text-xl my-2">Product Policy</h2>
+        <div className="text-sm grid grid-cols-2 gap-3">
+          <div className="flex items-center gap-x-2 mb:gap-x-3">
+            <Image
+              src="https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/Type_Hang_chinh_hang_0b0233a2c6.svg"
+              width={20}
+              height={20}
+              sizes="20px"
+              alt="return"
+            />
+            <span>Genuine product</span>
+          </div>
+          <div className="flex items-center gap-x-2 mb:gap-x-3">
+            <Image
+              src="https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/Type_Bao_hanh_9415bfe460.svg"
+              width={20}
+              height={20}
+              sizes="20px"
+              alt="return"
+            />
+            <span>Warranty (months): 12</span>
+          </div>
+          <div className="flex items-center gap-x-2 mb:gap-x-3">
+            <Image
+              src="https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/Type_Mien_phi_giao_hang_3339a0ce65.svg"
+              width={20}
+              height={20}
+              sizes="20px"
+              alt="return"
+            />
+            <span>Free delivery within 90 minutes</span>
+          </div>
+          <div className="flex items-center gap-x-2 mb:gap-x-3">
+            <Image
+              src="https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/Type_Cai_dat_21382ecc84.svg"
+              width={20}
+              height={20}
+              sizes="20px"
+              alt="return"
+            />
+            <span>Free installation support</span>
+          </div>
+          <div className="flex items-center gap-x-2 mb:gap-x-3">
+            <Image
+              src="https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/Type_Doi_tra_59d1881db4.svg"
+              width={20}
+              height={20}
+              sizes="20px"
+              alt="return"
+            />
+            <span>Return policy</span>
+          </div>
+          <div className="flex items-center gap-x-2 mb:gap-x-3">
+            <Image
+              src="https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/Type_Tra_gop_0362e63008.svg"
+              width={20}
+              height={20}
+              sizes="20px"
+              alt="return"
+            />
+            <span>Installment policy</span>
+          </div>
+        </div>
+      </div>
       <div className="py-6 mb-6 border-b-[1px] border-b-primaryred2"></div>
       <div className="my-2">
         <ProductSlider
@@ -336,6 +404,75 @@ const ProductPageDetail = ({ product }: Props) => {
               ))}
             </TableBody>
           </Table>
+        </div>
+      </div>
+
+      <div className=" mb:border-t mb:border-neutral-gray-3 my-4 py-4">
+        <div className="FeaturePolicy_wrapper__JYz8b">
+          <div className="container">
+            <div className="flex flex-col md:flex-row justify-between items-center">
+              <div className="FeaturePolicy_item__Y5K8b">
+                <div className="flex justify-center items-center">
+                  <Image
+                    sizes="65px"
+                    width={65}
+                    height={65}
+                    src="https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/policy1.svg"
+                    alt={""}
+                  />
+                </div>
+                <div className="text-[14px] text-center mt-4">
+                  <p className="font-bold">Thương hiệu đảm bảo</p>
+                  <p>Nhập khẩu, bảo hành chính hãng</p>
+                </div>
+              </div>
+              <div className="FeaturePolicy_item__Y5K8b">
+                <div className="flex justify-center items-center">
+                  <Image
+                    sizes="65px"
+                    width={65}
+                    height={65}
+                    src="https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/policy2.svg"
+                    alt={""}
+                  />
+                </div>
+                <div className="text-[14px] text-center mt-4">
+                  <p className="font-bold">Đổi trả dễ dàng</p>
+                  <p>Theo chính sách đổi trả tại FPT Shop</p>
+                </div>
+              </div>
+              <div className="FeaturePolicy_item__Y5K8b">
+                <div className="flex justify-center items-center">
+                  <Image
+                    sizes="65px"
+                    width={65}
+                    height={65}
+                    src="https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/policy3.svg"
+                    alt={""}
+                  />
+                </div>
+                <div className="text-[14px] text-center mt-4">
+                  <p className="font-bold">Sản phẩm chất lượng</p>
+                  <p>Đảm bảo tương thích và độ bền cao</p>
+                </div>
+              </div>
+              <div className="FeaturePolicy_item__Y5K8b">
+                <div className="flex justify-center items-center">
+                  <Image
+                    sizes="65px"
+                    width={65}
+                    height={65}
+                    src="https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/policy4.svg"
+                    alt={""}
+                  />
+                </div>
+                <div className="text-[14px] text-center mt-4">
+                  <p className="font-bold">Giao hàng tận nơi</p>
+                  <p>Tại 63 tỉnh thành</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
