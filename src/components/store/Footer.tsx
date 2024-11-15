@@ -12,31 +12,100 @@ export default async function Footer() {
 
   return (
     <footer className="bg-white dark:bg-gray-900 border-t border-ui-border-base shadow-inner  ">
-      <div className="mx-auto w-full sm:px-32 px-6 py-8 lg:py-8">
+      <div className="mx-auto w-full sm:px-16 lg:px-32 px-6 py-8 lg:py-8">
         <div className="md:flex md:justify-between">
-          <div className="mb-6 md:mb-0">
-            <a href="https://flowbite.com/" className="flex items-center">
-              <Image
-                src="/images/oralie.png"
-                width={64}
-                height={64}
-                className=""
-                alt="Oralie Logo"
-              />
-              <span className=" lg:block hidden self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
-                Oralie
-              </span>
-            </a>
-          </div>
-          <div className="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3">
-            <div>
-              <h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">
-                Resources
+          <div className="mb-6 md:mb-0 w-full md:w-1/6 space-x-6 flex flex-row md:flex-col justify-between md:justify-start items-center  ">
+            <div className="w-3/6 lg:w-full">
+              <a href="https://flowbite.com/" className="flex items-center">
+                <Image
+                  src="/images/oralie.png"
+                  width={64}
+                  height={64}
+                  className=""
+                  alt="Oralie Logo"
+                />
+                <span className=" lg:block hidden self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
+                  Oralie
+                </span>
+              </a>
+            </div>
+            <div className="pt-4 w-3/6 lg:w-full">
+              <h2 className="mb-3 text-sm font-semibold text-gray-900 uppercase dark:text-white">
+                contact with us
               </h2>
-              <ul className="text-gray-500 dark:text-gray-400 font-medium">
-                <li className="mb-4">
+              <ul className="text-gray-500 dark:text-gray-400 font-medium text-sm space-y-1 lg:w-3/5">
+                <li className="">
+                  <a href="#" className="hover:underline"></a>
+                </li>
+                <li>
+                  <div className="flex flex-wrap gap-2 lg:grid lg:grid-cols-4">
+                    <div className="  ">
+                      <a href="https://facebook.com" target="_blank">
+                        <Image
+                          width={25}
+                          height={25}
+                          sizes="100%"
+                          src={
+                            "https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/facebook_icon_8543190720.svg"
+                          }
+                          alt=""
+                          className=""
+                        />
+                      </a>
+                    </div>
+                    <div>
+                      <a href="https://zalo.vn" target="_blank">
+                        <Image
+                          width={25}
+                          height={25}
+                          sizes="100%"
+                          src={
+                            "https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/zalo_icon_8cbef61812.svg"
+                          }
+                          alt=""
+                        />
+                      </a>
+                    </div>
+                    <div>
+                      <a href="https://youtube.com" target="_blank">
+                        <Image
+                          width={25}
+                          height={25}
+                          sizes="100%"
+                          src={
+                            "https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/youtube_icon_b492d61ba5.svg"
+                          }
+                          alt=""
+                        />
+                      </a>
+                    </div>
+                    <div>
+                      <a href="https://tiktok.com" target="_blank">
+                        <Image
+                          width={25}
+                          height={25}
+                          sizes="100%"
+                          src={
+                            "https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/tiktok_icon_faabbeeb61.svg"
+                          }
+                          alt=""
+                        />
+                      </a>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-6 sm:gap-8 sm:grid-cols-4 w-full md:w-5/6">
+            <div>
+              <h2 className="mb-3 text-sm font-semibold text-gray-900 uppercase dark:text-white">
+                ABOUT US
+              </h2>
+              <ul className="text-gray-500 dark:text-gray-400 text-sm space-y-1">
+                <li className="">
                   <a href="https://flowbite.com/" className="hover:underline">
-                    Flowbite
+                    Introduction to the company{" "}
                   </a>
                 </li>
                 <li>
@@ -44,40 +113,181 @@ export default async function Footer() {
                     href="https://tailwindcss.com/"
                     className="hover:underline"
                   >
-                    Tailwind CSS
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">
-                Follow us
-              </h2>
-              <ul className="text-gray-500 dark:text-gray-400 font-medium">
-                <li className="mb-4">
-                  <a
-                    href="https://github.com/themesberg/flowbite"
-                    className="hover:underline "
-                  >
-                    Github
+                    Operating regulations{" "}
                   </a>
                 </li>
                 <li>
                   <a
-                    href="https://discord.gg/4eeurUVvTy"
+                    href="https://tailwindcss.com/"
                     className="hover:underline"
                   >
-                    Discord
+                    Friends - Your companion{" "}
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://tailwindcss.com/"
+                    className="hover:underline"
+                  >
+                    Promotional news{" "}
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://tailwindcss.com/"
+                    className="hover:underline"
+                  >
+                    Introduction to return devices{" "}
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://tailwindcss.com/"
+                    className="hover:underline"
+                  >
+                    Online shopping & payment instructions{" "}
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://tailwindcss.com/"
+                    className="hover:underline"
+                  >
+                    Apple authorized dealers and authorized warranty centers{" "}
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://tailwindcss.com/"
+                    className="hover:underline"
+                  >
+                    Check electronic invoices{" "}
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://tailwindcss.com/"
+                    className="hover:underline"
+                  >
+                    Check warranty{" "}
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://tailwindcss.com/"
+                    className="hover:underline"
+                  >
+                    Frequently asked questions{" "}
                   </a>
                 </li>
               </ul>
             </div>
             <div>
-              <h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">
+              <h2 className="mb-3 text-sm font-semibold text-gray-900 uppercase dark:text-white">
+                Information and policies
+              </h2>
+              <ul className="text-gray-500 dark:text-gray-400 text-sm space-y-1">
+                <li className="">
+                  <a href="https://flowbite.com/" className="hover:underline">
+                    Online shopping and payment{" "}
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://tailwindcss.com/"
+                    className="hover:underline"
+                  >
+                    Online installment shopping{" "}
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://tailwindcss.com/"
+                    className="hover:underline"
+                  >
+                    Installment shopping with credit card{" "}
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://tailwindcss.com/"
+                    className="hover:underline"
+                  >
+                    Delivery policy{" "}
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://tailwindcss.com/"
+                    className="hover:underline"
+                  >
+                    Check member points{" "}
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://tailwindcss.com/"
+                    className="hover:underline"
+                  >
+                    View member promotions{" "}
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://tailwindcss.com/"
+                    className="hover:underline"
+                  >
+                    Check warranty information{" "}
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://tailwindcss.com/"
+                    className="hover:underline"
+                  >
+                    Check electronic invoices{" "}
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://tailwindcss.com/"
+                    className="hover:underline"
+                  >
+                    Purchase invoice information{" "}
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://tailwindcss.com/"
+                    className="hover:underline"
+                  >
+                    Official warranty center{" "}
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://tailwindcss.com/"
+                    className="hover:underline"
+                  >
+                    Regulations on data backup{" "}
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://tailwindcss.com/"
+                    className="hover:underline"
+                  >
+                    Apple product unboxing policy{" "}
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h2 className="mb-3 text-sm font-semibold text-gray-900 uppercase dark:text-white">
                 Legal
               </h2>
-              <ul className="text-gray-500 dark:text-gray-400 font-medium">
-                <li className="mb-4">
+              <ul className="text-gray-500 dark:text-gray-400 font-medium text-sm space-y-1">
+                <li className="">
                   <a href="#" className="hover:underline">
                     Privacy Policy
                   </a>
@@ -87,7 +297,294 @@ export default async function Footer() {
                     Terms &amp; Conditions
                   </a>
                 </li>
+                <li className="">
+                  <div className="flex justify-between items-center -space-x-4">
+                    <div className="w-2/5">
+                      <Image
+                        width={100}
+                        height={100}
+                        sizes="100%"
+                        src={
+                          "https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/oralie-file-My_QR_Code_1-1024.png"
+                        }
+                        alt=""
+                      ></Image>
+                    </div>
+                    <div className="w-3/5">
+                      <Image
+                        width={150}
+                        height={100}
+                        sizes="100%"
+                        src={
+                          "https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/oralie-file-png-clipart-google-play-and-app-store-logos-app-store-google-play-apple-apple-text-logo-removebg-preview.png"
+                        }
+                        alt={""}
+                      ></Image>
+                    </div>
+                  </div>
+                </li>
               </ul>
+            </div>
+            <div className="flex flex-col items-center">
+              <div>
+                <h2 className="mb-3 text-sm font-semibold text-gray-900 uppercase dark:text-white">
+                  Payment support
+                </h2>
+                <ul className="text-gray-500 dark:text-gray-400 font-medium text-sm space-y-1">
+                  <li className="">
+                    <a href="#" className="hover:underline"></a>
+                  </li>
+                  <li>
+                    <div className="flex flex-wrap gap-1 md:grid md:grid-cols-4">
+                      <div>
+                        <Image
+                          width={55}
+                          height={55}
+                          sizes="100%"
+                          src={
+                            "https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/visa_icon_44fe6e15ed.svg"
+                          }
+                          alt=""
+                        />
+                      </div>
+                      <div>
+                        <Image
+                          width={55}
+                          height={55}
+                          sizes="100%"
+                          src={
+                            "https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/mastercard_icon_c75f94f6a5.svg"
+                          }
+                          alt=""
+                        />
+                      </div>
+                      <div>
+                        <Image
+                          width={55}
+                          height={55}
+                          sizes="100%"
+                          src={
+                            "https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/jcb_icon_214783937c.svg"
+                          }
+                          alt=""
+                        />
+                      </div>
+                      <div>
+                        <Image
+                          width={55}
+                          height={55}
+                          sizes="100%"
+                          src={
+                            "https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/amex_icon_d6fb68108d.svg"
+                          }
+                          alt=""
+                        />
+                      </div>
+                      <div>
+                        <Image
+                          width={55}
+                          height={55}
+                          sizes="100%"
+                          src={
+                            "https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/vnpay_icon_f42045057d.svg"
+                          }
+                          alt=""
+                        />
+                      </div>
+                      <div>
+                        <Image
+                          width={55}
+                          height={55}
+                          sizes="100%"
+                          src={
+                            "https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/zalopay_icon_26d64ea93f.svg"
+                          }
+                          alt=""
+                        />
+                      </div>
+                      <div>
+                        <Image
+                          width={55}
+                          height={55}
+                          sizes="100%"
+                          src={
+                            "https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/napas_icon_94d5330e3c.svg"
+                          }
+                          alt=""
+                        />
+                      </div>
+                      <div>
+                        <Image
+                          width={55}
+                          height={55}
+                          sizes="100%"
+                          src={
+                            "https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/kredivo_icon_04f72baf36.svg"
+                          }
+                          alt=""
+                        />
+                      </div>
+                      <div>
+                        <Image
+                          width={55}
+                          height={55}
+                          sizes="100%"
+                          src={
+                            "https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/momo_icon_baef21b5f7.svg"
+                          }
+                          alt=""
+                        />
+                      </div>
+                      <div>
+                        <Image
+                          width={55}
+                          height={55}
+                          sizes="100%"
+                          src={
+                            "https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/foxpay_icon_063b36c1f8.svg"
+                          }
+                          alt=""
+                        />
+                      </div>
+                      <div>
+                        <Image
+                          width={55}
+                          height={55}
+                          sizes="100%"
+                          src={
+                            "https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/alepay_icon_20d5310617.svg"
+                          }
+                          alt=""
+                        />
+                      </div>
+                      <div>
+                        <Image
+                          width={55}
+                          height={55}
+                          sizes="100%"
+                          src={
+                            "https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/homepaylater_icon_adef600842.svg"
+                          }
+                          alt=""
+                        />
+                      </div>
+                      <div>
+                        <Image
+                          width={55}
+                          height={55}
+                          sizes="100%"
+                          src={
+                            "https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/muadee_icon_5e297d9e61.svg"
+                          }
+                          alt=""
+                        />
+                      </div>
+                      <div>
+                        <Image
+                          width={55}
+                          height={55}
+                          sizes="100%"
+                          src={
+                            "https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/applepay_icon_cb6806a0d0.svg"
+                          }
+                          alt=""
+                        />
+                      </div>
+                      <div>
+                        <Image
+                          width={55}
+                          height={55}
+                          sizes="100%"
+                          src={
+                            "https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/samsungpay_icon_0292aa9876.svg"
+                          }
+                          alt=""
+                        />
+                      </div>
+                      <div>
+                        <Image
+                          width={55}
+                          height={55}
+                          sizes="100%"
+                          src={
+                            "https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/googlepay_icon_afa293cc14.svg"
+                          }
+                          alt=""
+                        />
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div className="pt-4 w-full">
+                <h2 className="mb-3 text-sm font-semibold text-gray-900 uppercase dark:text-white">
+                  Certification
+                </h2>
+                <ul className="text-gray-500 dark:text-gray-400 font-medium text-sm space-y-1">
+                  <li className="">
+                    <a href="#" className="hover:underline"></a>
+                  </li>
+                  <li>
+                    <div className="flex flex-wrap gap-1 md:grid md:grid-cols-4">
+                      <div>
+                        <Image
+                          width={55}
+                          height={55}
+                          sizes="100%"
+                          src={
+                            "https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/dmca_icon_8fc6622bd5.svg"
+                          }
+                          alt=""
+                        />
+                      </div>
+                      <div>
+                        <Image
+                          width={55}
+                          height={55}
+                          sizes="100%"
+                          src={
+                            "https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/thuong_hieu_manh_2013_icon_b56f772475.svg"
+                          }
+                          alt=""
+                        />
+                      </div>
+                      <div>
+                        <Image
+                          width={55}
+                          height={55}
+                          sizes="100%"
+                          src={
+                            "https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/san_pham_dich_vu_hang_dau_viet_nam_icon_282a9ba4f7.svg"
+                          }
+                          alt=""
+                        />
+                      </div>
+                      <div>
+                        <Image
+                          width={35}
+                          height={35}
+                          sizes="100%"
+                          src={
+                            "https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/noi_khong_voi_hang_gia_icon_e16037d9cb.svg"
+                          }
+                          alt=""
+                        />
+                      </div>
+                      <div>
+                        <Image
+                          width={100}
+                          height={100}
+                          sizes="100%"
+                          src={
+                            "https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/da_thong_bao_bo_cong_thuong_icon_64785fb3f7.svg"
+                          }
+                          alt=""
+                        />
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>

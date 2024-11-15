@@ -391,7 +391,6 @@ const ProductPageDetail = ({ product }: Props) => {
         <div className="w-2/6 rounded-lg shadow-inner p-4">
           <h2 className=" font-bold text-lg">Specifications</h2>
           <Table>
-            <TableCaption>A list of your recent invoices.</TableCaption>
             <TableBody>
               {product.specifications.map((spec, index) => (
                 <TableRow
