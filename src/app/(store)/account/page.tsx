@@ -1,6 +1,5 @@
 "use client";
 
-import Logout from "@/components/auth/Logout";
 import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import federatedLogout from "@/utils/federatedLogout";
@@ -8,7 +7,7 @@ import { LogOut } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const AccountPage: React.FC = () => {
   const { data: session, status } = useSession();
@@ -18,6 +17,18 @@ const AccountPage: React.FC = () => {
   const handleSectionClick = (section: string) => {
     setSelectedSection(section);
   };
+
+  const [exprise, setExprise] = useState<string>("");
+
+  useEffect(() => {
+    if (session) {
+      setExprise(session.expires);
+      const timer = setTimeout(() => {
+        setExprise(session.expires);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [session]);
 
   const links = [
     { name: "Profile", icon: <Icons.user /> },
@@ -41,12 +52,12 @@ const AccountPage: React.FC = () => {
       case "Profile":
         return (
           <div className="flex flex-col items-center">
+            <span className="text-sm">{session?.user?.email} </span>
             <span className="text-lg font-bold">
               {session?.user?.name || "User"}
             </span>
             <span className="text-sm">{session?.user?.email}</span>
-            <span className="text-sm">{session?.access_token}</span>
-            <span className="text-sm">{session?.expires}</span>
+            <span className="text-sm">{exprise}</span>
           </div>
         );
       case "Orders":
@@ -62,6 +73,10 @@ const AccountPage: React.FC = () => {
               {session?.user?.name || "User"}
             </span>
             <span className="text-sm">{session?.user?.email}</span>
+            <span className="text-sm break-words w-3/5 h-full">
+              {session?.access_token}
+            </span>
+            <span className="text-sm">{exprise}</span>
           </div>
         );
     }
