@@ -1,7 +1,6 @@
 import apiClientService from "@/utils/ApiClientService";
 import {ProductPage} from "@/model/product/ProductPage";
 import {ProductPost} from "@/model/product/ProductPost";
-import {Product} from "@/model/product/Product";
 import axios from "axios";
 import { testUrlProductService } from "@/constants/data";
 
