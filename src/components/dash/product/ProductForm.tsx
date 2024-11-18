@@ -1,22 +1,19 @@
 "use client";
 import "react-quill/dist/quill.snow.css";
-import { EditorContent, EditorRoot } from "novel";
 import * as React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useFieldArray, useForm } from "react-hook-form";
+import {  useFieldArray, useForm } from "react-hook-form";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -35,13 +32,11 @@ import { getListBrand } from "@/services/BrandService";
 import { useSession } from "next-auth/react";
 import { CategoryGet } from "@/model/category/CategoryGet";
 import { ProductPost } from "@/model/product/ProductPost";
-import { Edit, List, TrashIcon } from "lucide-react";
+import {  TrashIcon } from "lucide-react";
 import { MultiSelect } from "@/components/common/multi-select";
 import { PlusIcon } from "@radix-ui/react-icons";
 import { useToast } from "@/hooks/use-toast";
 import { Product } from "@/model/product/Product";
-import { spec } from "node:test/reporters";
-import Tiptap from "@/components/common/editor";
 import ReactQuill from "react-quill";
 import { useRouter } from "next/navigation";
 

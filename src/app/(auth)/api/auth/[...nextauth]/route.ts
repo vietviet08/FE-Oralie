@@ -4,57 +4,38 @@ import NextAuth from "next-auth";
 import {JWT} from "next-auth/jwt";
 import {GetServerSidePropsContext, NextApiRequest, NextApiResponse} from "next";
 
-const {KEYCLOAK_STORE_CLIENT_ID, KEYCLOAK_STORE_CLIENT_SECRET, KEYCLOAK_DOMAIN, NEXTAUTH_SECRET} = process.env;
-
-if (!KEYCLOAK_STORE_CLIENT_ID || !KEYCLOAK_STORE_CLIENT_SECRET || !KEYCLOAK_DOMAIN || !NEXTAUTH_SECRET) {
-    throw new Error("Required environment variables are missing");
-}
-
 async function requestRefreshOfAccessToken(token: JWT) {
-    try {
-        const response = await fetch(`${KEYCLOAK_DOMAIN}/protocol/openid-connect/token`, {
-            headers: {"Content-Type": "application/x-www-form-urlencoded"},
-            body: new URLSearchParams({
-                client_id: KEYCLOAK_STORE_CLIENT_ID!,
-                client_secret: KEYCLOAK_STORE_CLIENT_SECRET!,
-                grant_type: "refresh_token",
-                refresh_token: token.refreshToken as string,
-            }),
-            method: "POST",
-            cache: "no-store",
-        });
+    const response = await fetch(`${process.env.KEYCLOAK_DOMAIN}/protocol/openid-connect/token`, {
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+        body: new URLSearchParams({
+            client_id: process.env.KEYCLOAK_STORE_CLIENT_ID!,
+            client_secret: process.env.KEYCLOAK_STORE_CLIENT_SECRET!,
+            grant_type: "refresh_token",
+            refresh_token: token.refreshToken as string,
+        }),
+        method: "POST",
+        cache: "no-store"
+    });
 
-        if (!response.ok) {
-            const errorData = await response.json();
-            console.error("Failed to refresh access token", errorData);
-            throw new Error(errorData.error_description || "Failed to refresh access token");
-        }
-
-        const refreshedTokens = await response.json() as TokenSet & { expires_in: number };
-
-        if (!refreshedTokens.access_token) {
-            throw new Error("No new access token in the response");
-        }
-
-        return refreshedTokens;
-    } catch (error) {
-        console.error("Network error while refreshing access token", error);
-        throw error;
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error_description || "Failed to refresh access token");
     }
+
+    return response.json();
 }
 
 export const authOptions: AuthOptions = {
     providers: [
         KeycloakProvider({
-            clientId: KEYCLOAK_STORE_CLIENT_ID!,
-            clientSecret: KEYCLOAK_STORE_CLIENT_SECRET!,
-            issuer: KEYCLOAK_DOMAIN!,
+            clientId: process.env.KEYCLOAK_STORE_CLIENT_ID!,
+            clientSecret: process.env.KEYCLOAK_STORE_CLIENT_SECRET!,
+            issuer: process.env.KEYCLOAK_DOMAIN!,
         }),
     ],
-    secret: NEXTAUTH_SECRET,
+    secret: process.env.NEXTAUTH_SECRET,
     session: {
         strategy: "jwt",
-        maxAge: 5 * 60 * 60,
     },
     callbacks: {
         async jwt({token, account}) {
@@ -62,22 +43,24 @@ export const authOptions: AuthOptions = {
                 token.idToken = account.id_token;
                 token.accessToken = account.access_token;
                 token.refreshToken = account.refresh_token;
-                // token.expiresAt = Math.floor(Date.now() / 1000) + 5 * 60 * 60; // Set expiry time based on maxAge
+                token.expiresAt = account.expires_at;
                 return token;
             }
 
-            // Check the expiration time, reduce the interval to refresh proactively
-            if (Date.now() < ((Number(token.expiresAt) ?? 0) * 1000 - 5 * 60 * 1000)) {
+            if (Date.now() < ((Number(token.expiresAt) ?? 0) * 1000 - 60 * 1000)) {
                 return token;
             } else {
                 try {
-                    const tokens = await requestRefreshOfAccessToken(token);
-                    token.idToken = tokens.id_token;
-                    token.accessToken = tokens.access_token;
-                    token.refreshToken = tokens.refresh_token ?? token.refreshToken;
-                    token.expiresAt = Math.floor(Date.now() / 1000) + tokens.expires_in;
+                    const tokens = await requestRefreshOfAccessToken(token) as TokenSet & { expires_in: number };
 
-                    return token;
+                    const updatedToken: JWT = {
+                        ...token,
+                        idToken: tokens.id_token,
+                        accessToken: tokens.access_token,
+                        expiresAt: Math.floor(Date.now() / 1000 + tokens.expires_in),
+                        refreshToken: tokens.refresh_token ?? token.refreshToken,
+                    };
+                    return updatedToken;
                 } catch (error) {
                     console.error("Error refreshing access token", error);
                     return {...token, error: "RefreshAccessTokenError"};
