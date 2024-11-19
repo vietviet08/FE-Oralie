@@ -19,6 +19,24 @@ export async function getCart(token: string) {
     }
 }
 
+export async function getCartItems(token: string) {
+    try {
+        const res = await axios.get(`${baseUrl}/store/carts/items`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        });
+        if (res && res.status === 200) {
+            console.log(res.data);
+            return res.data;
+        }
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
+
 export async function addProductToCart(token: string, quantity: number, productId: number) {
     try {
         const res = await axios.post(`${baseUrl}/store/carts/add/${productId}`, null, {
