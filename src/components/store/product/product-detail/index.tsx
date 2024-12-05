@@ -389,29 +389,20 @@ const ProductPageDetail = ({product}: Props) => {
                 </div>
             </div>
             <div className="py-6 mb-6 border-b-[1px] border-b-primaryred2"></div>
-            <div className="my-2">
-                <ProductSlider
-                    data={[]}
-                    pageNo={0}
-                    pageSize={0}
-                    totalElements={0}
-                    totalPages={0}
-                    isLast={false}
-                ></ProductSlider>
-            </div>
-
-            <div className="my-2">
-                <ProductSlider
-                    data={productsRelated}
-                    pageNo={0}
-                    pageSize={0}
-                    totalElements={0}
-                    totalPages={0}
-                    isLast={false}
-                ></ProductSlider>
-            </div>
-
-            <div className="py-2 my-8 border-b-[1px] border-b-primaryred2"></div>
+            {productsRelated && productsRelated.length > 0 &&
+                <>
+                    <div className="my-2">
+                        <ProductSlider
+                            data={productsRelated}
+                            pageNo={0}
+                            pageSize={0}
+                            totalElements={0}
+                            totalPages={0}
+                            isLast={false}
+                        ></ProductSlider>
+                    </div>
+                    <div className="py-2 my-8 border-b-[1px] border-b-primaryred2"></div>
+                </>}
 
             <div className="space-x-2 flex justify-between">
                 <div className="w-4/6 rounded-lg shadow-inner p-4">
