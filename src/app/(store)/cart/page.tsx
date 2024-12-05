@@ -71,19 +71,19 @@ export default function CartPage() {
                         </Card>
                     </div>
 
-                    <div className="flex flex-col justify-center space-y-8 m-0">
+                    <div className="flex flex-col justify-center space-y-4 m-0">
                         {cart?.cartItemResponses?.map(item => (
                             <Card key={item.id} className={"w-full flex items-center space-x-2"}>
                                 <Checkbox className="ml-6" />
                                 <CardContent className="flex w-full justify-between items-center p-6 pr-0">
-                                    <div className="w-3/5 flex justify-between items-center">
+                                    <div className="w-3/5 flex justify-between items-center space-x-2">
                                         {item.urlImageThumbnail ? (
                                             <Image className="rounded-xl overflow-hidden" width={100} height={100} src={item.urlImageThumbnail} alt={item.productName} />
                                         ) : (
                                             <Avatar key={item.id} className="w-20 h-20 bg-gray-200 dark:bg-gray-800 rounded-lg" />
                                         )}
-                                        <div>
-                                            <h2 className="text-xl">{item.productName}</h2>
+                                        <div className= "w-full overflow-hidden text-ellipsis">
+                                            <h2 className="text-sm">{item.productName}</h2>
                                         </div>
                                         <div>
                                             <p className="text-primaryred">${item.price}</p>

@@ -111,42 +111,11 @@ const ProductSlider: React.FC<ListResponse<Product>> = ({ data }) => {
               modules={[FreeMode, Pagination, Autoplay, Navigation]}
               className="mySwiper h-full"
             >
-              {product && (
-                <>
-                  <SwiperSlide>
-                    <div className="w-full">
-                      <ProductCard product={product} />
-                    </div>
-                  </SwiperSlide>
-                  <SwiperSlide>
+                {data && data.map((product) => (
+                <SwiperSlide key={product.id}>
                     <ProductCard product={product} />
-                  </SwiperSlide>
-                  <SwiperSlide>
-                    <ProductCard product={product} />
-                  </SwiperSlide>
-                  <SwiperSlide>
-                    <ProductCard product={product} />
-                  </SwiperSlide>
-                  <SwiperSlide>
-                    <ProductCard product={product} />
-                  </SwiperSlide>
-                  <SwiperSlide>
-                    <ProductCard product={product} />
-                  </SwiperSlide>
-                  <SwiperSlide>
-                    <ProductCard product={product} />
-                  </SwiperSlide>
-                  <SwiperSlide>
-                    <ProductCard product={product} />
-                  </SwiperSlide>
-                  <SwiperSlide>
-                    <ProductCard product={product} />
-                  </SwiperSlide>
-                  <SwiperSlide>
-                    <ProductCard product={product} />
-                  </SwiperSlide>
-                </>
-              )}
+                </SwiperSlide>
+                ))}
               <div
                 ref={prevRef}
                 style={{

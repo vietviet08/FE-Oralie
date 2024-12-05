@@ -45,6 +45,19 @@ export async function getProducts(page: number,
     return response.json();
 }
 
+export async function getTop10ProductRelatedCategory(productId: number, categoryName: string) {
+    try {
+        const res = await axios.get(`${baseUrl}/store/products/top10/${productId}?categoryName=${categoryName}`);
+        if (res && res.status === 200) {
+            console.log(res.data);
+            return res.data;
+        }
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
 export async function getProductByCategoryAndBrand(page: number,
                                                    size: number,
                                                    sortBy: string,
