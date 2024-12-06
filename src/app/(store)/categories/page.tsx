@@ -56,8 +56,7 @@ export async function generateMetadata(
 
 export default async function Page({searchParams}: Props) {
     const {category, brand} = searchParams;
-    const formattedCategory = category.charAt(0).toUpperCase() + category.slice(1);
-    const formattedBrand = brand ? brand.charAt(0).toUpperCase() + brand.slice(1) : undefined;
+
     if (!category) {
         return <NotFound/>;
     }
@@ -70,5 +69,5 @@ export default async function Page({searchParams}: Props) {
         return <NotFound/>;
     }
 
-    return <PageProduct category={formattedCategory} brand={formattedBrand} listResponse={product}/>
+    return <PageProduct category={category} brand={brand || ""} listResponse={product}/>
 }
