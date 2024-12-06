@@ -47,6 +47,11 @@ import {
     PlusIcon,
     Star,
     StarHalf,
+    Clock,
+    ArrowDownWideNarrow,
+    ArrowUpWideNarrow,
+    Flame,
+    Eye,
 } from "lucide-react";
 
 export type Icon = LucideIcon;
@@ -115,4 +120,9 @@ export const Icons = {
     plus: PlusIcon,
     star: Star,
     starHalf: StarHalf,
+    clock: Clock,
+    arrowDownWideNarrow: ArrowDownWideNarrow,
+    arrowUpWideNarrow: ArrowUpWideNarrow,
+    flame: Flame,
+    eye: Eye,
 };

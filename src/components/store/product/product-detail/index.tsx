@@ -469,7 +469,7 @@ const ProductPageDetail = ({product}: Props) => {
                                     />
                                 </div>
                                 <div className="text-[14px] text-center mt-4">
-                                    <p className="font-bold">Easy Returnsàng</p>
+                                    <p className="font-bold">Easy Return</p>
                                     <p>According to Oralie&#39;s Return Policy</p>
                                 </div>
                             </div>

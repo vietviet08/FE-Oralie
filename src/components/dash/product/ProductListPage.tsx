@@ -9,7 +9,7 @@ import {Product} from "@/model/product/Product";
 import PageContainer from "@/components/dash/page-container";
 import {Breadcrumbs} from "@/components/common/breadcrumbs";
 import ProductTable from "@/components/dash/product/product-tables";
-import {getListProduct, getProducts} from "@/services/ProductService";
+import {getListProduct} from "@/services/ProductService";
 
 const breadcrumbItems = [
     {title: 'Dashboard', link: '/admin'},

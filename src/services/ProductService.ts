@@ -2,10 +2,21 @@ import apiClientService from "@/utils/ApiClientService";
 import {ProductPage} from "@/model/product/ProductPage";
 import {ProductPost} from "@/model/product/ProductPost";
 import axios from "axios";
-import { testUrlProductService } from "@/constants/data";
+import {testUrlProductService} from "@/constants/data";
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL + '/api/products';
 const testUrl = testUrlProductService;
+
+// export async function getProducts(page: number,
+//                                   size: number,
+//                                   sortBy: string,
+//                                   sort: string,
+//                                   search: string,
+//                                   category: string): Promise<ProductPage> {
+//     const url = `page=${page}&size=${size}&sortBy=${sortBy}&sort=${sort}&search=${search}&category=${category}`;
+//     const response = await apiClientService.get(`${baseUrl}/store/products?${url}`);
+//     return response.json();
+// }
 
 export async function getListProduct(page: number,
                                      size: number,
@@ -34,17 +45,6 @@ export async function getListProduct(page: number,
     }
 }
 
-export async function getProducts(page: number,
-                                  size: number,
-                                  sortBy: string,
-                                  sort: string,
-                                  search: string,
-                                  category: string): Promise<ProductPage> {
-    const url = `page=${page}&size=${size}&sortBy=${sortBy}&sort=${sort}&search=${search}&category=${category}`;
-    const response = await apiClientService.get(`${baseUrl}/store/products?${url}`);
-    return response.json();
-}
-
 export async function getTop10ProductRelatedCategory(productId: number, categoryName: string) {
     try {
         const res = await axios.get(`${baseUrl}/store/products/top10/${productId}?categoryName=${categoryName}`);
@@ -63,20 +63,31 @@ export async function getProductByCategoryAndBrand(page: number,
                                                    sortBy: string,
                                                    sort: string,
                                                    category: string,
-                                                   brand: string): Promise<ProductPage> {
-    const url = `page=${page}&size=${size}&sortBy=${sortBy}&sort=${sort}&categoryName=${category}&brandName=${brand}`;
-    const response = await apiClientService.get(`${baseUrl}/store/categories?${url}`);
-    return response.json();
+                                                   brand?: string) {
+    try {
+        const params: any = { page, size, sortBy, sort, category };
+        if (brand) {
+            params.brand = brand;
+        }
+        const res = await axios.get(`${baseUrl}/store/categories`, { params });
+        if (res && res.status === 200) {
+            console.log(res.data);
+            return res.data;
+        }
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
 }
 
 export async function getProductById(id: number) {
 
-   try {
+    try {
         const res = await axios.get(`${baseUrl}/store/products/id/${id}`);
         if (res && res.status === 200) {
             console.log(res.data);
             return res.data;
-        }else if(res.status === 404){
+        } else if (res.status === 404) {
             return null;
         }
     } catch (error) {
@@ -88,18 +99,18 @@ export async function getProductById(id: number) {
 export async function getProductBySlug(slug: string) {
 
     try {
-         const res = await axios.get(`${baseUrl}/store/products/${slug}`);
-         if (res && res.status === 200) {
-             console.log(res.data);
-             return res.data;
-         } else if (res.status === 404) {
-             return null;
-         }
-     } catch (error) {
-         console.log(error);
+        const res = await axios.get(`${baseUrl}/store/products/${slug}`);
+        if (res && res.status === 200) {
+            console.log(res.data);
+            return res.data;
+        } else if (res.status === 404) {
+            return null;
+        }
+    } catch (error) {
+        console.log(error);
         //  throw error;
-     }
- }
+    }
+}
 
 //dash for manage
 
@@ -237,7 +248,7 @@ export async function updateProduct(id: number, product: ProductPost, token: str
     }
 }
 
-export async function updateAvailabelProduct(id: number, token : string) {
+export async function updateAvailabelProduct(id: number, token: string) {
     try {
         const res = await axios.put(`${baseUrl}/dash/products/available/${id}`, {}, {
             headers: {
@@ -255,7 +266,7 @@ export async function updateAvailabelProduct(id: number, token : string) {
 }
 
 
-export async function deleteProduct(id: number, token : string) {
+export async function deleteProduct(id: number, token: string) {
     try {
         const res = await axios.delete(`${baseUrl}/dash/products/${id}`, {
             headers: {
