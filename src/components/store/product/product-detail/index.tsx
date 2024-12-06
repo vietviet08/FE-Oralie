@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/table";
 import Image from "next/image";
 import {getTop10ProductRelatedCategory} from "@/services/ProductService";
+import Rates from "@/components/store/product/rates";
 
 type Props = {
     product: Product;
@@ -89,7 +90,7 @@ const ProductPageDetail = ({product}: Props) => {
             <div className="pt-8">
                 <main>
                     <div className="flex flex-col md:flex-row md:justify-center ">
-                        <div className="w-full md:w-3/5 mr-0 md:mr-2 mt-0 m-4 ">
+                        <div className="w-full md:w-3/5 mr-0 md:mr-2 mt-0 m-4 ml-0 ">
                             <div className="relative w-full h-full ">
                                 <Swiper
                                     onSwiper={(swiper) => {
@@ -246,7 +247,7 @@ const ProductPageDetail = ({product}: Props) => {
                                 </Swiper>
                             </div>
                         </div>
-                        <div className="w-full md:w-2/5 ml-0 md:ml-2 mt-0 p-4 rounded-lg shadow-sm">
+                        <div className="w-full md:w-2/5 ml-0 md:ml-2 mt-0 m-4 mr-0 rounded-lg shadow-sm">
                             <div className="grid grid-cols-3 gap-3 mb-4">
                                 {product.options.map((option) => (
                                     <Button
@@ -389,6 +390,7 @@ const ProductPageDetail = ({product}: Props) => {
                 </div>
             </div>
             <div className="py-6 mb-6 border-b-[1px] border-b-primaryred2"></div>
+
             {productsRelated && productsRelated.length > 0 &&
                 <>
                     <div className="my-2">
@@ -402,17 +404,24 @@ const ProductPageDetail = ({product}: Props) => {
                         ></ProductSlider>
                     </div>
                     <div className="py-2 my-8 border-b-[1px] border-b-primaryred2"></div>
-                </>}
+                </>
+            }
 
             <div className="space-x-2 flex justify-between">
-                <div className="w-4/6 rounded-lg shadow-inner p-4">
-                    <h2 className="text-primaryred font-bold text-lg ">
-                        Outstanding features
-                    </h2>
-                    <div dangerouslySetInnerHTML={{__html: product.description}}/>
+                <div className="w-4/6 p-4 pt-0 pl-0">
+                    <div className=" rounded-lg shadow-inner">
+                        <h2 className="text-primaryred font-bold text-lg ">
+                            Outstanding features
+                        </h2>
+                        <div dangerouslySetInnerHTML={{__html: product.description}}/>
+                    </div>
+
+                    <div className="py-2 my-4 border-b-[1px] border-b-primaryred2"></div>
+
+                    <Rates productId={product.id!} productName={product.name}/>
                 </div>
                 <div className="w-2/6 rounded-lg shadow-inner p-4">
-                    <h2 className=" font-bold text-lg">Specifications</h2>
+                <h2 className=" font-bold text-lg">Specifications</h2>
                     <Table>
                         <TableBody>
                             {product.specifications.map((spec, index) => (

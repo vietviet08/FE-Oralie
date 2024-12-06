@@ -10,28 +10,17 @@ import { ListResponse } from "@/model/ListData";
 import { Product } from "@/model/product/Product";
 import React, { useEffect, useRef, useState } from "react";
 import ProductCard from "../../product/product-card";
-import { getProductById } from "@/services/ProductService";
 import { Button } from "@/components/ui/button";
 import { Swiper as SwiperType } from "swiper/types";
 import { Icons } from "@/components/icons";
 
 const ProductSlider: React.FC<ListResponse<Product>> = ({ data }) => {
-  const [product, setProduct] = useState<Product>();
 
   const prevRef = useRef<HTMLDivElement>(null);
   const nextRef = useRef<HTMLDivElement>(null);
   const swiperRef = useRef<SwiperType>();
 
   const [progress, setProgress] = useState(0);
-
-  useEffect(() => {
-    async function fetchData() {
-      const response = await getProductById(12);
-      setProduct(response);
-    }
-
-    fetchData();
-  }, []);
 
   useEffect(() => {
     if (swiperRef.current && swiperRef.current.navigation) {

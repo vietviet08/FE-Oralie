@@ -44,7 +44,9 @@ import {
     PhoneCall,
     ChevronUp,
     Minus,
-    PlusIcon
+    PlusIcon,
+    Star,
+    StarHalf,
 } from "lucide-react";
 
 export type Icon = LucideIcon;
@@ -110,5 +112,7 @@ export const Icons = {
     phoneCall: PhoneCall,
     chevronUp: ChevronUp,
     minus: Minus,
-    plus: PlusIcon
+    plus: PlusIcon,
+    star: Star,
+    starHalf: StarHalf,
 };

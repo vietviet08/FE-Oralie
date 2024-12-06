@@ -6,8 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="fd629b57-0b74-4564-9f46-6e0f11d5b572" name="Changes" comment="Refactor auth and cart services; update dependencies&#10;&#10;Refactor environment variable references in auth routes for clarity and streamline token management logic. Add comprehensive functions for cart operations and enhance CartItem model. Update dependencies and icons for additional functionalities.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/icons.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/icons.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/store/home/productSlider/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/store/home/productSlider/index.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/store/product/product-card.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/store/product/product-card.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/store/product/product-detail/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/store/product/product-detail/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/rate/Rate.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/rate/Rate.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -17,8 +20,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="TypeScript File" />
         <option value="TypeScript JSX File" />
+        <option value="TypeScript File" />
       </list>
     </option>
   </component>
@@ -117,7 +120,8 @@
       <workItem from="1731997462721" duration="1356000" />
       <workItem from="1732026475836" duration="3471000" />
       <workItem from="1733408230254" duration="7000" />
-      <workItem from="1733408366061" duration="7638000" />
+      <workItem from="1733408366061" duration="8237000" />
+      <workItem from="1733455870516" duration="7902000" />
     </task>
     <task id="LOCAL-00001" summary="Improve token management and update AccountPage component&#10;&#10;Separated environment variable definitions for better error handling. Improved AccountPage with session expiration state and effect for re-rendering.">
       <option name="closed" value="true" />

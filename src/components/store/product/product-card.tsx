@@ -9,18 +9,20 @@ type ProductCardProps = {
 };
 
 const ProductCard: React.FC<ProductCardProps> = ({product}) => {
+    const domainName = process.env.NEXT_PUBLIC_URL;
+
     const [isHovered, setIsHovered] = useState(false);
 
-    const productTemp = {
-        name: "Premium Wireless Headphones ",
-        price: 299.99,
-        priceDiscount: 199.99,
-        percentDiscount: 33,
-        description: "Experience crystal-clear sound battery life.",
-        image:
-            "images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3",
-        alt: "Premium Wireless Headphones with sleek design",
-    };
+    // const productTemp = {
+    //     name: "Premium Wireless Headphones ",
+    //     price: 299.99,
+    //     priceDiscount: 199.99,
+    //     percentDiscount: 33,
+    //     description: "Experience crystal-clear sound battery life.",
+    //     image:
+    //         "images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3",
+    //     alt: "Premium Wireless Headphones with sleek design",
+    // };
 
     return (
         <motion.div
@@ -54,7 +56,7 @@ const ProductCard: React.FC<ProductCardProps> = ({product}) => {
                             className="text-base text-center text-gray-800 line-clamp-2"
                             animate={{color: isHovered ? "#da2118" : "#1f2937"}}
                         >
-                            <a href={`http://localhost:3000/${product.slug}`}>
+                            <a href={`${domainName}/${product.slug}`}>
                                 {product.name}
                             </a>
                         </motion.h2>
@@ -62,22 +64,28 @@ const ProductCard: React.FC<ProductCardProps> = ({product}) => {
 
                     <div className="flex flex-col space-y-1">
               <span className="text-base font-bold text-center text-primaryred ">
-                ${product.discount.toFixed(2)}
+                ${(product.price - product.discount).toFixed(2)}
               </span>
 
                         <div className="flex justify-between items-center">
-                        <span className="text-sm text-center text-gray-700 line-through mx-1">
-                          ${product.price.toFixed(2)}
-                        </span>
-                            <span className="text-sm text-center text-primaryred mx-1">
-                          Discount {productTemp.percentDiscount.toFixed(0)}%
-                        </span>
+                            {product.isDiscounted &&
+                                <>
+                                    <span className="text-sm text-center text-gray-700 line-through mx-1">
+                                        ${product.price.toFixed(2)}
+                                    </span>
+
+                                    <span className="text-sm text-center text-primaryred mx-1">
+                                    Discount {(product.discount * 100 / product.price).toFixed(0)}%
+                                    </span>
+                                </>
+                            }
                         </div>
                     </div>
                 </div>
             </a>
         </motion.div>
-);
+    )
+        ;
 };
 
 export default ProductCard;
