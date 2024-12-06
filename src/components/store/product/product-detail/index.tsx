@@ -407,9 +407,9 @@ const ProductPageDetail = ({product}: Props) => {
                 </>
             }
 
-            <div className="space-x-2 flex justify-between">
-                <div className="w-4/6 p-4 pt-0 pl-0">
-                    <div className=" rounded-lg shadow-inner">
+            <div className="flex flex-col-reverse lg:flex-row space-x-0 lg:space-x-2 space-y-2 lg:space-y-0 justify-between">
+                <div className="lg:w-4/6 w-full p-4 pt-0 pl-0">
+                    <div className="mt-4 lg:mt-0 rounded-lg shadow-inner">
                         <h2 className="text-primaryred font-bold text-lg ">
                             Outstanding features
                         </h2>
@@ -420,8 +420,8 @@ const ProductPageDetail = ({product}: Props) => {
 
                     <Rates productId={product.id!} productName={product.name}/>
                 </div>
-                <div className="w-2/6 rounded-lg shadow-inner p-4">
-                <h2 className=" font-bold text-lg">Specifications</h2>
+                <div className="lg:w-2/6 w-full rounded-lg shadow-inner py-4">
+                    <h2 className=" font-bold text-lg">Specifications</h2>
                     <Table>
                         <TableBody>
                             {product.specifications.map((spec, index) => (
