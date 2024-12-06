@@ -66,7 +66,7 @@ const ProductPageDetail = ({product}: Props) => {
         <div className="sm:px-32 px-6 py-6 mt-14">
             <div className="flex justify-between items-center w-full py-4">
                 <div className="w-3/5">
-                    <h2 className="text-2xl font-bold text-primaryred">{product.name}</h2>
+                    <h2 className="text-2xl font-bold text-black">{product.name}</h2>
                 </div>
                 <div className="">
                     {product.isAvailable ? (

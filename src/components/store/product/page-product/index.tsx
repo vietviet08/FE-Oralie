@@ -96,7 +96,10 @@ const PageProduct = ({listResponse, category, brand}: Props) => {
                         <Icons.arrowUpWideNarrow className="text-gray-500" width={16} height={16}/>
                         <span className="text-base">Price increase</span>
                     </Button>
-                    <Button variant="outline" className="h-8 px-4">
+                    <Button variant="outline" className="h-8 px-4" onClick={() => {
+                        setSortOrder("desc");
+                        setSortBy("discount")
+                    }}>
                         <Icons.flame className="text-gray-500" width={16} height={16}/>
                         <span className="text-base">Hot discount</span>
                     </Button>

@@ -54,17 +54,17 @@ export default function CartPage() {
 
 
     return (
-        <div className="mx-auto p-4 mt-16 md:mx-32">
+        <div className="px-6 my-24 mb-8 md:mx-32 md:px-0">
             <h1 className="text-2xl font-bold mb-4">Your Cart</h1>
-            <div className="flex md:flex-row gap-2">
-                <div className="w-3/5">
+            <div className="flex flex-col xl:flex-row gap-2">
+                <div className="w-full xl:w-3/5">
                     <div className="flex flex-col justify-center space-y-8 m-0 mb-4">
                         <Card className="w-full">
-                            <CardContent className="flex w-full justify-between items-center p-2">
+                            <CardContent className="flex w-full justify-between items-center p-0">
                                 <div className="w-full flex justify-between items-center">
-                                    <Checkbox className="ml-4" />
+                                    <Checkbox className="ml-3 md:ml-6" />
                                     <Button variant="ghost">
-                                        <Icons.trash className="w-7 h-7 text-primaryred" />
+                                        <Icons.trash className="w-7 h-7 mr-2 text-primaryred" />
                                     </Button>
                                 </div>
                             </CardContent>
@@ -74,7 +74,7 @@ export default function CartPage() {
                     <div className="flex flex-col justify-center space-y-4 m-0">
                         {cart?.cartItemResponses?.map(item => (
                             <Card key={item.id} className={"w-full flex items-center space-x-2"}>
-                                <Checkbox className="ml-6" />
+                                <Checkbox className="ml-3 md:ml-6" />
                                 <CardContent className="flex w-full justify-between items-center p-6 pr-0">
                                     <div className="w-3/5 flex justify-between items-center space-x-2">
                                         {item.urlImageThumbnail ? (
@@ -94,7 +94,7 @@ export default function CartPage() {
                                             <button
                                                 type="button"
                                                 id="decrement-button"
-                                                className="bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 border border-gray-300 rounded-s-lg p-3 h-11 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none"
+                                                className="bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 border border-gray-300 rounded-s-lg p-3 h-9 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none"
                                                 onClick={() => item.id !== undefined && handleQuantityChange(item.id, -1)}
                                             >
                                                 <Icons.minus className="w-3 h-3 text-gray-900 dark:text-white" />
@@ -103,14 +103,14 @@ export default function CartPage() {
                                                 type="text"
                                                 id="quantity-input"
                                                 aria-describedby="helper-text-explanation"
-                                                className="bg-gray-50 border-x-0 border-gray-300 h-11 text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full py-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                                className="bg-gray-50 border-x-0 border-gray-300 h-9 text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full py-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                 value={item.id !== undefined ? quantities[item.id] : ''}
                                                 readOnly
                                             />
                                             <button
                                                 type="button"
                                                 id="increment-button"
-                                                className="bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 border border-gray-300 rounded-e-lg p-3 h-11 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none"
+                                                className="bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 border border-gray-300 rounded-e-lg p-3 h-9 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none"
                                                 onClick={() => item.id !== undefined && handleQuantityChange(item.id, 1)}
                                             >
                                                 <Icons.plus className="w-3 h-3 text-gray-900 dark:text-white" />
@@ -125,7 +125,7 @@ export default function CartPage() {
                         ))}
                     </div>
                 </div>
-                <div className="w-2/5 flex flex-col gap-2">
+                <div className="w-full xl:w-2/5 flex flex-col gap-2">
                     <Card className="w-full">
                         <CardContent className="flex w-full justify-between items-center p-2">
                             <div className="w-full flex-col gap-2 space-y-4 justify-between items-center">
