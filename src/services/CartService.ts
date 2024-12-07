@@ -57,6 +57,7 @@ export async function addProductToCart(token: string, quantity: number, productI
 
 export async function updateProductQuantity(token: string, productId: number, quantity: number) {
     try {
+        console.log(quantity);
         const res = await axios.put(`${baseUrl}/store/carts/update/${productId}`, null, {
             headers: {
                 Authorization: `Bearer ${token}`,
