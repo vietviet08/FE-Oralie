@@ -6,6 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="fd629b57-0b74-4564-9f46-6e0f11d5b572" name="Changes" comment="Refactor auth and cart services; update dependencies&#10;&#10;Refactor environment variable references in auth routes for clarity and streamline token management logic. Add comprehensive functions for cart operations and enhance CartItem model. Update dependencies and icons for additional functionalities.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(store)/cart/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(store)/cart/page.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,24 +38,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "master",
-    "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "D:/DA/DACS2/Ecommerce-Microservice/FE-Oralie/src/app/(store)",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "ml.llm.LLMConfigurable",
-    "ts.external.directory.path": "D:\\DA\\DACS2\\Ecommerce-Microservice\\FE-Oralie\\node_modules\\typescript\\lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/DA/DACS2/Ecommerce-Microservice/FE-Oralie/src/app/(store)&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;ml.llm.LLMConfigurable&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;D:\\DA\\DACS2\\Ecommerce-Microservice\\FE-Oralie\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\DA\DACS2\Ecommerce-Microservice\FE-Oralie\src\app\(store)" />
@@ -117,6 +118,7 @@
       <workItem from="1733408230254" duration="7000" />
       <workItem from="1733408366061" duration="8237000" />
       <workItem from="1733455870516" duration="27679000" />
+      <workItem from="1733553023993" duration="1112000" />
     </task>
     <task id="LOCAL-00001" summary="Improve token management and update AccountPage component&#10;&#10;Separated environment variable definitions for better error handling. Improved AccountPage with session expiration state and effect for re-rendering.">
       <option name="closed" value="true" />

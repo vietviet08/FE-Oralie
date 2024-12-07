@@ -1,21 +1,23 @@
 "use client";
-import React, { useEffect, useState } from 'react';
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { useSession } from "next-auth/react";
+import React, {useEffect, useState} from 'react';
+import {Card, CardContent} from "@/components/ui/card";
+import {Button} from "@/components/ui/button";
+import {Checkbox} from "@/components/ui/checkbox";
+import {useSession} from "next-auth/react";
 import Image from "next/image";
-import { Input } from "@/components/ui/input";
-import { Avatar } from "@/components/ui/avatar";
-import { CartItem } from "@/model/cart/CartItem";
-import { CartResponse } from "@/model/cart/CartResponse";
-import { getCart } from "@/services/CartService";
-import { Icons } from "@/components/icons";
+import {Input} from "@/components/ui/input";
+import {Avatar} from "@/components/ui/avatar";
+import {CartItem} from "@/model/cart/CartItem";
+import {CartResponse} from "@/model/cart/CartResponse";
+import {getCart} from "@/services/CartService";
+import {Icons} from "@/components/icons";
 
 export default function CartPage() {
+    const domainUrl = process.env.NEXT_PUBLIC_URL;
+
     const [cart, setCart] = useState<CartResponse | null>(null);
     const [quantities, setQuantities] = useState<{ [key: number]: number }>({});
-    const { data: session } = useSession();
+    const {data: session} = useSession();
 
     useEffect(() => {
         async function fetchCart() {
@@ -28,7 +30,10 @@ export default function CartPage() {
                 const res: CartResponse | null = await getCart(token);
                 if (res) {
                     setCart(res);
-                    setQuantities(res.cartItemResponses.reduce((acc: Record<number, number>, item: CartItem) => item.id !== undefined ? { ...acc, [item.id]: 1 } : acc, {}));
+                    setQuantities(res.cartItemResponses.reduce((acc: Record<number, number>, item: CartItem) => item.id !== undefined ? {
+                        ...acc,
+                        [item.id]: 1
+                    } : acc, {}));
                     console.log(res);
                 }
             } catch (error) {
@@ -62,9 +67,9 @@ export default function CartPage() {
                         <Card className="w-full">
                             <CardContent className="flex w-full justify-between items-center p-0">
                                 <div className="w-full flex justify-between items-center">
-                                    <Checkbox className="ml-3 md:ml-6" />
+                                    <Checkbox className="ml-3 md:ml-6"/>
                                     <Button variant="ghost">
-                                        <Icons.trash className="w-7 h-7 mr-2 text-primaryred" />
+                                        <Icons.trash className="w-7 h-7 mr-2 text-primaryred"/>
                                     </Button>
                                 </div>
                             </CardContent>
@@ -74,17 +79,22 @@ export default function CartPage() {
                     <div className="flex flex-col justify-center space-y-4 m-0">
                         {cart?.cartItemResponses?.map(item => (
                             <Card key={item.id} className={"w-full flex items-center space-x-2"}>
-                                <Checkbox className="ml-3 md:ml-6" />
+                                <Checkbox className="ml-3 md:ml-6"/>
                                 <CardContent className="flex w-full justify-between items-center p-6 pr-0">
                                     <div className="w-3/5 flex justify-between items-center space-x-2">
-                                        {item.urlImageThumbnail ? (
-                                            <Image className="rounded-xl overflow-hidden" width={100} height={100} src={item.urlImageThumbnail} alt={item.productName} />
-                                        ) : (
-                                            <Avatar key={item.id} className="w-20 h-20 bg-gray-200 dark:bg-gray-800 rounded-lg" />
-                                        )}
-                                        <div className= "w-full overflow-hidden text-ellipsis">
-                                            <h2 className="text-sm">{item.productName}</h2>
-                                        </div>
+                                        <a className="flex justify-between items-center space-x-2"
+                                           href={domainUrl + "/" + item.productSlug}>
+                                            {item.urlImageThumbnail ? (
+                                                <Image className="rounded-xl overflow-hidden" width={100} height={100}
+                                                       src={item.urlImageThumbnail} alt={item.productName}/>
+                                            ) : (
+                                                <Avatar key={item.id}
+                                                        className="w-20 h-20 bg-gray-200 dark:bg-gray-800 rounded-lg"/>
+                                            )}
+                                            <div className="w-full overflow-hidden text-ellipsis">
+                                                <h2 className="text-sm hover:text-primaryred">{item.productName}</h2>
+                                            </div>
+                                        </a>
                                         <div>
                                             <p className="text-primaryred">${item.price}</p>
                                         </div>
@@ -97,7 +107,7 @@ export default function CartPage() {
                                                 className="bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 border border-gray-300 rounded-s-lg p-3 h-9 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none"
                                                 onClick={() => item.id !== undefined && handleQuantityChange(item.id, -1)}
                                             >
-                                                <Icons.minus className="w-3 h-3 text-gray-900 dark:text-white" />
+                                                <Icons.minus className="w-3 h-3 text-gray-900 dark:text-white"/>
                                             </button>
                                             <Input
                                                 type="text"
@@ -113,12 +123,13 @@ export default function CartPage() {
                                                 className="bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 border border-gray-300 rounded-e-lg p-3 h-9 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none"
                                                 onClick={() => item.id !== undefined && handleQuantityChange(item.id, 1)}
                                             >
-                                                <Icons.plus className="w-3 h-3 text-gray-900 dark:text-white" />
+                                                <Icons.plus className="w-3 h-3 text-gray-900 dark:text-white"/>
                                             </button>
                                         </div>
                                     </div>
-                                    <Button className="mr-2" variant="ghost" onClick={() => item.id !== undefined && handleDeleteItem(item.id)}>
-                                        <Icons.trash className="w-7 h-7 text-primaryred" />
+                                    <Button className="mr-2" variant="ghost"
+                                            onClick={() => item.id !== undefined && handleDeleteItem(item.id)}>
+                                        <Icons.trash className="w-7 h-7 text-primaryred"/>
                                     </Button>
                                 </CardContent>
                             </Card>
@@ -132,11 +143,12 @@ export default function CartPage() {
                                 <div>
                                     <h2 className="text-lg font-semibold">Order Information</h2>
                                 </div>
-                                <div className="w-full flex justify-between items-center border-b">
+                                <div
+                                    className="w-full pb-2 flex justify-between items-center border-b border-dashed  border-gray-400">
                                     <p className="text-sm">Total</p>
                                     <div className="text-xl font-semibold">${cart?.totalPrice}</div>
                                 </div>
-                                <div className="flex flex-col space-y-2 border-b border-dashed">
+                                <div className="flex flex-col space-y-2 pb-2 border-b border-dashed border-gray-400">
                                     <div className="w-full flex justify-between items-center">
                                         <p className="text-sm">Total Promotion</p>
                                         <div className="text-xl font-semibold">${cart?.totalPrice}</div>
