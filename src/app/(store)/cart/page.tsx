@@ -94,7 +94,8 @@ export default function CartPage() {
                 console.log('Clear cart response:', response);
 
                 if (response) {
-                    setCart(null);
+                    const updatedCart = await getCart(token);
+                    setCart(updatedCart);
                     setSelectedItems([]);
                     setSelectAll(false);
                 }
