@@ -12,8 +12,17 @@ import {Button} from "@medusajs/ui";
 import {Icons} from "../icons";
 import {Input} from "../ui/input";
 import Menu from "./home/sologan/menu";
+import {useEffect} from "react";
+import {getCart} from "@/services/CartService";
+import {CartResponse} from "@/model/cart/CartResponse";
+import {useSession} from "next-auth/react";
 
 export function Header() {
+    const { data: session } = useSession();
+    const token = session?.access_token as string;
+
+    let cartItemCount  = 0;
+
     const [openMenu, setOpenMenu] = React.useState(false);
 
     const menuRef = React.useRef<HTMLDivElement>(null);
@@ -25,8 +34,8 @@ export function Header() {
         }
     };
 
+    useEffect(() => {
 
-    React.useEffect(() => {
         if (openMenu) {
             document.addEventListener("mousedown", handleClickOutside);
         } else {
@@ -35,7 +44,26 @@ export function Header() {
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, [openMenu]);
+
+        async function fetchCart() {
+            try {
+                const res = await getCart(token);
+                if (res) {
+                    cartItemCount = res.quantity;
+                    console.log("cart in header " + res);
+                }
+            } catch (error) {
+                console.error("Failed to fetch cart:", error);
+            }
+        }
+
+        fetchCart();
+
+    }, [token, openMenu]);
+
+
+
+    console.log("cart item count in header " + cartItemCount);
 
     return (
         <header
@@ -113,7 +141,7 @@ export function Header() {
             <span className="relative">
               <Icons.shoppingCart className="w-7 h-7 text-white"/>
               <span className="absolute left-auto -ml-1 top-0 rounded-full bg-white px-1 py-0 text-xs  text-primaryred">
-                0
+                 {cartItemCount}
               </span>
             </span>
                     </Link>

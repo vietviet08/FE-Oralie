@@ -29,12 +29,17 @@ import {
 import Image from "next/image";
 import {getTop10ProductRelatedCategory} from "@/services/ProductService";
 import Rates from "@/components/store/product/rates";
+import {addProductToCart} from "@/services/CartService";
+import {useSession} from "next-auth/react";
 
 type Props = {
     product: Product;
 };
 
 const ProductPageDetail = ({product}: Props) => {
+    const {data: session} = useSession();
+    const token = session?.access_token as string;
+
     const [productsRelated, setProductsRelated] = useState<Product[]>([]);
 
     const [thumbsSwiper, setThumbsSwiper] = useState<SwiperClass | null>(null);
@@ -61,6 +66,14 @@ const ProductPageDetail = ({product}: Props) => {
 
         fetchTop10ProductRelated().then(r => r);
     }, [product.id, product.productCategories]);
+
+    const handleAddToCart = async (quantity: number, productId: number) => {
+        console.log("Add to cart", productId);
+        const res = await addProductToCart(token, quantity, productId);
+        if (res) {
+            console.log(res);
+        }
+    };
 
     return (
         <div className="sm:px-32 px-6 py-6 mt-14">
@@ -270,7 +283,9 @@ const ProductPageDetail = ({product}: Props) => {
                                 </Button>
                                 <div className="h-14 flex items-center">
                                     <Button
-                                        className="flex flex-col justify-center items-center rounded-lg border text-primaryred border-primaryred bg-white w-20 h-14 transition-all duration-300 ease-in-out hover:bg-primaryred hover:text-white">
+                                        className="flex flex-col justify-center items-center rounded-lg border text-primaryred border-primaryred bg-white w-20 h-14 transition-all duration-300 ease-in-out hover:bg-primaryred hover:text-white"
+                                        onClick={() => handleAddToCart(1, product.id!)}
+                                    >
                                         <Icons.shoppingCart className="w-10 h-10 text-xl"/>
                                         <span className=" text-[12px]">Add to cart</span>
                                     </Button>
@@ -407,7 +422,8 @@ const ProductPageDetail = ({product}: Props) => {
                 </>
             }
 
-            <div className="flex flex-col-reverse lg:flex-row space-x-0 lg:space-x-2 space-y-2 lg:space-y-0 justify-between">
+            <div
+                className="flex flex-col-reverse lg:flex-row space-x-0 lg:space-x-2 space-y-2 lg:space-y-0 justify-between">
                 <div className="lg:w-4/6 w-full p-4 pt-0 pl-0">
                     <div className="mt-4 lg:mt-0 rounded-lg shadow-inner">
                         <h2 className="text-primaryred font-bold text-lg ">
