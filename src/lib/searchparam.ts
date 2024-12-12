@@ -5,7 +5,7 @@ import {
     parseAsString
 } from 'nuqs/server';
 
-export const searchParams= {
+export const searchParams = {
     page: parseAsInteger.withDefault(1),
     size: parseAsInteger.withDefault(10),
     sortBy: parseAsString.withDefault('id'),
@@ -19,7 +19,6 @@ export const searchParamsProduct = {
     // gender: parseAsString,
     // products: parseAsString
 };
-
 
 
 export const searchParamsCacheProduct = createSearchParamsCache(searchParamsProduct);

@@ -26,7 +26,6 @@ export async function getListBrand(page: number,
         });
 
         if (res && res.status === 200) {
-            console.log(res.data);
             return res.data;
         } else if (res && res.status === 401) {
             return null;
@@ -34,6 +33,18 @@ export async function getListBrand(page: number,
     } catch (error) {
         console.log(error);
         // throw error;
+    }
+}
+
+export async function getAllBrand() {
+    try {
+        const res = await axios.get(`${baseUrl}/store/brands/all`);
+        if (res) {
+            return res.data;
+        }
+    } catch (error) {
+        console.log(error);
+        throw error;
     }
 }
 
@@ -45,7 +56,6 @@ export async function getBrandById(id: number, token: string) {
             }
         });
         if (res) {
-            console.log(res.data);
             return res.data;
         }
     } catch (error) {
