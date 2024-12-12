@@ -186,7 +186,7 @@ export default function ProductForm({ product }: ProductFormProps) {
         const categoryGets: CategoryGet[] = response.data;
         setCategories(categoryGets);
       } catch (error) {
-        console.error("Error fetching categories:", error);
+        console.error("Error fetching products:", error);
       }
     }
 

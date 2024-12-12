@@ -37,13 +37,13 @@ export async function getCartItems(token: string) {
 }
 
 
-export async function addProductToCart(token: string, quantity: number, productId: number) {
+export async function addProductToCart(token: string, quantity: number, optionId: number, productId: number) {
     try {
         const res = await axios.post(`${baseUrl}/store/carts/add/${productId}`, null, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
-            params: {quantity},
+            params: {optionId, quantity},
         });
         if (res && res.status === 200) {
             console.log(res.data);
@@ -55,14 +55,14 @@ export async function addProductToCart(token: string, quantity: number, productI
     }
 }
 
-export async function updateProductQuantity(token: string, productId: number, quantity: number) {
+export async function updateProductQuantity(token: string, productId: number, itemId: number, optionId: number, quantity: number) {
     try {
         console.log(quantity);
         const res = await axios.put(`${baseUrl}/store/carts/update/${productId}`, null, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
-            params: {quantity},
+            params: {itemId, optionId, quantity},
         });
         if (res && res.status === 200) {
             console.log(res.data);
@@ -74,9 +74,9 @@ export async function updateProductQuantity(token: string, productId: number, qu
     }
 }
 
-export async function removeProductFromCart(token: string, productId: number) {
+export async function removeProductFromCart(token: string, itemId: number) {
     try {
-        const res = await axios.delete(`${baseUrl}/store/carts/remove/${productId}`, {
+        const res = await axios.delete(`${baseUrl}/store/carts/remove/${itemId}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },

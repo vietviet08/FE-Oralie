@@ -17,7 +17,7 @@ export const searchParamsProduct = {
     ...searchParams,
     category: parseAsString.withDefault(''),
     // gender: parseAsString,
-    // categories: parseAsString
+    // products: parseAsString
 };
 
 

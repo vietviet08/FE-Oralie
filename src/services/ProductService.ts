@@ -1,11 +1,8 @@
-import apiClientService from "@/utils/ApiClientService";
-import {ProductPage} from "@/model/product/ProductPage";
 import {ProductPost} from "@/model/product/ProductPost";
 import axios from "axios";
-import {testUrlProductService} from "@/constants/data";
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL + '/api/products';
-const testUrl = testUrlProductService;
+// const testUrl = testUrlProductService;
 
 // export async function getProducts(page: number,
 //                                   size: number,
@@ -58,6 +55,19 @@ export async function getTop10ProductRelatedCategory(productId: number, category
     }
 }
 
+export async function getProductOptionsByProductId(productId: number) {
+    try {
+        const res = await axios.get(`${baseUrl}/store/products/options/${productId}`);
+        if (res && res.status === 200) {
+            console.log(res.data);
+            return res.data;
+        }
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
 export async function getProductByCategoryAndBrand(page: number,
                                                    size: number,
                                                    sortBy: string,
@@ -65,7 +75,7 @@ export async function getProductByCategoryAndBrand(page: number,
                                                    category: string,
                                                    brand?: string) {
     try {
-        const params: any = { page, size, sortBy, sort, category };
+        const params: { page: number; size: number; sortBy: string; sort: string; category: string; brand?: string } = { page, size, sortBy, sort, category };
         if (brand) {
             params.brand = brand;
         }
@@ -141,7 +151,7 @@ export async function createProduct(product: ProductPost, token: string) {
 
         formData.append('brandId', product.brandId?.toString() ?? '');
 
-        product.images?.forEach((image, index) => {
+        product.images?.forEach((image) => {
             formData.append(`images`, image);
         });
 
@@ -159,7 +169,7 @@ export async function createProduct(product: ProductPost, token: string) {
             console.log(`${key}: ${value}`);
         });
 
-        const test = `${testUrl}/dash/products`;
+        // const test = `${testUrl}/dash/products`;
         const mainUrl = `${baseUrl}/dash/products`;
 
         const res = await axios.post(mainUrl, formData, {
@@ -205,7 +215,7 @@ export async function updateProduct(id: number, product: ProductPost, token: str
 
         formData.append('brandId', product.brandId?.toString() ?? '');
 
-        product.images?.forEach((image, index) => {
+        product.images?.forEach((image) => {
             formData.append(`images`, image);
         });
 
@@ -224,7 +234,7 @@ export async function updateProduct(id: number, product: ProductPost, token: str
         });
 
 
-        const test = `${testUrl}/dash/products/${id}`;
+        // const test = `${testUrl}/dash/products/${id}`;
 
         const mainUrl = `${baseUrl}/dash/products/${id}`;
 

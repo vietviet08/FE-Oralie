@@ -11,6 +11,15 @@ import {Avatar} from "@/components/ui/avatar";
 import {CartResponse} from "@/model/cart/CartResponse";
 import {clearCart, getCart, removeProductFromCart, updateProductQuantity} from "@/services/CartService";
 import {Icons} from "@/components/icons";
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectTrigger,
+    SelectValue
+} from "@/components/ui/select";
+import Link from "next/link";
 
 export default function CartPage() {
     const domainUrl = process.env.NEXT_PUBLIC_URL;
@@ -35,8 +44,8 @@ export default function CartPage() {
                     setCart(res);
                     const initialQuantities: { [key: number]: number } = {};
                     res.cartItemResponses?.forEach(item => {
-                        if (item.productId && item.quantity) {
-                            initialQuantities[item.productId] = item.quantity;
+                        if (item.id && item.quantity) {
+                            initialQuantities[item.id] = item.quantity;
                         }
                     });
                     console.log('Initializing quantities:', initialQuantities);
@@ -48,22 +57,23 @@ export default function CartPage() {
         }
 
         fetchCart();
+
     }, [token]);
 
 
-    const handleQuantityChange = async (productId: number, change: number) => {
+    const handleQuantityChange = async (itemId: number, productId: number, optionId: number, change: number) => {
         console.log(`Handling quantity change for product ${productId}, change: ${change}`);
         try {
-            const currentQuantity = quantities[productId] || 0;
+            const currentQuantity = quantities[itemId] || 0;
             const newQuantity = Math.max(1, currentQuantity + change);
 
             console.log(`Current quantity: ${currentQuantity}, New quantity: ${newQuantity}`);
 
-            const response = await updateProductQuantity(token, productId, newQuantity);
+            const response = await updateProductQuantity(token, productId, itemId, optionId, newQuantity);
             console.log('Update quantity response:', response);
 
             if (response) {
-                setQuantities(prev => ({...prev, [productId]: newQuantity}));
+                setQuantities(prev => ({...prev, [itemId]: newQuantity}));
                 setCart(response);
             }
         } catch (error) {
@@ -71,15 +81,15 @@ export default function CartPage() {
         }
     };
 
-    const handleDeleteItem = async (productId: number) => {
-        console.log(`Deleting product ${productId} from cart`);
+    const handleDeleteItem = async (itemId: number) => {
+        console.log(`Deleting item ${itemId} from cart`);
         try {
-            const response = await removeProductFromCart(token, productId);
+            const response = await removeProductFromCart(token, itemId);
             console.log('Delete item response:', response);
 
             if (response) {
                 setCart(response);
-                setSelectedItems(prev => prev.filter(id => id !== productId));
+                setSelectedItems(prev => prev.filter(id => id !== itemId));
             }
         } catch (error) {
             console.error('Error deleting item:', error);
@@ -100,8 +110,8 @@ export default function CartPage() {
                     setSelectAll(false);
                 }
             } else {
-                for (const productId of selectedItems) {
-                    await removeProductFromCart(token, productId);
+                for (const itemId of selectedItems) {
+                    await removeProductFromCart(token, itemId);
                 }
                 const updatedCart = await getCart(token);
                 setCart(updatedCart);
@@ -112,15 +122,29 @@ export default function CartPage() {
         }
     };
 
-    const handleItemSelection = (productId: number) => {
-        console.log(`Toggling selection for product ${productId}`);
+    const handleItemSelection = (itemId: number) => {
+        console.log(`Toggling selection for item ${itemId}`);
         setSelectedItems(prev => {
-            const newSelection = prev.includes(productId)
-                ? prev.filter(id => id !== productId)
-                : [...prev, productId];
+            const newSelection = prev.includes(itemId)
+                ? prev.filter(id => id !== itemId)
+                : [...prev, itemId];
             console.log('New selection:', newSelection);
             return newSelection;
         });
+    };
+
+    const handleOptionChange = async (itemId: number, productId: number, optionId: number) => {
+        console.log(`Changing option for item ${itemId} to option ${optionId}`);
+        try {
+            const response = await updateProductQuantity(token, productId, itemId, optionId, quantities[itemId]);
+            console.log('Update option response:', response);
+
+            if (response) {
+                setCart(response);
+            }
+        } catch (error) {
+            console.error('Error updating option:', error);
+        }
     };
 
     const handleSelectAll = () => {
@@ -130,9 +154,9 @@ export default function CartPage() {
             console.log('New select all state:', newSelectAll);
 
             if (newSelectAll && cart?.cartItemResponses) {
-                const allProductIds = cart.cartItemResponses.map(item => item.productId!);
-                console.log('Selecting all products:', allProductIds);
-                setSelectedItems(allProductIds);
+                const allItemIds = cart.cartItemResponses.map(item => item.id!);
+                console.log('Selecting all products with items id:', allItemIds);
+                setSelectedItems(allItemIds);
             } else {
                 console.log('Deselecting all products');
                 setSelectedItems([]);
@@ -141,7 +165,6 @@ export default function CartPage() {
             return newSelectAll;
         });
     };
-
 
     return (
         <div className="px-6 my-24 mb-8 md:mx-32 md:px-0">
@@ -157,7 +180,8 @@ export default function CartPage() {
                                         checked={selectAll}
                                         onCheckedChange={() => handleSelectAll()}
                                     />
-                                    <Button variant="ghost" onClick={handleClearCart} disabled={selectedItems.length === 0}>
+                                    <Button variant="ghost" onClick={handleClearCart}
+                                            disabled={selectedItems.length === 0}>
                                         <Icons.trash className="w-7 h-7 mr-2 text-primaryred"/>
                                     </Button>
                                 </div>
@@ -170,50 +194,78 @@ export default function CartPage() {
                             <Card key={item.id} className={"w-full flex items-center space-x-2"}>
                                 <Checkbox
                                     className="ml-3 md:ml-6"
-                                    checked={selectedItems.includes(item.productId!)}
-                                    onCheckedChange={() => handleItemSelection(item.productId!)}
+                                    checked={selectedItems.includes(item.id!)}
+                                    onCheckedChange={() => handleItemSelection(item.id!)}
                                 />
                                 <CardContent
-                                    className="flex w-full justify-between items-center p-6 pr-0 gap-4 lg:gap-0">
-                                    <div className="w-3/5 flex justify-between items-center space-x-2 lg:gap-2">
-                                        <a
-                                            className=" flex flex-col sm:flex-row  justify-between items-center space-x-2"
-                                            href={domainUrl + "/" + item.productSlug}
-                                        >
-                                            {item.urlImageThumbnail ? (
-                                                <Image
-                                                    className="rounded-xl overflow-hidden"
-                                                    width={100}
-                                                    height={100}
-                                                    sizes={"100px"}
-                                                    src={item.urlImageThumbnail}
-                                                    alt={item.productName}
-                                                />
-                                            ) : (
-                                                <Avatar
-                                                    key={item.id}
-                                                    className="w-20 h-20 bg-gray-200 dark:bg-gray-800 rounded-lg"
-                                                />
-                                            )}
-                                            <div className="w-full  overflow-hidden text-ellipsis">
-                                                <h2 className="text-sm hover:text-primaryred">
-                                                    {item.productName}
-                                                </h2>
+                                    className="flex w-full justify-between items-center py-6 px-0 gap-4 lg:gap-0">
+                                    <div className="w-3/5 flex justify-between items-center space-x-2 gap-1">
+                                        <div
+                                            className=" flex flex-col sm:flex-row items-center space-x-2">
+                                            <Link
+                                                href={domainUrl + "/" + item.productSlug}
+                                            >
+                                                {item.urlImageThumbnail ? (
+                                                    <Image
+                                                        className="rounded-xl overflow-hidden"
+                                                        width={100}
+                                                        height={100}
+                                                        sizes={"100px"}
+                                                        src={item.urlImageThumbnail}
+                                                        alt={item.productName}
+                                                    />
+                                                ) : (
+                                                    <Avatar
+                                                        key={item.id}
+                                                        className="w-20 h-20 bg-gray-200 dark:bg-gray-800 rounded-lg"
+                                                    />
+                                                )}
+                                            </Link>
+                                            <div className="flex flex-col w-full justify-center">
+                                                <Link href={item.productSlug}>
+                                                    <div className="w-full overflow-hidden">
+                                                        <h2 className="text-sm hover:text-primaryred line-clamp-3">
+                                                            {item.productName}
+                                                        </h2>
+                                                    </div>
+                                                </Link>
+                                                <div className="w-full sm:w-3/5 lg:w-3/6 my-1">
+                                                    <Select
+                                                        value={item.productOptionId?.toString()}
+                                                        onValueChange={(value) => handleOptionChange(item.id!, item.productId, parseInt(value))}
+                                                    >
+                                                        <SelectTrigger>
+                                                            <SelectValue placeholder="Options"/>
+                                                        </SelectTrigger>
+                                                        <SelectContent>
+                                                            <SelectGroup>
+                                                                {item.productOptions.map(option => (
+                                                                    <SelectItem key={option.id}
+                                                                                value={option.id!.toString()}>
+                                                                        {option.name}
+                                                                    </SelectItem>
+                                                                ))}
+                                                            </SelectGroup>
+                                                        </SelectContent>
+                                                    </Select>
+                                                </div>
                                             </div>
-                                        </a>
+                                        </div>
+
                                         <div>
                                             <p className="text-primaryred">${item.price}</p>
                                         </div>
                                     </div>
+
                                     <div>
-                                        <div className="relative flex items-center max-w-[8rem]">
+                                        <div className="relative flex items-center  w-1/5 sm:w-2/5">
                                             <Button
                                                 type="button"
                                                 id="decrement-button"
                                                 className="shadow-none rounded-r-none bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 border border-gray-300 rounded-s-lg p-3 h-9 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none"
                                                 onClick={() =>
                                                     item.productId !== undefined &&
-                                                    handleQuantityChange(item.productId, -1)
+                                                    handleQuantityChange(item.id!, item.productId, item.productOptionId, -1)
                                                 }
                                             >
                                                 <Icons.minus className="w-3 h-3 text-gray-900 dark:text-white"/>
@@ -222,7 +274,7 @@ export default function CartPage() {
                                                 type="text"
                                                 id="quantity-input"
                                                 className="bg-gray-50 border-x-0 rounded-none border-gray-300 h-9 w-9 p-0 text-center focus:ring-0 focus:outline-none focus:border-none"
-                                                value={item.productId !== undefined ? quantities[item.productId] : ""}
+                                                value={item.productId !== undefined ? quantities[item.id!] : ""}
                                                 readOnly
                                             />
                                             <Button
@@ -231,7 +283,7 @@ export default function CartPage() {
                                                 className="shadow-none rounded-l-none bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 border border-gray-300 rounded-e-lg p-3 h-9"
                                                 onClick={() =>
                                                     item.productId !== undefined &&
-                                                    handleQuantityChange(item.productId, 1)
+                                                    handleQuantityChange(item.id!, item.productId, item.productOptionId, 1)
                                                 }
                                             >
                                                 <Icons.plus className="w-3 h-3 text-gray-900 dark:text-white"/>
@@ -241,8 +293,8 @@ export default function CartPage() {
                                     <Button
                                         className="mr-2"
                                         variant="ghost"
-                                        onClick={() => item.productId !== undefined && handleDeleteItem(item.productId)}
-                                        disabled={!selectedItems.includes(item.productId!)}
+                                        onClick={() => item.id !== undefined && handleDeleteItem(item.id)}
+                                        disabled={!selectedItems.includes(item.id!)}
                                     >
                                         <Icons.trash className="w-7 h-7 text-primaryred"/>
                                     </Button>

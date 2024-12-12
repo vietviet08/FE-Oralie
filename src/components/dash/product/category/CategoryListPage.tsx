@@ -13,7 +13,7 @@ import {CategoryDialog} from "@/components/dash/product/category/CategoryDialog"
 
 const breadcrumbItems = [
     {title: 'Dashboard', link: '/admin'},
-    {title: 'Categories', link: '/admin/categories'}
+    {title: 'Categories', link: '/admin/products'}
 ];
 
 export default async function CategoryListPage() {

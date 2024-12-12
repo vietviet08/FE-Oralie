@@ -19,7 +19,7 @@ const breadcrumbItems = [
 
 export default async function ProductListPage() {
     // const search = searchParamsCache.get('q');
-    // const categories = searchParamsCache.get('categories');
+    // const products = searchParamsCache.get('products');
 
     // const [page, setPage] = useState<number>(0);
     // const [size, setSize] = useState<number>(10);

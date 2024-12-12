@@ -24,8 +24,8 @@ export function useProductTableFilters() {
     );
 
     // const [categoriesFilter, setCategoriesFilter] = useQueryState(
-    //     'categories',
-    //     searchParams.categories.withOptions({shallow: false}).withDefault('')
+    //     'products',
+    //     searchParams.products.withOptions({shallow: false}).withDefault('')
     // );
 
     const [page, setPage] = useQueryState(

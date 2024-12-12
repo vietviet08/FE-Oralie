@@ -11,7 +11,7 @@ export async function getListCategory(page: number,
                                       sort: string,
                                       token: string) {
 
-    const testUrl = testUrlProductService + "/dash/categories";
+    const testUrl = testUrlProductService + "/dash/products";
     try {
         const res = await axios.get(`${baseUrl}/dash/categories`, {
             params: {

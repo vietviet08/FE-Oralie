@@ -8,7 +8,7 @@ type pageProps = {
 
 export const metadata = {
     title: 'Dash - Categories',
-    description: 'Manage categories',
+    description: 'Manage products',
 }
 
 export default function Page({searchParams}: pageProps) {

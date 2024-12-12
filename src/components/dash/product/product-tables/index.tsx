@@ -45,7 +45,7 @@ export default function ProductTable({
           setPage={setPage}
         />
         {/*<DataTableFilterBox*/}
-        {/*    filterKey="categories"*/}
+        {/*    filterKey="products"*/}
         {/*    title="Categories"*/}
         {/*    options={CATEGORY_OPTIONS}*/}
         {/*    setFilterValue={setCategoriesFilter}*/}

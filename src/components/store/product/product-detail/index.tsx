@@ -31,6 +31,7 @@ import {getTop10ProductRelatedCategory} from "@/services/ProductService";
 import Rates from "@/components/store/product/rates";
 import {addProductToCart} from "@/services/CartService";
 import {useSession} from "next-auth/react";
+import {useToast} from "@/hooks/use-toast";
 
 type Props = {
     product: Product;
@@ -39,6 +40,11 @@ type Props = {
 const ProductPageDetail = ({product}: Props) => {
     const {data: session} = useSession();
     const token = session?.access_token as string;
+
+    const {toast} = useToast();
+
+    const [selectedOptionId, setSelectedOptionId] = useState<number>(product.options[0].id!);
+    const [quantity, setQuantity] = useState<number>(1);
 
     const [productsRelated, setProductsRelated] = useState<Product[]>([]);
 
@@ -67,11 +73,18 @@ const ProductPageDetail = ({product}: Props) => {
         fetchTop10ProductRelated().then(r => r);
     }, [product.id, product.productCategories]);
 
-    const handleAddToCart = async (quantity: number, productId: number) => {
+    const handleAddToCart = async (quantity: number, productId: number, optionId: number) => {
         console.log("Add to cart", productId);
-        const res = await addProductToCart(token, quantity, productId);
+        const res = await addProductToCart(token, quantity, optionId, productId);
+        toast({
+            title: "Added to cart",
+            variant: "success",
+            description: "Product has been added to cart successfully",
+            duration: 3000,
+        });
         if (res) {
-            console.log(res);
+            console.log("Add to cart successfully");
+
         }
     };
 
@@ -85,21 +98,21 @@ const ProductPageDetail = ({product}: Props) => {
                     {product.isAvailable ? (
                         <Badge
                             variant={"allower"}
-                            className="w-36 h-10 text-center flex justify-center items-center rounded-2xl border-allowertext"
+                            className="w-24 h-8 text-center flex justify-center items-center rounded-2xl border-allowertext"
                         >
-                            <span className="text-[15px]">Status: Stock</span>
+                            <span className="text-[10px]">Status: Stock</span>
                         </Badge>
                     ) : (
                         <Badge
                             variant={"destructive"}
-                            className="w-32 h-8  text-center flex justify-center items-center rounded-2xl border-allowertext"
+                            className="w-32 h-8 text-center flex justify-center items-center rounded-2xl border-primaryred"
                         >
-                            <span>Status: Out of stock</span>
+                            <span className="text-[10px]">Status: Out of stock</span>
                         </Badge>
                     )}
                 </div>
             </div>
-            <div className="py-2 border-b-[1px] border-b-primaryred2"></div>
+            <div className=" border-b-[1px] border-b-primaryred2"></div>
             <div className="pt-8">
                 <main>
                     <div className="flex flex-col md:flex-row md:justify-center ">
@@ -265,7 +278,8 @@ const ProductPageDetail = ({product}: Props) => {
                                 {product.options.map((option) => (
                                     <Button
                                         key={option.id}
-                                        className="flex flex-col justify-center items-center rounded-xl text-primaryred1 bg-white  border border-primaryred2 hover:text-white hover:bg-primaryred1 overflow-hidden w-full h-full"
+                                        className={`flex flex-col justify-center items-center rounded-xl text-primaryred1 bg-white border border-primaryred2 hover:text-white hover:bg-primaryred1 overflow-hidden w-full h-full ${selectedOptionId === option.id ? 'bg-primaryred1 text-white' : 'bg-transparent'}`}
+                                        onClick={() => setSelectedOptionId(option.id!)}
                                     >
                                         <div className=" font-bold text-sm">{option.name}</div>
                                         <div className=" text-sm">${option.value}</div>
@@ -284,7 +298,7 @@ const ProductPageDetail = ({product}: Props) => {
                                 <div className="h-14 flex items-center">
                                     <Button
                                         className="flex flex-col justify-center items-center rounded-lg border text-primaryred border-primaryred bg-white w-20 h-14 transition-all duration-300 ease-in-out hover:bg-primaryred hover:text-white"
-                                        onClick={() => handleAddToCart(1, product.id!)}
+                                        onClick={() => handleAddToCart(quantity, product.id!, selectedOptionId)}
                                     >
                                         <Icons.shoppingCart className="w-10 h-10 text-xl"/>
                                         <span className=" text-[12px]">Add to cart</span>
