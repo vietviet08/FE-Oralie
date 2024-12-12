@@ -282,7 +282,7 @@ const ProductPageDetail = ({product}: Props) => {
                                         onClick={() => setSelectedOptionId(option.id!)}
                                     >
                                         <div className=" font-bold text-sm">{option.name}</div>
-                                        <div className=" text-sm">${option.value}</div>
+                                        <div className=" text-sm">$ {option.value}</div>
                                     </Button>
                                 ))}
                             </div>

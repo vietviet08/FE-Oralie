@@ -33,7 +33,7 @@ export const navItems: NavItem[] = [
     },
     {
         title: 'Category',
-        href: '/admin/products',
+        href: '/admin/categories',
         icon: 'category',
         label: 'category'
     },

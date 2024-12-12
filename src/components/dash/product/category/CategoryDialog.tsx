@@ -12,13 +12,15 @@ import {
 } from "@/components/ui/dialog"
 import {Input} from "@/components/ui/input"
 import {Label} from "@/components/ui/label"
-import {ReactNode, useState} from "react";
+import React, {ReactNode, useEffect, useState} from "react";
 import {cn} from "@/lib/utils";
-import {createCategory} from "@/services/CategoryService";
+import {createCategory, getAllCategoriesNotId} from "@/services/CategoryService";
 import {useToast} from "@/hooks/use-toast";
 import {useRouter} from "next/navigation";
 import {FileUploader} from "@/components/common/file-uploader";
 import {Switch} from "@/components/ui/switch";
+import {Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
+import {CategoryGet} from "@/model/category/CategoryGet";
 
 type Props = {
     icon: ReactNode;
@@ -28,14 +30,27 @@ type Props = {
 export function CategoryDialog({icon, accessToken}: Props) {
 
     const [isOpen, setIsOpen] = useState(false);
+
+    const [file, setFile] = useState<File[]>([]);
     const [name, setName] = useState<string>("");
     const [description, setDescription] = useState<string>("");
-    const [file, setFile] = useState<File[]>([]);
+    const [parentId, setParentId] = useState<number | undefined>(undefined);
+    const [categoryList, setCategoryList] = useState<CategoryGet[]>([]);
     const [isChecked, setChecked] = useState(true);
 
     const router = useRouter()
     const {toast} = useToast();
 
+    useEffect(() => {
+        async function fetchListCategory() {
+            const res = await getAllCategoriesNotId(1, true);
+            if (res && res.status === 200) {
+                setCategoryList(res.data);
+            }
+        }
+
+        fetchListCategory();
+    }, []);
 
     async function handleSubmit() {
         const slug = name.toLowerCase().replace(/ /g, '-');
@@ -47,7 +62,7 @@ export function CategoryDialog({icon, accessToken}: Props) {
                 image: file[0],
                 slug: slug,
                 isDeleted: !isChecked,
-                parentId: undefined,
+                parentId: parentId,
             }, accessToken);
 
             if (res && res.status === 200) {
@@ -73,7 +88,7 @@ export function CategoryDialog({icon, accessToken}: Props) {
                 description: "Category creation failed",
                 duration: 5000,
             });
-        }finally {
+        } finally {
             setIsOpen(false);
             router.refresh();
         }
@@ -96,42 +111,72 @@ export function CategoryDialog({icon, accessToken}: Props) {
                                   maxFiles={1}
                                   multiple={false}
                                   maxSize={4 * 1024 * 1024}
-                                  onValueChange={setFile} />
+                                  onValueChange={setFile}/>
 
                     <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="name" className="text-right">
-                                Name
-                            </Label>
-                            <Input id="name"
-                                   value={name}
-                                   className="col-span-3"
-                                   onChange={(e) => {
-                                       setName(e.target.value)
-                                   }}/>
-                        </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="desciption" className="text-right">
-                                Description
-                            </Label>
-                            <Input id="desciption"
-                                   value={description}
-                                   className="col-span-3"
-                                   onChange={(e) => {
-                                       setDescription(e.target.value)
-                                   }}
-                            />
-                        </div>
-
+                        <Label htmlFor="name" className="text-right">
+                            Name
+                        </Label>
+                        <Input id="name"
+                               value={name}
+                               className="col-span-3"
+                               onChange={(e) => {
+                                   setName(e.target.value)
+                               }}/>
                     </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="desciption" className="text-right">
+                            Description
+                        </Label>
+                        <Input id="desciption"
+                               value={description}
+                               className="col-span-3"
+                               onChange={(e) => {
+                                   setDescription(e.target.value)
+                               }}
+                        />
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="desciption" className="text-right">
+                            Parent Category
+                        </Label>
+                        <Input id="desciption"
+                               value={description}
+                               className="col-span-3"
+                               onChange={(e) => {
+                                   setDescription(e.target.value)
+                               }}
+                        />
+                        <Select>
+                            <Select
+                                onValueChange={(value) => setParentId(parseInt(value))}
+                            >
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Options"/>
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        {categoryList.map(category => (
+                                            <SelectItem key={category.id}
+                                                        value={category.id!.toString()}>
+                                                {category.name}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
+                        </Select>
+                    </div>
+                </div>
                 <DialogFooter className={"flex items-center justify-between"}>
                     <div className="flex items-center space-x-2">
                         <Switch id="button-checked" name={"Activate"} checked={isChecked} onCheckedChange={setChecked}/>
                         <Label htmlFor="button-checked">Activate</Label>
                     </div>
-                        <Button type="button" onClick={handleSubmit}>Create</Button>
+                    <Button type="button" onClick={handleSubmit}>Create</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
-)
+    )
 }
 

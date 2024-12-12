@@ -1,6 +1,5 @@
 import axios from "axios";
 import {BrandPost} from "@/model/brand/BrandPost";
-import { testUrlProductService } from "@/constants/data";
 import api from "./api/api";
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL + '/api/products';
@@ -11,9 +10,8 @@ export async function getListBrand(page: number,
                                    sort: string,
                                    token: string) {
 
-    const testUrl = testUrlProductService + "/dash/brands";
     try {
-        const res = await api.get(`/products/dash/brands`, {
+        const res = await api.get(`${baseUrl}/store/brands`, {
             params: {
                 page,
                 size,
@@ -39,7 +37,7 @@ export async function getListBrand(page: number,
 
 export async function getBrandById(id: number, token: string) {
     try {
-        const res = await axios.get(`${baseUrl}/dash/brands/${id}`, {
+        const res = await axios.get(`${baseUrl}/store/brands/${id}`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }

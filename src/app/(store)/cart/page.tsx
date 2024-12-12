@@ -199,7 +199,7 @@ export default function CartPage() {
                                 />
                                 <CardContent
                                     className="flex w-full justify-between items-center py-6 px-0 gap-4 lg:gap-0">
-                                    <div className="w-3/5 flex justify-between items-center space-x-2 gap-1">
+                                    <div className="w-4/6 flex justify-between items-center space-x-2 gap-1">
                                         <div
                                             className=" flex flex-col sm:flex-row items-center space-x-2">
                                             <Link
@@ -313,12 +313,12 @@ export default function CartPage() {
                                 <div
                                     className="w-full pb-2 flex justify-between items-center border-b border-dashed border-gray-400">
                                     <p className="text-sm">Total</p>
-                                    <div className="text-xl font-semibold">${cart?.totalPrice}</div>
+                                    <div className="text-xl font-semibold">$ {cart?.totalPrice}</div>
                                 </div>
                                 <div className="flex flex-col space-y-2 pb-2 border-b border-dashed border-gray-400">
                                     <div className="w-full flex justify-between items-center">
                                         <p className="text-sm">Total Promotion</p>
-                                        <div className="text-xl font-semibold">${cart?.totalPrice}</div>
+                                        <div className="text-xl font-semibold">$ {cart?.totalPrice}</div>
                                     </div>
                                     <div className="w-full flex justify-between items-center">
                                         <p className="text-sm">Shipping Fee</p>
@@ -327,12 +327,11 @@ export default function CartPage() {
                                 </div>
                                 <div className="w-full flex justify-between items-center">
                                     <p className="text-sm">Need to Pay</p>
-                                    <div className="text-xl font-semibold">${cart?.totalPrice}</div>
+                                    <div className="text-xl font-semibold">$ {cart?.totalPrice}</div>
                                 </div>
                                 <Button type="button" className="w-full bg-primaryred hover:bg-red-500 text-white">
                                     Go To Payment
                                 </Button>
-                                <Checkbox></Checkbox>
                             </div>
                         </CardContent>
                     </Card>

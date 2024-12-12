@@ -1,6 +1,5 @@
 import axios from "axios";
 import {CategoryPost} from "@/model/category/CategoryPost";
-import { testUrlProductService } from "@/constants/data";
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL + '/api/products';
 
@@ -11,9 +10,8 @@ export async function getListCategory(page: number,
                                       sort: string,
                                       token: string) {
 
-    const testUrl = testUrlProductService + "/dash/products";
     try {
-        const res = await axios.get(`${baseUrl}/dash/categories`, {
+        const res = await axios.get(`${baseUrl}/store/categories/all`, {
             params: {
                 page,
                 size,
@@ -35,9 +33,49 @@ export async function getListCategory(page: number,
     }
 }
 
+export async function getAllCategoriesNotId(id: number, notId: boolean) {
+
+    try {
+        const res = await axios.get(`${baseUrl}/store/categories/not-id/${id}`, {
+            params: {
+                notId
+            }
+        });
+
+        if (res && res.status === 200) {
+            console.log(res.data);
+            return res.data;
+        }
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
+
+export async function getAllCategoryContainsName(name: string) {
+
+    try {
+        const res = await axios.get(`${baseUrl}/store/categories/contains-name`, {
+            params: {
+                name
+            }
+        });
+
+        if (res && res.status === 200) {
+            console.log(res.data);
+            return res.data;
+        }
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
+
 export async function getCategoryById(id: number, token: string) {
     try {
-        const res = await axios.get(`${baseUrl}/dash/categories/${id}`, {
+        const res = await axios.get(`${baseUrl}/store/categories/${id}`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
