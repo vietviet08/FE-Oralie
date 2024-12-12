@@ -8,6 +8,7 @@ export async function getListCategory(page: number,
                                       size: number,
                                       sortBy: string,
                                       sort: string,
+                                      search: string,
                                       token: string) {
 
     try {
@@ -17,6 +18,7 @@ export async function getListCategory(page: number,
                 size,
                 sortBy,
                 sort,
+                search
             },
             headers: {
                 Authorization: `Bearer ${token}`

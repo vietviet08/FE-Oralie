@@ -22,11 +22,12 @@ export default async function CategoryListPage() {
     const size = searchParamsCache.get('size');
     const sortBy = searchParamsCache.get('sortBy');
     const sort = searchParamsCache.get('sort');
+    const search = searchParamsCache.get('search');
 
     const session: Session | null = await getServerSession(authOptions);
     const token = session?.access_token as string;
 
-    const data = await getListCategory(page, size, sortBy, sort, token);
+    const data = await getListCategory(page, size, sortBy, sort, search, token);
 
     const categories: CategoryGet[] = data.data;
     const totalCategories = data.totalElements;

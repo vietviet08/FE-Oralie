@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog"
 import {Input} from "@/components/ui/input"
 import {Label} from "@/components/ui/label"
-import React, {ReactNode, useEffect, useState} from "react";
+import React, {ReactNode, useState} from "react";
 import {cn} from "@/lib/utils";
 import {createCategory, getAllCategoriesNotId} from "@/services/CategoryService";
 import {useToast} from "@/hooks/use-toast";
@@ -41,20 +41,15 @@ export function CategoryDialog({icon, accessToken}: Props) {
     const router = useRouter()
     const {toast} = useToast();
 
-    useEffect(() => {
-        async function fetchListCategory() {
-            const res = await getAllCategoriesNotId(1, true);
-            if (res && res.status === 200) {
-                setCategoryList(res.data);
-            }
+    async function fetchListCategory() {
+        const res = await getAllCategoriesNotId(1, false);
+        if (res) {
+            setCategoryList(res);
         }
-
-        fetchListCategory();
-    }, []);
+    }
 
     async function handleSubmit() {
-        const slug = name.toLowerCase().replace(/ /g, '-');
-
+        const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
         try {
             const res = await createCategory({
                 name: name,
@@ -68,8 +63,9 @@ export function CategoryDialog({icon, accessToken}: Props) {
             if (res && res.status === 200) {
                 toast({
                     title: "Category Created",
+                    variant: "success",
                     description: "Category has been created successfully",
-                    duration: 5000,
+                    duration: 3000,
                 });
             }
             if (res && res.status === 400) {
@@ -77,7 +73,7 @@ export function CategoryDialog({icon, accessToken}: Props) {
                     variant: "destructive",
                     title: "Category Creation Failed",
                     description: "Name category already exists",
-                    duration: 5000,
+                    duration: 3000,
                 });
             }
         } catch (e) {
@@ -86,7 +82,7 @@ export function CategoryDialog({icon, accessToken}: Props) {
                 variant: "destructive",
                 title: "Category Creation Failed",
                 description: "Category creation failed",
-                duration: 5000,
+                duration: 3000,
             });
         } finally {
             setIsOpen(false);
@@ -95,7 +91,10 @@ export function CategoryDialog({icon, accessToken}: Props) {
     }
 
     return (
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <Dialog open={isOpen} onOpenChange={(open) => {
+            setIsOpen(open);
+            if (open) fetchListCategory();
+        }}>
             <DialogTrigger asChild>
                 <Button className={cn(buttonVariants(), 'text-xs md:text-sm')}> {icon} <span>Add New</span></Button>
             </DialogTrigger>
@@ -140,32 +139,22 @@ export function CategoryDialog({icon, accessToken}: Props) {
                         <Label htmlFor="desciption" className="text-right">
                             Parent Category
                         </Label>
-                        <Input id="desciption"
-                               value={description}
-                               className="col-span-3"
-                               onChange={(e) => {
-                                   setDescription(e.target.value)
-                               }}
-                        />
-                        <Select>
-                            <Select
-                                onValueChange={(value) => setParentId(parseInt(value))}
-                            >
+                        <div className="flex w-full col-span-3  ">
+                            <Select onValueChange={(value) => setParentId(parseInt(value))}>
                                 <SelectTrigger>
-                                    <SelectValue placeholder="Options"/>
+                                    <SelectValue placeholder="Parent"/>
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectGroup>
-                                        {categoryList.map(category => (
-                                            <SelectItem key={category.id}
-                                                        value={category.id!.toString()}>
+                                        {categoryList && categoryList.map(category => (
+                                            <SelectItem key={category.id} value={category.id!.toString()}>
                                                 {category.name}
                                             </SelectItem>
                                         ))}
                                     </SelectGroup>
                                 </SelectContent>
                             </Select>
-                        </Select>
+                        </div>
                     </div>
                 </div>
                 <DialogFooter className={"flex items-center justify-between"}>

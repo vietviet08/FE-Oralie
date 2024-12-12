@@ -7,7 +7,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Check, CircleCheck, Edit, MoreHorizontal, Trash } from "lucide-react";
+import {  CircleCheck, Edit, MoreHorizontal, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { AlertModal } from "@/components/dash/modal/alert-modal";
@@ -68,7 +68,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
           variant: "success",
           title: "Brand deleted",
           description: "Brand has been deleted successfully",
-          duration: 5000,
+          duration: 3000,
         });
       }
     } catch (error) {
@@ -77,7 +77,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         variant: "destructive",
         title: "Brand can't be deleted",
         description: "Brand can't be deleted, please try again",
-        duration: 5000,
+        duration: 3000,
       });
     } finally {
       setOpen(false);

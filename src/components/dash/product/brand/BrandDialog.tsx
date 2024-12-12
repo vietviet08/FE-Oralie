@@ -55,7 +55,7 @@ export function BrandDialog({ icon }: Props) {
         toast({
           title: "Brand Created",
           description: "Brand has been created successfully",
-          duration: 5000,
+          duration: 3000,
         });
       }
       if (res && res.status === 400) {
@@ -63,7 +63,7 @@ export function BrandDialog({ icon }: Props) {
           variant: "destructive",
           title: "Brand Creation Failed",
           description: "Name brand already exists",
-          duration: 5000,
+          duration: 3000,
         });
       }
     } catch (e) {
@@ -72,7 +72,7 @@ export function BrandDialog({ icon }: Props) {
         variant: "destructive",
         title: "Brand Creation Failed",
         description: "Brand creation failed",
-        duration: 5000,
+        duration: 3000,
       });
     } finally {
       setIsOpen(false);

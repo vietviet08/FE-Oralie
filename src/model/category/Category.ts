@@ -1,8 +1,9 @@
 export type Category = {
     id?: number;
     name: string;
-    image: string,
-    slug?: string;
+    slug: string;
     description: string;
-    isDeleted?: boolean;
+    image: string,
+    parentId: number,
+    isDeleted: boolean;
 }

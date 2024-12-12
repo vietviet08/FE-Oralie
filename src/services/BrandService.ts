@@ -8,6 +8,7 @@ export async function getListBrand(page: number,
                                    size: number,
                                    sortBy: string,
                                    sort: string,
+                                   search: string,
                                    token: string) {
 
     try {
@@ -17,6 +18,7 @@ export async function getListBrand(page: number,
                 size,
                 sortBy,
                 sort,
+                search
             },
             headers: {
                 Authorization: `Bearer ${token}`
@@ -26,7 +28,7 @@ export async function getListBrand(page: number,
         if (res && res.status === 200) {
             console.log(res.data);
             return res.data;
-        }else if(res && res.status === 401){
+        } else if (res && res.status === 401) {
             return null;
         }
     } catch (error) {
@@ -114,9 +116,9 @@ export async function updateBrand(id: number, brand: BrandPost, token: string) {
     }
 }
 
-export async function updateAvailabelBrand(id: number, token: string){
+export async function updateAvailabelBrand(id: number, token: string) {
     try {
-        const res = await axios.put(`${baseUrl}/dash/brands/available/${id}`,{}, {
+        const res = await axios.put(`${baseUrl}/dash/brands/available/${id}`, {}, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
