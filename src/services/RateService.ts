@@ -119,7 +119,6 @@ export async function dislikeComment(productId: number, rateId: number) {
     }
 }
 
-
 export async function updateAvailableComment(rateId: number) {
     try {
         const res = await axios.put(`${baseUrl}/store/rates/available/` + rateId);
@@ -133,11 +132,9 @@ export async function updateAvailableComment(rateId: number) {
     }
 }
 
-
-
 export async function getAvgRateStarByProductId(productId: number) {
     try {
-        const res = await axios.put(`${baseUrl}/store/rates/rates/avg/` + productId);
+        const res = await axios.get(`${baseUrl}/store/rates/avg/` + productId);
         if (res && res.status === 200) {
             console.log(res.data);
             return res.data;

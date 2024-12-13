@@ -1,7 +1,12 @@
+"use client";
+
 import ProductSlider from "@/components/store/home/productSlider";
 import SoloGan from "@/components/store/home/sologan";
 
 export default function Home() {
+
+    
+
   return (
     <div className="sm:px-32 px-6 py-6">
       <div className="py-1 mt-14">

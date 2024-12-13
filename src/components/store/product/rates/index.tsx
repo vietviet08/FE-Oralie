@@ -12,13 +12,13 @@ type Props = {
 
 const Rates = ({productId, productName}: Props) => {
     const [rates, setRates] = useState<Rate[]>([]);
-    const [avgRate, setAvgRate] = useState<number>(0);
+    const [avgRate, setAvgRate] = useState<number>(0.0);
 
     useEffect(() => {
         async function fetchRates() {
             try {
                 const res = await getListRateByProductId(productId, 1, 10, 'createdAt', 'desc');
-                setRates(res.content);
+                setRates(res.data);
             } catch (e) {
                 console.log(e);
             }
@@ -29,7 +29,7 @@ const Rates = ({productId, productName}: Props) => {
         async function fetchAvgRate() {
             try {
                 const res = await getAvgRateStarByProductId(productId);
-                setAvgRate(res.data);
+                setAvgRate(res);
             } catch (e) {
                 console.log(e);
             }
@@ -38,14 +38,13 @@ const Rates = ({productId, productName}: Props) => {
         fetchAvgRate().then(r => r);
     }, [productId]);
 
-
     return (
         <div>
             <h1 className="text-lg font-semibold ">Reviews & Comments {productName}</h1>
             <div className="flex justify-between item-center my-4">
                 <div className="w-2/5 flex flex-col justify-center items-center space-y-2">
                     <span className="text-3xl text-primaryred font-semibold">{avgRate}</span>
-                    <span className="text-lg  font-semibold">{rates.length} review</span>
+                    <span className="text-lg font-semibold">{rates && rates.length > 0 ? rates.length : 0} review</span>
                     <div className="flex justify-center items-center gap-1">
                         {[1, 2, 3, 4, 5].map((star, index) => {
                             if (avgRate >= star) {
@@ -72,13 +71,14 @@ const Rates = ({productId, productName}: Props) => {
                             <div className="w-11/12 flex justify-between items-center gap-2">
                                 <div className="w-11/12 h-3 rounded-lg overflow-hidden border">
 
-                                    <div className={rates.length > 0 ? "bg-primaryred w-full h-3" : "bg-gray-300 w-full h-3"}
-                                         style={{width: `${(rates.filter(rate => rate.rateStar === star).length / rates.length) * 100}%`}}>
+                                    <div
+                                        className={rates && rates.length > 0 ? "bg-primaryred w-full h-3" : "bg-gray-300 w-full h-3"}
+                                        style={{width: `${(rates && rates.length > 0 ? rates.filter(rate => rate.rateStar === star).length / rates.length : 0) * 100}%`}}>
                                     </div>
 
                                 </div>
                                 <span className="w-1/12 text-base">
-                                    {rates.filter(rate => rate.rateStar === star).length}
+                                    {rates && rates.length > 0 ? rates.filter(rate => rate.rateStar === star).length : 0}
                                 </span>
                             </div>
                         </div>

@@ -131,20 +131,22 @@ export const CellAction: React.FC<CellActionProps> = ({data}) => {
                     duration: 3000,
                 });
             }
-            if (res && res.status === 400) {
-                toast({
-                    variant: "destructive",
-                    title: "Category Update Failed",
-                    description: "Name category already exists",
-                    duration: 3000,
-                });
-            }
+            // if (res && res.status === 400) {
+            //     toast({
+            //         variant: "destructive",
+            //         title: "Category Update Failed",
+            //         description: "Name category already exists",
+            //         duration: 3000,
+            //     });
+            // }
         } catch (e) {
             console.log(e);
             toast({
                 variant: "destructive",
                 title: "Category Update Failed",
-                description: "Category update failed",
+                description: (e as unknown as {
+                    response?: { data?: { errorMessage?: string } }
+                }).response?.data?.errorMessage || "An unknown error occurred",
                 duration: 3000,
             });
         } finally {

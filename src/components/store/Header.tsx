@@ -12,27 +12,42 @@ import {Button} from "@medusajs/ui";
 import {Icons} from "../icons";
 import {Input} from "../ui/input";
 import Menu from "./home/sologan/menu";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {getCart} from "@/services/CartService";
-import {CartResponse} from "@/model/cart/CartResponse";
 import {useSession} from "next-auth/react";
+import {CartResponse} from "@/model/cart/CartResponse";
 
 export function Header() {
-    const { data: session } = useSession();
+    const {data: session} = useSession();
     const token = session?.access_token as string;
 
-    let cartItemCount  = 0;
+    const [cartItemCount, setCartItemCount] = useState<number>(0);
 
     const [openMenu, setOpenMenu] = React.useState(false);
 
     const menuRef = React.useRef<HTMLDivElement>(null);
-
 
     const handleClickOutside = (event: MouseEvent) => {
         if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
             setOpenMenu(false);
         }
     };
+
+    useEffect(() => {
+        async function fetchCart() {
+            try {
+                const res: CartResponse = await getCart(token);
+                if (res) {
+                    setCartItemCount(res.quantity);
+                    console.log("cart in header " + res);
+                }
+            } catch (error) {
+                console.error("Failed to fetch cart:", error);
+            }
+        }
+
+        fetchCart();
+    }, [token]);
 
     useEffect(() => {
 
@@ -45,25 +60,7 @@ export function Header() {
             document.removeEventListener("mousedown", handleClickOutside);
         };
 
-        async function fetchCart() {
-            try {
-                const res = await getCart(token);
-                if (res) {
-                    cartItemCount = res.quantity;
-                    console.log("cart in header " + res);
-                }
-            } catch (error) {
-                console.error("Failed to fetch cart:", error);
-            }
-        }
-
-        fetchCart();
-
     }, [token, openMenu]);
-
-
-
-    console.log("cart item count in header " + cartItemCount);
 
     return (
         <header

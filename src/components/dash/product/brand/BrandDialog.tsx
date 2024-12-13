@@ -58,20 +58,22 @@ export function BrandDialog({icon}: Props) {
                     duration: 3000,
                 });
             }
-            if (res && res.status === 400) {
-                toast({
-                    variant: "destructive",
-                    title: "Brand Creation Failed",
-                    description: "Name brand already exists",
-                    duration: 3000,
-                });
-            }
+            // if (res && res.status === 400) {
+            //     toast({
+            //         variant: "destructive",
+            //         title: "Brand Creation Failed",
+            //         description: res.response.data.errorMessage || "An unknown error occurred",
+            //         duration: 3000,
+            //     });
+            // }
         } catch (e) {
             console.log(e);
             toast({
                 variant: "destructive",
                 title: "Brand Creation Failed",
-                description: "Brand creation failed",
+                description: (e as unknown as {
+                    response?: { data?: { errorMessage?: string } }
+                }).response?.data?.errorMessage || "An unknown error occurred",
                 duration: 3000,
             });
         } finally {

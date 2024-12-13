@@ -3,7 +3,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import Image from "next/image";
 import { CellAction } from "./cell-action";
 import { Product } from "@/model/product/Product";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Icons } from "@/components/icons";
 
 const truncateText = (text: string, maxLength: number) => {
@@ -49,7 +49,7 @@ export const columns: ColumnDef<Product>[] = [
     header: "NAME",
     cell: ({ row }) => {
       const name = row.getValue("name") as string;
-      return <span>{truncateText(name, 20)}</span>;
+      return <span title={name}>{truncateText(name, 20)}</span>;
     },
   },
   {

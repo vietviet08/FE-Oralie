@@ -224,7 +224,7 @@ export default function ProductForm({product}: ProductFormProps) {
                         toast({
                             title: "Product Updated",
                             description: `Product has been updated successfully with id ${res.data.id}`,
-                            duration: 5000,
+                            duration: 3000,
                         });
                         router.push("/admin/products");
                         router.refresh();
@@ -236,7 +236,7 @@ export default function ProductForm({product}: ProductFormProps) {
                     toast({
                         title: "Product Created",
                         description: `Product has been created successfully with id ${res.data.id}`,
-                        duration: 5000,
+                        duration: 3000,
                     });
                     router.push("/admin/products");
                     router.refresh();
@@ -247,9 +247,10 @@ export default function ProductForm({product}: ProductFormProps) {
             toast({
                 variant: "destructive",
                 title: "Product Creation Failed",
-                description:
-                    "Product creation failed, error from server please contact to admin",
-                duration: 5000,
+                description: (error as unknown as {
+                    response?: { data?: { errorMessage?: string } }
+                }).response?.data?.errorMessage || "An unknown error occurred",
+                duration: 3000,
             });
         }
     }
