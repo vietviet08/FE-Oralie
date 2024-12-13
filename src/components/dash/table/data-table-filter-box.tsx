@@ -35,13 +35,13 @@ interface FilterBoxProps {
     options: FilterOption[];
     setFilterValue: (
         value: string | ((old: string) => string | null) | null,
-        options?: Options<any> | undefined
+        options?: Options<unknown> | undefined
     ) => Promise<URLSearchParams>;
     filterValue: string;
 }
 
 export function DataTableFilterBox({
-                                       filterKey,
+                                       // filterKey,
                                        title,
                                        options,
                                        setFilterValue,

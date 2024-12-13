@@ -1,4 +1,3 @@
-import { Text, clx } from "@medusajs/ui";
 import Image from "next/image";
 
 // import { getCategoriesList, getCollectionsList } from "@lib/data"

@@ -11,10 +11,10 @@ export async function GET() {
 
         const endSessionUrl = process.env.KEYCLOAK_END_SESSION_URL || '';
         const nextAuthUrl = process.env.NEXT_PUBLIC_URL || '';
-        var url = `${endSessionUrl}?id_token_hint=${idToken}&post_logout_redirect_uri=${encodeURIComponent(nextAuthUrl)}`;
+        const url = `${endSessionUrl}?id_token_hint=${idToken}&post_logout_redirect_uri=${encodeURIComponent(nextAuthUrl)}`;
 
         try {
-            const resp = await fetch(url, {method: "GET"});
+            await fetch(url, {method: "GET"});
         } catch (err) {
             console.error(err);
             return new Response(null, {status: 500});

@@ -1,4 +1,4 @@
-import {Metadata, ResolvingMetadata} from "next";
+import {Metadata} from "next";
 import {baseOpenGraph} from "@/components/common/base-open-graph";
 import {getCategoryById} from "@/services/CategoryService";
 import {getServerSession, Session} from "next-auth";
@@ -12,8 +12,7 @@ type Props = {
     }
 }
 
-export async function generateMetadata({params}: Props,
-                                       parent: ResolvingMetadata): Promise<Metadata> {
+export async function generateMetadata({params}: Props): Promise<Metadata> {
     const session: Session | null = await getServerSession(authOptions);
     const token = session?.access_token as string;
 

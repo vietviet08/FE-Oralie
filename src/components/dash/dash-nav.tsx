@@ -107,7 +107,7 @@ NavItemButton.displayName = 'NavItemButton';
 export function DashboardNav({
                                  items,
                                  setOpen,
-                                 isMobileNav = false
+                                 // isMobileNav = false
                              }: DashboardNavProps) {
     const path = usePathname();
     const {isMinimized} = useSidebar();

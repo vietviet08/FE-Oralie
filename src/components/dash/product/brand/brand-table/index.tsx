@@ -17,15 +17,14 @@ export default function BrandTable({
     const {
         isAnyFilterActive,
         resetFilters,
-
-        page,
+        // page,
         setPage,
-        size,
-        setSize,
-        sortBy,
-        setSortBy,
-        sort,
-        setSort,
+        // size,
+        // setSize,
+        // sortBy,
+        // setSortBy,
+        // sort,
+        // setSort,
         searchQuery,
         setSearchQuery,
 

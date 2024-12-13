@@ -10,7 +10,7 @@ export default function SessionGuard({children}: { children: ReactNode }) {
     useEffect(() => {
         if (session?.error === "RefreshAccessTokenError") {
             signIn("keycloak").then((r) => {
-                console.log('login success');
+                console.log('login success', r);
             });
         }
     }, [session]);

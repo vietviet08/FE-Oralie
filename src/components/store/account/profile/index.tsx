@@ -9,11 +9,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/hooks/use-toast";
 import { User } from "@/model/user/User";
 import { getImageProfile, getProfile } from "@/services/UserService";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Phone } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { Form, useForm } from "react-hook-form";
@@ -52,9 +50,8 @@ const formSchema = z.object({
 });
 
 export default function Profile({ user }: UserFormProps) {
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const token = session?.access_token as string;
-  const { toast } = useToast();
 
   const [defaultValues, setDefaultValues] = useState<{
     userImage: string;
@@ -104,7 +101,9 @@ export default function Profile({ user }: UserFormProps) {
     fetchImage();
   }, []);
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {}
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log(values);
+  }
 
   return (
     <div className="">

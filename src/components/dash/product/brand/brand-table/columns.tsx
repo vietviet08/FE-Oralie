@@ -25,14 +25,14 @@ export const columns: ColumnDef<Brand>[] = [
             const image = row.getValue("image") as string;
             const name = row.getValue("name") as string;
             return (
-                <div className="relative aspect-square w-16 h-16">
+                <div className="relative w-24 h-16">
                     {image ? (
                         <Image
                             src={image}
                             alt={name}
-                            fill
-                            sizes={"100%"}
-                            className="rounded-lg object-cover"
+                            layout="fill"
+                            objectFit="contain"
+                            className="rounded-lg"
                         />
                     ) : (
                         <Avatar className="h-16 w-16 rounded-xl">

@@ -40,7 +40,6 @@ export function BrandDialog({icon}: Props) {
 
     async function handleSubmit() {
         try {
-            console.log(token);
             const res = await createBrand(
                 {
                     name: name,
@@ -51,21 +50,13 @@ export function BrandDialog({icon}: Props) {
                 token
             );
 
-            if (res && res.status === 200) {
+            if (res) {
                 toast({
                     title: "Brand Created",
                     description: "Brand has been created successfully",
                     duration: 3000,
                 });
             }
-            // if (res && res.status === 400) {
-            //     toast({
-            //         variant: "destructive",
-            //         title: "Brand Creation Failed",
-            //         description: res.response.data.errorMessage || "An unknown error occurred",
-            //         duration: 3000,
-            //     });
-            // }
         } catch (e) {
             console.log(e);
             toast({

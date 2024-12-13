@@ -32,6 +32,7 @@ import Rates from "@/components/store/product/rates";
 import {addProductToCart} from "@/services/CartService";
 import {useSession} from "next-auth/react";
 import {useToast} from "@/hooks/use-toast";
+import Link from "next/link";
 
 type Props = {
     product: Product;
@@ -86,6 +87,7 @@ const ProductPageDetail = ({product}: Props) => {
             console.log("Add to cart successfully");
 
         }
+        setQuantity(1);
     };
 
     return (
@@ -271,9 +273,75 @@ const ProductPageDetail = ({product}: Props) => {
                                         </SwiperSlide>
                                     ))}
                                 </Swiper>
+                                <div className="my-4 w-full md:w-3/5">
+                                    <h2 className="font-bold text-xl my-2">Product Policy</h2>
+                                    <div className="text-sm grid grid-cols-2 gap-3">
+                                        <div className="flex items-center gap-x-2 mb:gap-x-3">
+                                            <Image
+                                                src="https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/Type_Hang_chinh_hang_0b0233a2c6.svg"
+                                                width={20}
+                                                height={20}
+                                                sizes="20px"
+                                                alt="return"
+                                            />
+                                            <span>Genuine product</span>
+                                        </div>
+                                        <div className="flex items-center gap-x-2 mb:gap-x-3">
+                                            <Image
+                                                src="https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/Type_Bao_hanh_9415bfe460.svg"
+                                                width={20}
+                                                height={20}
+                                                sizes="20px"
+                                                alt="return"
+                                            />
+                                            <span>Warranty (months): 12</span>
+                                        </div>
+                                        <div className="flex items-center gap-x-2 mb:gap-x-3">
+                                            <Image
+                                                src="https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/Type_Mien_phi_giao_hang_3339a0ce65.svg"
+                                                width={20}
+                                                height={20}
+                                                sizes="20px"
+                                                alt="return"
+                                            />
+                                            <span>Free delivery within 90 minutes</span>
+                                        </div>
+                                        <div className="flex items-center gap-x-2 mb:gap-x-3">
+                                            <Image
+                                                src="https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/Type_Cai_dat_21382ecc84.svg"
+                                                width={20}
+                                                height={20}
+                                                sizes="20px"
+                                                alt="return"
+                                            />
+                                            <span>Free installation support</span>
+                                        </div>
+                                        <div className="flex items-center gap-x-2 mb:gap-x-3">
+                                            <Image
+                                                src="https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/Type_Doi_tra_59d1881db4.svg"
+                                                width={20}
+                                                height={20}
+                                                sizes="20px"
+                                                alt="return"
+                                            />
+                                            <span>Return policy</span>
+                                        </div>
+                                        <div className="flex items-center gap-x-2 mb:gap-x-3">
+                                            <Image
+                                                src="https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/Type_Tra_gop_0362e63008.svg"
+                                                width={20}
+                                                height={20}
+                                                sizes="20px"
+                                                alt="return"
+                                            />
+                                            <span>Installment policy</span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
+
                         </div>
-                        <div className="w-full md:w-2/5 ml-0 md:ml-2 mt-0 m-4 mr-0 rounded-lg shadow-sm">
+                        <div className="w-full md:w-2/5 ml-0 md:ml-2 mt-0 m-4 mr-0 rounded-lg ">
                             <div className="grid grid-cols-3 gap-3 mb-4">
                                 {product.options.map((option) => (
                                     <Button
@@ -290,10 +358,10 @@ const ProductPageDetail = ({product}: Props) => {
                             <div className="flex justify-between items-center space-x-3 my-4">
                                 <Button
                                     className="rounded-lg bg-primaryred w-5/6 h-14 flex flex-col justify-center items-center text-white hover:bg-white hover:text-primaryred border  hover:border-primaryred">
-                  <span className="text-sm space-y-1 flex flex-col justify-center items-center">
-                    <span className="font-bold uppercase">Pay now</span>
-                    <span>Shiping or take direct in the store</span>
-                  </span>
+                                      <span className="text-sm space-y-1 flex flex-col justify-center items-center">
+                                        <span className="font-bold uppercase">Pay now</span>
+                                        <span>Shiping or take direct in the store</span>
+                                      </span>
                                 </Button>
                                 <div className="h-14 flex items-center">
                                     <Button
@@ -309,115 +377,132 @@ const ProductPageDetail = ({product}: Props) => {
                             <div className="my-4 space-x-3 flex justify-center items-center">
                                 <div
                                     className="rounded-lg bg-primaryblue w-3/6 h-14 flex flex-col justify-center items-center">
-                  <span className="text-sm text-white space-y-1 flex flex-col justify-center items-center">
-                    <span className="font-bold uppercase">INSTALLMENT 0%</span>
-                    <span>0% down payment</span>
-                  </span>
+                                      <span
+                                          className="text-sm text-white space-y-1 flex flex-col justify-center items-center">
+                                        <span className="font-bold uppercase">INSTALLMENT 0%</span>
+                                        <span>0% down payment</span>
+                                      </span>
                                 </div>
                                 <div
                                     className="rounded-lg bg-primaryblue w-3/6 h-14 flex flex-col justify-center items-center">
-                  <span className="text-sm text-white space-y-1 flex flex-col justify-center items-center">
-                    <span className="font-bold uppercase">
-                      0% installment by card
-                    </span>
-                    <span>(VISA, Mastercard, JCB)</span>
-                  </span>
+                                      <span
+                                          className="text-sm text-white space-y-1 flex flex-col justify-center items-center">
+                                        <span className="font-bold uppercase">
+                                          0% installment by card
+                                        </span>
+                                        <span>(VISA, Mastercard, JCB)</span>
+                                      </span>
                                 </div>
                             </div>
 
-                            <div className="my-4">
-                                <h2 className="text-lg font-bold text-primaryred">
+                            <div className="my-4 rounded-xl border border-gray-200 overflow-hidden">
+                                <h2 className="text-md font-bold text-primaryred  bg-gray-100 px-4 py-2.5">
                                     Additional Offers
                                 </h2>
-                                <ul className="text-sm space-y-1">
+                                <ul className="text-sm space-y-1 px-4 py-3">
                                     <li>
-                                        <Icons.check className="text-green-400 size-3 inline-block mr-2"/>
+                                        <Icons.check className="text-green-400 size-4 inline-block mr-2"/>
                                         Full Accessories Included
                                     </li>
                                     <li>
-                                        <Icons.check className="text-green-400 size-3 inline-block mr-2"/>
+                                        <Icons.check className="text-green-400 size-4 inline-block mr-2"/>
                                         Lifetime Software Support
                                     </li>
                                     <li>
-                                        <Icons.check className="text-green-400 size-3 inline-block mr-2"/>
+                                        <Icons.check className="text-green-400 size-4 inline-block mr-2"/>
                                         Free Windows Installation + Machine Cleaning
                                     </li>
                                     <li>
-                                        <Icons.check className="text-green-400 size-3 inline-block mr-2"/>
+                                        <Icons.check className="text-green-400 size-4 inline-block mr-2"/>
                                         Support for Old-For-New Exchange - Best Price Subsidy
                                     </li>
                                 </ul>
                             </div>
+
+                            <div
+                                className="flex flex-col overflow-hidden bg-white mb:container-full rounded-xl border border-gray-200">
+                                <h3 className="text-md text-primaryred text-black-opacity-100 font-semibold px-4 py-2.5 bg-gray-100">
+                                    Other gifts and promotions
+                                </h3>
+                                <div className="flex flex-col gap-2 text-sm px-4 py-3">
+                                    <div className="flex gap-1 ">
+                                        <div className="h-7 w-7 flex-shrink-0 p-0.5 pt-1.5">
+                                            <Image width={30} height={30}
+                                                   src={"https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/gift.svg"}
+                                                   alt={""}>
+                                            </Image>
+                                        </div>
+                                        <div className="flex min-h-7 items-center pt-1.5">
+                                            <p
+                                                className="text-black ">
+                                                <span>Free 150,000 VND voucher for Backpacks, Shockproof Bags (Valid for 15 days)</span>&nbsp;
+                                                <Link className="text-blue-blue-7 hover:underline" target="_blank"
+                                                      href="#">
+                                                    See details
+                                                </Link>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div className="flex gap-1">
+                                        <div className="h-7 w-7 flex-shrink-0 p-0.5 pt-1.5">
+                                            <Image width={30} height={30}
+                                                   src={"https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/gift.svg"}
+                                                   alt={""}>
+                                            </Image>
+                                        </div>
+                                        <div className="flex min-h-7 items-center pt-1.5">
+                                            <p
+                                                className="text-black-opacity-100 ">
+                                                <span>Free 300,000 VND voucher for monitors (Valid for 15 days)</span>&nbsp;
+                                                <Link className="text-blue-blue-7 hover:underline" target="_blank"
+                                                      href="#">See details
+                                                </Link>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div className="flex gap-1">
+                                        <div className="h-7 w-7 flex-shrink-0 p-0.5 pt-1.5">
+                                            <Image width={30} height={30}
+                                                   src={"https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/gift.svg"}
+                                                   alt={""}>
+                                            </Image>
+                                        </div>
+                                        <div className="flex min-h-7 items-center pt-1.5">
+                                            <p
+                                                className="text-black-opacity-100 ">
+                                                <span>Save 600,000 VND when buying Microsoft 365 Personal with device</span>&nbsp;
+                                                <Link className="text-blue-blue-7 hover:underline" target="_blank"
+                                                      href="#">See details
+                                                </Link>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div className="flex gap-1">
+                                        <div className="h-7 w-7 flex-shrink-0 p-0.5 pt-1.5">
+                                            <Image width={30} height={30}
+                                                   src={"https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/gift.svg"}
+                                                   alt={""}>
+                                            </Image>
+                                        </div>
+                                        <div className="flex min-h-7 items-center pt-1.5">
+                                            <p
+                                                className="text-black-opacity-100 ">
+                                                <span>Free 3% discount code when buying Tablets, Smartwatches, Electronics</span>&nbsp;
+                                                <Link className="text-blue-blue-7 hover:underline" target="_blank"
+                                                      href="#">See details
+                                                </Link>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
+
                 </main>
             </div>
 
-            <div className="my-4 w-full md:w-2/5">
-                <h2 className="font-bold text-xl my-2">Product Policy</h2>
-                <div className="text-sm grid grid-cols-2 gap-3">
-                    <div className="flex items-center gap-x-2 mb:gap-x-3">
-                        <Image
-                            src="https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/Type_Hang_chinh_hang_0b0233a2c6.svg"
-                            width={20}
-                            height={20}
-                            sizes="20px"
-                            alt="return"
-                        />
-                        <span>Genuine product</span>
-                    </div>
-                    <div className="flex items-center gap-x-2 mb:gap-x-3">
-                        <Image
-                            src="https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/Type_Bao_hanh_9415bfe460.svg"
-                            width={20}
-                            height={20}
-                            sizes="20px"
-                            alt="return"
-                        />
-                        <span>Warranty (months): 12</span>
-                    </div>
-                    <div className="flex items-center gap-x-2 mb:gap-x-3">
-                        <Image
-                            src="https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/Type_Mien_phi_giao_hang_3339a0ce65.svg"
-                            width={20}
-                            height={20}
-                            sizes="20px"
-                            alt="return"
-                        />
-                        <span>Free delivery within 90 minutes</span>
-                    </div>
-                    <div className="flex items-center gap-x-2 mb:gap-x-3">
-                        <Image
-                            src="https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/Type_Cai_dat_21382ecc84.svg"
-                            width={20}
-                            height={20}
-                            sizes="20px"
-                            alt="return"
-                        />
-                        <span>Free installation support</span>
-                    </div>
-                    <div className="flex items-center gap-x-2 mb:gap-x-3">
-                        <Image
-                            src="https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/Type_Doi_tra_59d1881db4.svg"
-                            width={20}
-                            height={20}
-                            sizes="20px"
-                            alt="return"
-                        />
-                        <span>Return policy</span>
-                    </div>
-                    <div className="flex items-center gap-x-2 mb:gap-x-3">
-                        <Image
-                            src="https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/Type_Tra_gop_0362e63008.svg"
-                            width={20}
-                            height={20}
-                            sizes="20px"
-                            alt="return"
-                        />
-                        <span>Installment policy</span>
-                    </div>
-                </div>
-            </div>
+
             <div className="py-6 mb-6 border-b-[1px] border-b-primaryred2"></div>
 
             {productsRelated && productsRelated.length > 0 &&
@@ -439,8 +524,8 @@ const ProductPageDetail = ({product}: Props) => {
             <div
                 className="flex flex-col-reverse lg:flex-row space-x-0 lg:space-x-2 space-y-2 lg:space-y-0 justify-between">
                 <div className="lg:w-4/6 w-full p-4 pt-0 pl-0">
-                    <div className="mt-4 lg:mt-0 rounded-lg shadow-inner">
-                        <h2 className="text-primaryred font-bold text-lg ">
+                    <div className="mt-4 lg:mt-0 rounded-lg ">
+                        <h2 className="text-primaryred font-bold text-2xl mb-4">
                             Outstanding features
                         </h2>
                         <div dangerouslySetInnerHTML={{__html: product.description}}/>
@@ -450,7 +535,7 @@ const ProductPageDetail = ({product}: Props) => {
 
                     <Rates productId={product.id!} productName={product.name}/>
                 </div>
-                <div className="lg:w-2/6 w-full rounded-lg shadow-inner py-4">
+                <div className="lg:w-2/6 w-full rounded-lg py-4">
                     <h2 className=" font-bold text-lg">Specifications</h2>
                     <Table>
                         <TableBody>

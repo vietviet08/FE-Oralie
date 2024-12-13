@@ -23,14 +23,14 @@ export default function ProductTable({
     // setPage,
     // setSearchQuery
 
-    page,
+    // page,
     setPage,
-    size,
-    setSize,
-    sortBy,
-    setSortBy,
-    sort,
-    setSort,
+    // size,
+    // setSize,
+    // sortBy,
+    // setSortBy,
+    // sort,
+    // setSort,
     searchQuery,
     setSearchQuery,
   } = useProductTableFilters();

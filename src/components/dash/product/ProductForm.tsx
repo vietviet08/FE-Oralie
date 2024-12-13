@@ -100,18 +100,18 @@ const formSchema = z.object({
 });
 
 export default function ProductForm({product}: ProductFormProps) {
-    const convertUrlsToFiles = async (urls: string[]) => {
-        const files = await Promise.all(
-            urls.map(async (url) => {
-                const response = await fetch(url);
-                const blob = await response.blob();
-                const filename = url.split("/").pop() || "file";
-                const mimeType = blob.type;
-                return new File([blob], filename, {type: mimeType});
-            })
-        );
-        return files;
-    };
+    // const convertUrlsToFiles = async (urls: string[]) => {
+    //     const files = await Promise.all(
+    //         urls.map(async (url) => {
+    //             const response = await fetch(url);
+    //             const blob = await response.blob();
+    //             const filename = url.split("/").pop() || "file";
+    //             const mimeType = blob.type;
+    //             return new File([blob], filename, {type: mimeType});
+    //         })
+    //     );
+    //     return files;
+    // };
 
     const [defaultValues, setDefaultValues] = useState<{
         name: string;
@@ -156,14 +156,30 @@ export default function ProductForm({product}: ProductFormProps) {
     });
 
     useEffect(() => {
-        async function fetchImages() {
-            if (product?.images) {
-                const imageUrls = product.images.map((image) => image.url);
-                const images = await convertUrlsToFiles(imageUrls);
-                setDefaultValues((prevValues) => ({...prevValues, image: images}));
-                console.log("Images:", images);
-            }
-        }
+        const fetchImages = async () => {
+            if (!product?.images || product.images.length === 0) return;
+
+            const filePromises = product.images.map(async (imageUrl, index) => {
+                try{
+                    const response = await fetch(imageUrl.url);
+                    console.log("image fetched: ", response);
+                    const blob = await response.blob();
+                    const file = new File([blob], `image-${index}.jpg`, {
+                        type: blob.type,
+                    });
+                    return file;
+                } catch(e) {
+                    console.log("error while fetch image: ", e)
+                    return null
+                }
+
+            });
+
+            const files = (await Promise.all(filePromises)).filter(file => file !== null) as File[];
+            setDefaultValues((prev) => {
+                return ({...prev, image: files})
+            });
+        };
 
         fetchImages();
 
@@ -189,6 +205,8 @@ export default function ProductForm({product}: ProductFormProps) {
 
         fetchBrands();
     }, []);
+
+    console.log("images", defaultValues.image);
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         const productPost: ProductPost = {
@@ -220,6 +238,7 @@ export default function ProductForm({product}: ProductFormProps) {
             if (product) {
                 if (product.id !== undefined) {
                     res = await updateProduct(product.id, productPost, token);
+                    console.log("updating product" + values.category);
                     if (res && res.status === 200) {
                         toast({
                             title: "Product Updated",
@@ -273,6 +292,7 @@ export default function ProductForm({product}: ProductFormProps) {
                                     <FormLabel>Images</FormLabel>
                                     <FormControl>
                                         <FileUploader
+                                            defaultValue={field.value}
                                             value={field.value}
                                             onValueChange={field.onChange}
                                             maxFiles={8}
@@ -304,7 +324,6 @@ export default function ProductForm({product}: ProductFormProps) {
                                 render={({field}) => (
                                     <FormItem>
                                         <FormLabel>Category</FormLabel>
-
                                         <MultiSelect
                                             options={categories.map((category) => ({
                                                 label: category.name,

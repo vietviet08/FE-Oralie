@@ -1,7 +1,6 @@
 import React from "react";
 import Menu from "./menu";
 import Slider from "./slider";
-import { MenuIcon } from "lucide-react";
 import dataSlider from "@/constants/slider-data.json";
 import dataBanner from "@/constants/banner-data.json";
 import Banner from "./banner";

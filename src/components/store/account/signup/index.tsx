@@ -1,8 +1,5 @@
 "use client";
 
-import { useFormState } from "react-dom";
-
-// import { signUp } from "@modules/account/actions"
 import { LOGIN_VIEW } from "../template/login-template";
 import Input from "@/components/common/input";
 import ErrorMessage from "@/components/common/error-message";

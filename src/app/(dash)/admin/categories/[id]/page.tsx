@@ -11,8 +11,7 @@ type Props = {
     }
 }
 
-export async function generateMetadata({params}: Props,
-                                       parent: ResolvingMetadata): Promise<Metadata> {
+export async function generateMetadata({params}: Props): Promise<Metadata> {
     const session: Session | null = await getServerSession(authOptions);
     const token = session?.access_token as string;
 

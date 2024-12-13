@@ -1,4 +1,3 @@
-import { Icons } from "@/components/icons";
 import React from "react";
 
 interface MenuItem {

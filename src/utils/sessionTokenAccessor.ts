@@ -1,7 +1,7 @@
-import {getServerSession} from "next-auth";
 import {decrypt} from "./encryption";
 import {authOptions} from "@/app/(auth)/api/auth/[...nextauth]/route";
-import {Session} from "next-auth";
+import { Session} from "next-auth";
+import { getServerSession } from "next-auth/next";
 
 declare module "next-auth" {
     interface Session {

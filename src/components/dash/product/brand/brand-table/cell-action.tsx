@@ -114,14 +114,6 @@ export const CellAction: React.FC<CellActionProps> = ({data}) => {
                     duration: 3000,
                 });
             }
-            // if (res && res.status === 400) {
-            //     toast({
-            //         variant: "destructive",
-            //         title: "Brand Update Failed",
-            //         description: "Name brand already exists",
-            //         duration: 3000,
-            //     });
-            // }
         } catch (e) {
             console.log(e);
             toast({

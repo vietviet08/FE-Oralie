@@ -57,10 +57,10 @@ export function CategoryDialog({icon, accessToken}: Props) {
                 image: file[0],
                 slug: slug,
                 isDeleted: !isChecked,
-                parentId: parentId,
+                parentId: parentId !== 0 ? parentId : undefined,
             }, accessToken);
 
-            if (res && res.status === 200) {
+            if (res && res.status == 200) {
                 toast({
                     title: "Category Created",
                     variant: "success",
@@ -68,14 +68,9 @@ export function CategoryDialog({icon, accessToken}: Props) {
                     duration: 3000,
                 });
             }
-            // if (res && res.status === 400) {
-            //     toast({
-            //         variant: "destructive",
-            //         title: "Category Creation Failed",
-            //         description: "Name category already exists",
-            //         duration: 3000,
-            //     });
-            // }
+
+            setParentId(0);
+
         } catch (e) {
             console.log(e)
             toast({
@@ -148,6 +143,9 @@ export function CategoryDialog({icon, accessToken}: Props) {
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectGroup>
+                                        <SelectItem key={0} value={"0"}>
+                                            None
+                                        </SelectItem>
                                         {categoryList && categoryList.map(category => (
                                             <SelectItem key={category.id} value={category.id!.toString()}>
                                                 {category.name}
