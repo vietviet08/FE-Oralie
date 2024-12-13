@@ -5,6 +5,7 @@ import Input from "@/components/common/input";
 import {signIn} from "next-auth/react";
 import {useRouter} from "next/navigation";
 import {Button} from "@/components/ui/button";
+import Image from "next/image";
 
 type Props = {
     setCurrentView: (view: LOGIN_VIEW) => void;
@@ -71,7 +72,10 @@ const Login = ({setCurrentView}: Props) => {
                 variant={"outline"}
                 onClick={() => handleSignIn("google")}
             >
-                <img
+                <Image
+                    width={24}
+                    height={24}
+                    sizes={"w-2"}
                     src="/images/google.svg"
                     alt="Google Icon"
                     className="w-6 inline-block mr-2"
@@ -84,7 +88,10 @@ const Login = ({setCurrentView}: Props) => {
                 variant={"outline"}
                 onClick={() => handleSignIn("facebook")}
             >
-                <img
+                <Image
+                    width={24}
+                    height={24}
+                    sizes={"w-2"}
                     src="/images/facebook.svg"
                     alt="Facebook Icon"
                     className="w-6 inline-block mr-2"

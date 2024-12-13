@@ -9,7 +9,7 @@ interface RequestOptions {
 const sendRequest = async (
     method: string,
     endpoint: string,
-    data: any = null,
+    data: unknown = null,
     contentType: string | null = null
 ) => {
     const defaultContentType = 'application/json; charset=UTF-8';
@@ -24,7 +24,7 @@ const sendRequest = async (
         if (data instanceof FormData) {
             delete requestOptions.headers['Content-type'];
         }
-        requestOptions.body = data;
+        requestOptions.body = JSON.stringify(data);
     }
 
     try {
@@ -43,8 +43,8 @@ const sendRequest = async (
 
 const apiClientService = {
     get: (endpoint: string) => sendRequest('GET', endpoint),
-    post: (endpoint: string, data: any, contentType: string | null = null) => sendRequest('POST', endpoint, data, contentType),
-    put: (endpoint: string, data: any, contentType: string | null = null) => sendRequest('PUT', endpoint, data, contentType),
+    post: (endpoint: string, data: unknown, contentType: string | null = null) => sendRequest('POST', endpoint, data, contentType),
+    put: (endpoint: string, data: unknown, contentType: string | null = null) => sendRequest('PUT', endpoint, data, contentType),
     delete: (endpoint: string) => sendRequest('DELETE', endpoint),
 };
 

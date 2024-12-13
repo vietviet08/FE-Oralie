@@ -142,7 +142,7 @@ export default function ProductForm({product}: ProductFormProps) {
     });
 
     const router = useRouter();
-    const {data: session} = useSession();
+    const {data: session, } = useSession();
     const token = session?.access_token as string;
 
     const {toast} = useToast();
@@ -204,7 +204,7 @@ export default function ProductForm({product}: ProductFormProps) {
         }
 
         fetchBrands();
-    }, []);
+    }, [product?.images]);
 
     console.log("images", defaultValues.image);
 

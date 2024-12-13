@@ -53,7 +53,7 @@ const ProductSlider: React.FC<ListResponse<Product>> = ({data}) => {
                 setProgress(swiperInstance.progress);
             });
         }
-    }, [swiperRef.current]);
+    }, [swiperRef]);
 
     return (
         <div>

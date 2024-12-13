@@ -1,4 +1,4 @@
-import {Metadata, ResolvingMetadata} from "next";
+import {Metadata} from "next";
 import {getProductBySlug} from "@/services/ProductService";
 import {baseOpenGraph} from "@/components/common/base-open-graph";
 import ProductPageDetail from "@/components/store/product/product-detail";

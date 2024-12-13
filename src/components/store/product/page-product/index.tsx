@@ -48,7 +48,7 @@ const PageProduct = ({listResponse, category, brand}: Props) => {
         }
 
         fetchProducts();
-    }, [pageIndex, sortOrder, category, brand]);
+    }, [sortBy, pageIndex, sortOrder, category, brand]);
 
     return (
         <div className="sm:px-32 px-6 py-6 mt-14">

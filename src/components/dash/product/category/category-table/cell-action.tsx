@@ -69,7 +69,7 @@ export const CellAction: React.FC<CellActionProps> = ({data}) => {
     }, [data.id]);
 
     const onConfirm = async () => {
-        const token = session?.access_token as string;
+        const token = session?.acess_token as string;
 
         try {
             let res;

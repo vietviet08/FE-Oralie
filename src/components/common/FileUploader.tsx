@@ -25,7 +25,7 @@ export default function FileUploader() {
     )
 }
 
-function FileIcon(props: any) {
+function FileIcon(props: React.SVGProps<SVGSVGElement>) {
     return (
         <svg
             {...props}

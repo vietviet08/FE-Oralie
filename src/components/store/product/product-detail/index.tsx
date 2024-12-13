@@ -61,7 +61,7 @@ const ProductPageDetail = ({product}: Props) => {
             swiperRef.current.navigation.init();
             swiperRef.current.navigation.update();
         }
-    }, [swiperRef.current]);
+    }, [swiperRef]);
 
     useEffect(() => {
         async function fetchTop10ProductRelated() {
@@ -146,7 +146,9 @@ const ProductPageDetail = ({product}: Props) => {
                                     {product.images.map((image, index) => (
                                         <SwiperSlide key={index}>
                                             <div className="relative w-full h-[360px]">
-                                                <img
+                                                <Image
+                                                    width={500}
+                                                    height={500}
                                                     src={image.url}
                                                     alt={product.name}
                                                     className="absolute left-0 top-0 w-full h-full object-contain"
