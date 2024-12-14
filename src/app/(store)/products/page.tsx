@@ -57,10 +57,6 @@ export async function generateMetadata(
 export default async function Page({searchParams}: Props) {
     const {category, brand} = searchParams;
 
-    if (!category) {
-        return <NotFound/>;
-    }
-
     const product = await getProductByCategoryAndBrand(0, 20, "id", "asc", category, brand as string);
 
     console.log(product);
@@ -69,5 +65,5 @@ export default async function Page({searchParams}: Props) {
         return <NotFound/>;
     }
 
-    return <PageProduct category={category} brand={brand || ""} listResponse={product}/>
+    return <PageProduct category={category || ""} brand={brand || ""} listResponse={product}/>
 }

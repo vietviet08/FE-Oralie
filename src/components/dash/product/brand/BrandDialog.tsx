@@ -44,6 +44,7 @@ export function BrandDialog({icon}: Props) {
                 {
                     name: name,
                     image: file[0],
+                    slug: name.toLowerCase().replace(/\s/g, "-"),
                     description: description,
                     isActive: isChecked,
                 },

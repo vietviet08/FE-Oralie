@@ -8,7 +8,7 @@ import Banner from "./banner";
 const SoloGan = () => {
   return (
     <div className="flex">
-      <div className="w-1/5 mr-2 rounded-lg shadow-lg hidden lg:block">
+      <div className="w-1/5 mr-2 shadow-lg hidden lg:block">
         <Menu />
       </div>
       <div className="w-full mr-2 rounded-lg lg:w-3/5 shadow-lg">

@@ -9,6 +9,12 @@ import ProductCard from "@/components/store/product/product-card";
 import {getProductByCategoryAndBrand} from "@/services/ProductService";
 import FilterSection from "@/components/store/product/page-product/filter-section/filter-section";
 import Pagination from "@/components/store/Pagination";
+import {Brand} from "@/model/brand/Brand";
+import {CategoryGet} from "@/model/category/CategoryGet";
+import {getAllBrand} from "@/services/BrandService";
+import { getAllCategoriesSameParentBySlug} from "@/services/CategoryService";
+import Link from "next/link";
+import Image from "next/image";
 
 type Props = {
     listResponse: ListResponse<Product>;
@@ -19,6 +25,10 @@ type Props = {
 const PageProduct = ({listResponse, category, brand}: Props) => {
     const domainUrl = process.env.NEXT_PUBLIC_BASE_URL;
     const formattedCategory = category.charAt(0).toUpperCase() + category.slice(1);
+    const formattedBrand = brand.charAt(0).toUpperCase() + brand.slice(1);
+
+    const [brands, setBrands] = useState<Brand[]>([]);
+    const [categories, setCategories] = useState<CategoryGet[]>([]);
 
     const [sortBy, setSortBy] = useState('id');
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
@@ -48,16 +58,69 @@ const PageProduct = ({listResponse, category, brand}: Props) => {
         }
 
         fetchProducts();
+
+        async function fetchBrands() {
+            try {
+                const res = await getAllBrand();
+                setBrands(res);
+            } catch (error) {
+                console.error("Error fetching brands:", error);
+            }
+        }
+
+        fetchBrands();
+
+        async function fetchCategories() {
+            try {
+                const res = await getAllCategoriesSameParentBySlug(category);
+                setCategories(res);
+                console.log("fetch categories", res);
+            } catch (error) {
+                console.error("Error fetching categories:", error);
+            }
+        }
+
+        fetchCategories();
+
     }, [sortBy, pageIndex, sortOrder, category, brand]);
 
     return (
         <div className="sm:px-32 px-6 py-6 mt-14">
             <h1 className="text-2xl font-semibold">
-                {formattedCategory} ({listProduct.totalElements})
+                {formattedCategory && formattedBrand ?
+                    `${formattedCategory}-${formattedBrand}` :
+                    (formattedCategory || formattedBrand)} ({listProduct.totalElements})
             </h1>
 
             {/* Filter by price */}
             <div className="my-4 flex flex-col gap-4">
+                {/* Filter by brand */}
+                {brands.length > 0 && (
+                    <FilterSection title="Brand">
+                        {brands.map((brandItem, idx) => (
+                            <Button key={idx} variant="outline" className="h-12 px-4">
+                                <Link href={`/products?category=${category}&brand=${brandItem.slug}`}>
+                                    <Image src={brandItem.image as string} alt={brandItem.name} width={56} height={32} className="w-full h-full"/>
+                                </Link>
+                            </Button>
+                        ))}
+                    </FilterSection>
+                )}
+
+                {/* Filter by category */}
+                {categories.length > 0 && (
+                    <FilterSection title="Category">
+                        {categories.map((categoryItem, idx) => (
+                            <Button key={idx} variant="outline" className="h-8 px-4">
+                                <Link href={`/products?category=${categoryItem.slug}`}>
+                                    <a>{categoryItem.name}</a>
+                                </Link>
+                            </Button>
+                        ))}
+                    </FilterSection>
+                )}
+
+                {/* Filter by price level */}
                 <FilterSection title="Price level">
                     {[
                         "Under $500",

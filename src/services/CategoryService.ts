@@ -35,9 +35,22 @@ export async function getListCategory(page: number,
     }
 }
 
-export async function getAllCategoryNotParen() {
+export async function getAllCategoryNotParent() {
     try {
         const res = await axios.get(`${baseUrl}/store/categories/not-parent`);
+        if (res) {
+            console.log(res.data);
+            return res.data;
+        }
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
+export async function getAllCategoriesSameParentBySlug(slug: string) {
+    try {
+        const res = await axios.get(`${baseUrl}/store/categories/same-parent/${slug}`);
         if (res) {
             console.log(res.data);
             return res.data;

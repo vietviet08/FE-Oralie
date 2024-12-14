@@ -67,7 +67,7 @@ export function Header() {
             className=" z-50 fixed flex shadow-md py-2 md:px-32 px-6 mb-14 bg-gradient-to-b from-primaryred1 to-primaryred font-sans min-h-[70px] tracking-wide w-full">
             {openMenu && (
                 <>
-                    <div className="fixed top-[72px] inset-0 bg-gray-600 opacity-50 z-0"></div>
+                    <div className="fixed top-[72px] inset-0 bg-black opacity-40 z-0"></div>
 
                     <div
                         ref={menuRef}

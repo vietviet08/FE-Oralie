@@ -2,7 +2,7 @@
 
 import React, {useEffect, useState} from "react";
 import Image from "next/image";
-import {getAllCategoriesNotId, getAllCategoryNotParen, getCategoryByName} from "@/services/CategoryService";
+import {getAllCategoriesNotId, getAllCategoryNotParent, getCategoryByName} from "@/services/CategoryService";
 import {CategoryGet} from "@/model/category/CategoryGet";
 import {getAllBrand} from "@/services/BrandService";
 import {Brand} from "@/model/brand/Brand";
@@ -23,8 +23,8 @@ interface MenuItem {
 //     "Accessories",
 // ];
 
-const urlCategory = "/product?category=";
-const urlBrand = "/product?brand=";
+const urlCategory = "/products?category=";
+const urlBrand = "/products?category=&brand=";
 
 const Menu: React.FC = () => {
     const [menu, setMenu] = useState<MenuItem[]>([]);
@@ -34,11 +34,11 @@ const Menu: React.FC = () => {
     useEffect(() => {
         async function fetchCategoriesNotParent() {
             try {
-                const response = await getAllCategoryNotParen();
+                const response = await getAllCategoryNotParent();
                 if (response) {
                     const menuData = response.map((item: CategoryGet) => ({
                         title: item.name,
-                        href: `${urlCategory + item.name}`,
+                        href: `${urlCategory + item.slug}`,
                         imgSrc: item.image,
                         subItems: [],
                     }));
@@ -57,7 +57,7 @@ const Menu: React.FC = () => {
                 if (response) {
                     const brandData = response.map((item: Brand) => ({
                         title: item.name,
-                        href: `${urlBrand + item.name}`,
+                        href: `${urlBrand + item.slug}`,
                         imgSrc: item.image,
                         subItems: [],
                     }));
@@ -118,9 +118,9 @@ const Menu: React.FC = () => {
 
 
     return (
-        <div className="box_menu_home relative">
-            <nav className="menu_nav ">
-                <ul className="menu_list flex flex-col gap-0">
+        <div className="box_menu_home relative ">
+            <nav className="menu_nav">
+                <ul className="menu_list flex flex-col gap-0 ">
                     {menu.map((item, index) => (
                         <MenuItemComponent key={index} item={item} brandMenu={brandMenu}
                                            onMouseEnter={() => setMenuNameHover(item.title)}/>
@@ -138,11 +138,11 @@ const MenuItemComponent: React.FC<{ item: MenuItem; brandMenu: MenuItem[], onMou
                                                                                                           }) => (
     <li className="group p-0 m-0" onMouseEnter={onMouseEnter}>
         <a
-            className="flex justify-between items-center space-x-2  text-gray-700 hover:text-primaryred"
+            className="flex justify-between items-center space-x-2 text-gray-700 hover:text-primaryred"
             href={item.href}
             title={item.title}
         >
-            <div className="flex items-center pl-4 py-2 hover:bg-gray-100 w-full">
+            <div className="flex items-center pl-4 py-2 hover:bg-gray-100 w-full ">
                 {item.imgSrc && (
                     <Image
                         width={24}
@@ -160,7 +160,7 @@ const MenuItemComponent: React.FC<{ item: MenuItem; brandMenu: MenuItem[], onMou
         <div className="absolute left-full top-0 h-full w-32 z-20 group-hover:block hidden"></div>
 
         {item.subItems && (
-            <ul className="hidden group-hover:flex flex-wrap absolute left-[98%] ml-3 top-0 w-[315%] bg-white shadow-lg rounded-lg z-50">
+            <ul className="hidden group-hover:flex flex-wrap rounded-xl absolute left-[98%] ml-3 top-0 w-[315%] bg-white shadow-lg z-50">
                 {item.title === "Laptop" && (
                     <li className="p-2 mx-2">
                         <a
@@ -173,23 +173,22 @@ const MenuItemComponent: React.FC<{ item: MenuItem; brandMenu: MenuItem[], onMou
                         {brandMenu && (
                             <ul className="text-sm space-y-2 mt-2">
                                 {brandMenu.map((subSubItem, subIndex) => (
-                                    <li key={subIndex}>
+                                    <li key={subIndex} className="">
                                         <a
-                                            className="flex items-center space-x-2 text-gray-700 hover:text-blue-500"
+                                            className="flex items-center h-8 space-x-2 text-gray-700 hover:text-blue-500"
                                             href={subSubItem.href}
                                             title={subSubItem.title}
                                         >
                                             {subSubItem.imgSrc && (
                                                 <Image
-                                                    width={46}
+                                                    width={58}
                                                     height={18}
                                                     src={subSubItem.imgSrc}
                                                     alt={subSubItem.title}
                                                     title={subSubItem.title}
-                                                    objectFit="contain"
+                                                    className="h-full object-contain"
                                                 />
                                             )}
-                                            <span>{subSubItem.title}</span>
                                         </a>
                                     </li>
                                 ))}

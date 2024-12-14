@@ -11,6 +11,8 @@ export const searchParams = {
     sortBy: parseAsString.withDefault('id'),
     sort: parseAsString.withDefault('asc'),
     search: parseAsString.withDefault(''),
+    category: parseAsString.withDefault(''),
+    brand: parseAsString.withDefault(''),
 };
 
 export const searchParamsProduct = {
