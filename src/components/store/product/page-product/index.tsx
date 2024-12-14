@@ -12,7 +12,7 @@ import Pagination from "@/components/store/Pagination";
 import {Brand} from "@/model/brand/Brand";
 import {CategoryGet} from "@/model/category/CategoryGet";
 import {getAllBrand} from "@/services/BrandService";
-import { getAllCategoriesSameParentBySlug} from "@/services/CategoryService";
+import {getAllCategoriesSameParentBySlug} from "@/services/CategoryService";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -92,15 +92,19 @@ const PageProduct = ({listResponse, category, brand}: Props) => {
                     (formattedCategory || formattedBrand)} ({listProduct.totalElements})
             </h1>
 
-            {/* Filter by price */}
             <div className="my-4 flex flex-col gap-4">
+                {/*delete filter */}
+
+
                 {/* Filter by brand */}
                 {brands.length > 0 && (
-                    <FilterSection title="Brand">
+                    <FilterSection title="Brand" className="grid grid-cols-4 gap-3 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-12 my-2">
                         {brands.map((brandItem, idx) => (
                             <Button key={idx} variant="outline" className="h-12 px-4">
-                                <Link href={`/products?category=${category}&brand=${brandItem.slug}`}>
-                                    <Image src={brandItem.image as string} alt={brandItem.name} width={56} height={32} className="w-full h-full"/>
+                                <Link href={`/products?category=${category}&brand=${brandItem.slug}`}
+                                      className="">
+                                    <Image src={brandItem.image as string} alt={brandItem.name} width={56} height={32}
+                                           className="w-full h-full"/>
                                 </Link>
                             </Button>
                         ))}
@@ -109,11 +113,11 @@ const PageProduct = ({listResponse, category, brand}: Props) => {
 
                 {/* Filter by category */}
                 {categories.length > 0 && (
-                    <FilterSection title="Category">
+                    <FilterSection title="Category" className="grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 my-2">
                         {categories.map((categoryItem, idx) => (
-                            <Button key={idx} variant="outline" className="h-8 px-4">
+                            <Button key={idx} variant="outline" className="h-10 px-4">
                                 <Link href={`/products?category=${categoryItem.slug}`}>
-                                    <a>{categoryItem.name}</a>
+                                    {categoryItem.name}
                                 </Link>
                             </Button>
                         ))}
@@ -121,7 +125,7 @@ const PageProduct = ({listResponse, category, brand}: Props) => {
                 )}
 
                 {/* Filter by price level */}
-                <FilterSection title="Price level">
+                <FilterSection title="Price level" className="grid grid-cols-3 gap-3 md:grid-cols-5 lg:grid-cols-8 my-2">
                     {[
                         "Under $500",
                         "$500 - $700",
@@ -130,15 +134,15 @@ const PageProduct = ({listResponse, category, brand}: Props) => {
                         "$1500 - $2000",
                         "Over $2000",
                     ].map((label, idx) => (
-                        <Button key={idx} variant="outline" className="h-8 px-4">
+                        <Button key={idx} variant="outline" className="h-10 px-4">
                             <a href={domainUrl}>{label}</a>
                         </Button>
                     ))}
                 </FilterSection>
 
                 {/* Sort by options */}
-                <FilterSection title="Sort By">
-                    <Button variant="outline" className="h-8 px-4" onClick={() => {
+                <FilterSection title="Sort By" className="grid grid-cols-2 gap-3 lg:grid-cols-6  my-2">
+                    <Button variant="outline" className="h-10 px-4" onClick={() => {
                         setSortOrder("asc");
                         setSortBy("id")
                     }}>
