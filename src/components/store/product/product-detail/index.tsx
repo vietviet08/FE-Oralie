@@ -266,7 +266,9 @@ const ProductPageDetail = ({product}: Props) => {
                                                             : "1px solid #d1d5db ",
                                                 }}
                                             >
-                                                <img
+                                                <Image
+                                                    width={500}
+                                                    height={500}
                                                     src={image.url}
                                                     alt={product.name}
                                                     className="absolute left-0 top-0 w-20 h-20 object-cover"
@@ -528,7 +530,7 @@ const ProductPageDetail = ({product}: Props) => {
                 <div className="lg:w-4/6 w-full p-4 pt-0 pl-0">
                     <div className="mt-4 lg:mt-0 rounded-lg ">
                         <h2 className="text-primaryred font-bold text-2xl mb-4">
-                            Outstanding features
+                            Detailed review {product.name}
                         </h2>
                         <div dangerouslySetInnerHTML={{__html: product.description}}/>
                     </div>
@@ -546,8 +548,8 @@ const ProductPageDetail = ({product}: Props) => {
                                     key={spec.id}
                                     className={index % 2 === 0 ? "bg-white" : "bg-gray-100"}
                                 >
-                                    <TableCell>{spec.name}</TableCell>
-                                    <TableCell className="text-right">{spec.value}</TableCell>
+                                    <TableCell className="w-2/6">{spec.name}</TableCell>
+                                    <TableCell className="w-4/6 text-left">{spec.value}</TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>

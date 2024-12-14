@@ -78,6 +78,12 @@ const formSchema = z.object({
     price: z.string().refine((value) => !isNaN(parseFloat(value)), {
         message: "Price must be a valid number.",
     }),
+    discount: z.string().refine((value) => !isNaN(parseFloat(value)), {
+        message: "Discount must be a valid number.",
+    }),
+    quantity: z.string().refine((value) => !isNaN(parseFloat(value)), {
+        message: "Quantity must be a valid number.",
+    }),
     description: z.string().min(10, {
         message: "Description must be at least 10 characters.",
     }),
@@ -119,6 +125,8 @@ export default function ProductForm({product}: ProductFormProps) {
         category: string[];
         brand: string;
         price: string;
+        discount: string;
+        quantity: string;
         description: string;
         options: { name: string; value: string }[];
         specifications: { name: string; value: string }[];
@@ -131,6 +139,8 @@ export default function ProductForm({product}: ProductFormProps) {
             ) || [],
         brand: product?.brand?.id?.toString() || "",
         price: product?.price.toString() || "",
+        discount: product?.discount.toString() || "",
+        quantity: product?.quantity.toString() || "",
         description: product?.description || "",
         options: product?.options || [],
         specifications: product?.specifications || [],
@@ -142,7 +152,7 @@ export default function ProductForm({product}: ProductFormProps) {
     });
 
     const router = useRouter();
-    const {data: session, } = useSession();
+    const {data: session,} = useSession();
     const token = session?.access_token as string;
 
     const {toast} = useToast();
@@ -160,7 +170,7 @@ export default function ProductForm({product}: ProductFormProps) {
             if (!product?.images || product.images.length === 0) return;
 
             const filePromises = product.images.map(async (imageUrl, index) => {
-                try{
+                try {
                     const response = await fetch(imageUrl.url);
                     console.log("image fetched: ", response);
                     const blob = await response.blob();
@@ -168,7 +178,7 @@ export default function ProductForm({product}: ProductFormProps) {
                         type: blob.type,
                     });
                     return file;
-                } catch(e) {
+                } catch (e) {
                     console.log("error while fetch image: ", e)
                     return null
                 }
@@ -223,9 +233,9 @@ export default function ProductForm({product}: ProductFormProps) {
             options: values.options || [],
             specifications: values.specifications || [],
             price: parseFloat(values.price),
-            isDiscounted: false,
-            discount: 0,
-            quantity: 0,
+            isDiscounted: parseFloat(values.discount) > 0.0,
+            discount: parseFloat(values.discount),
+            quantity: parseInt(values.quantity, 10),
             isAvailable: true,
             isDeleted: false,
             isFeatured: false,
@@ -292,7 +302,6 @@ export default function ProductForm({product}: ProductFormProps) {
                                     <FormLabel>Images</FormLabel>
                                     <FormControl>
                                         <FileUploader
-                                            defaultValue={field.value}
                                             value={field.value}
                                             onValueChange={field.onChange}
                                             maxFiles={8}
@@ -332,12 +341,12 @@ export default function ProductForm({product}: ProductFormProps) {
                                             onValueChange={(value) => {
                                                 field.onChange(value);
                                             }}
-                                            defaultValue={field.value}
+                                            // defaultValue={field.value}
                                             value={field.value}
                                             placeholder="Select Category"
                                             variant="inverted"
                                             animation={2}
-                                            maxCount={2}
+                                            maxCount={4}
                                         />
                                         <FormMessage/>
                                     </FormItem>
@@ -392,8 +401,46 @@ export default function ProductForm({product}: ProductFormProps) {
                                         <FormControl>
                                             <Input
                                                 type="number"
-                                                step="1"
+                                                step="0.1"
                                                 placeholder="Enter price"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage/>
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
+                                name="discount"
+                                render={({field}) => (
+                                    <FormItem>
+                                        <FormLabel>Discount</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                type="number"
+                                                step="1"
+                                                placeholder="Enter discount"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage/>
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
+                                name="quantity"
+                                render={({field}) => (
+                                    <FormItem>
+                                        <FormLabel>Quantity</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                type="number"
+                                                step="1"
+                                                placeholder="Enter quantity"
                                                 {...field}
                                             />
                                         </FormControl>
@@ -410,11 +457,6 @@ export default function ProductForm({product}: ProductFormProps) {
                                 <FormItem>
                                     <FormLabel>Description</FormLabel>
                                     <FormControl>
-                                        {/* <Textarea
-                      placeholder="Enter product description"
-                      className="resize-none"
-                      {...field}
-                    /> */}
                                         <ReactQuill
                                             modules={modulesQuill}
                                             value={field.value}

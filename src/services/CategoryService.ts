@@ -35,6 +35,19 @@ export async function getListCategory(page: number,
     }
 }
 
+export async function getAllCategoryNotParen() {
+    try {
+        const res = await axios.get(`${baseUrl}/store/categories/not-parent`);
+        if (res) {
+            console.log(res.data);
+            return res.data;
+        }
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
 export async function getAllCategoriesNotId(id: number, notId: boolean) {
 
     try {
@@ -82,6 +95,19 @@ export async function getCategoryById(id: number, token: string) {
                 Authorization: `Bearer ${token}`
             }
         });
+        if (res) {
+            console.log(res.data);
+            return res.data;
+        }
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
+export async function getCategoryByName(name: string) {
+    try {
+        const res = await axios.get(`${baseUrl}/store/categories/by-name/${name}`);
         if (res) {
             console.log(res.data);
             return res.data;

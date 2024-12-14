@@ -11,7 +11,8 @@ export async function middleware(req: NextRequest) {
 
     const token = await getToken({req, secret});
     const access_token = token?.accessToken;
-    const roles = token ? parseJwt(access_token).realm_access.roles : []
+
+    const roles = token ? parseJwt(access_token as string).realm_access.roles : []
 
     const {pathname} = req.nextUrl
 

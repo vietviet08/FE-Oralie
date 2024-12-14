@@ -2,7 +2,7 @@ import {Metadata} from "next";
 import {baseOpenGraph} from "@/components/common/base-open-graph";
 import {getCategoryById} from "@/services/CategoryService";
 import {Session} from "next-auth";
-import {getServerSession} from "next-auth/next";
+import {getServerSession} from "next-auth";
 import {authOptions} from "@/app/(auth)/api/auth/[...nextauth]/route";
 import {notFound} from "next/navigation";
 
