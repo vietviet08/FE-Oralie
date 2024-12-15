@@ -1,6 +1,9 @@
 {
   "compilerOptions": {
-    "typeRoots": ["./types", "./node_modules/@types"],
+    "typeRoots": [
+      "./types",
+      "./node_modules/@types"
+    ],
     "lib": [
       "dom",
       "dom.iterable",
@@ -29,7 +32,8 @@
       "@public/*": [
         "./public/*"
       ]
-    }
+    },
+    "target": "ES2017"
   },
   "include": [
     "next-env.d.ts",

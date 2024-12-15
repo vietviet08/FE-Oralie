@@ -14,15 +14,6 @@ interface MenuItem {
     subItems?: MenuItem[];
 }
 
-// const TitleMainMenu: string[] = [
-//     "Laptop",
-//     "Macbook",
-//     "Ipad",
-//     "Iphone",
-//     "PC",
-//     "Accessories",
-// ];
-
 const urlCategory = "/products?category=";
 const urlBrand = "/products?category=&brand=";
 

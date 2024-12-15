@@ -18,26 +18,6 @@ const breadcrumbItems = [
 
 
 export default async function ProductListPage() {
-    // const search = searchParamsCache.get('q');
-    // const products = searchParamsCache.get('products');
-
-    // const [page, setPage] = useState<number>(0);
-    // const [size, setSize] = useState<number>(10);
-    // const [sortBy, setSortBy] = useState<string>('id');
-    // const [sort, setSort] = useState<string>('asc');
-    // const [products, setProducts] = useState<Product[]>([]);
-    //
-    // const [totalProducts, setTotalProducts] = useState<number>(0);
-
-
-    // useEffect(() => {
-    //     getProducts(page, size, sortBy, sort).then((data) => {
-    //         console.log(data);
-    //         setProducts(data.data);
-    //         setTotalProducts(data.totalElements);
-    //
-    //     });
-    //     }, [page, size, sortBy, sort]);
     const search = searchParamsCacheProduct.get('search');
     const category = searchParamsCacheProduct.get('category');
     const page = searchParamsCacheProduct.get('page') - 1;
@@ -48,7 +28,7 @@ export default async function ProductListPage() {
     const data = await getListProduct(page, size, sortBy, sort, search, category);
     const products: Product[] = data.data;
     const totalProducts = data.totalElements;
-    console.log(products);
+
     // const totalProducts = totalProducts;
     // const products: Product[] = data.data;
 

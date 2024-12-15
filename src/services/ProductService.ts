@@ -75,7 +75,12 @@ export async function getProductByCategoryAndBrand(page: number,
                                                    category: string,
                                                    brand?: string) {
     try {
-        const params: { page: number; size: number; sortBy: string; sort: string; category: string; brand?: string } = { page, size, sortBy, sort, category };
+        const params: { page: number;
+            size: number;
+            sortBy: string;
+            sort: string;
+            category: string;
+            brand?: string } = { page, size, sortBy, sort, category };
         if (brand) {
             params.brand = brand;
         }

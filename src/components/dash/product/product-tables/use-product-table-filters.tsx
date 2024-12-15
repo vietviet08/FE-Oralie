@@ -5,17 +5,27 @@ import {useQueryState} from 'nuqs';
 import {useCallback, useMemo} from 'react';
 
 export function useProductTableFilters() {
-    const [searchQuery, setSearchQuery] = useQueryState(
+    const [search, setSearch] = useQueryState(
         'search',
         searchParamsProduct.search
             .withOptions({shallow: false, throttleMs: 1000})
             .withDefault('')
     );
 
-    // const [categoriesFilter, setCategoriesFilter] = useQueryState(
-    //     'products',
-    //     searchParams.products.withOptions({shallow: false}).withDefault('')
-    // );
+    const [category, setCategory] = useQueryState(
+        'category',
+        searchParamsProduct.category.withOptions({shallow: false}).withDefault('')
+    );
+
+    const [brand, setBrand] = useQueryState(
+        'brand',
+        searchParamsProduct.brand.withOptions({shallow: false}).withDefault('')
+    );
+
+    const [price, setPrice] = useQueryState(
+        'price',
+        searchParamsProduct.price.withOptions({shallow: false}).withDefault('')
+    );
 
     const [page, setPage] = useQueryState(
         'page',
@@ -38,25 +48,28 @@ export function useProductTableFilters() {
     );
 
     const resetFilters = useCallback(() => {
-        setSearchQuery('');
+        setSearch('');
         setSortBy('id');
         setSort('asc');
         setSize(10);
         setPage(0);
+        setBrand('');
+        setCategory('');
+        setPrice('');
         // setCategoriesFilter(null);
-    }, [setSearchQuery, setPage, setSize, setSortBy, setSort]);
+    }, [setSearch, setPage, setSize, setSortBy, setSort, setBrand, setCategory, setPrice]);
 
     // const isAnyFilterActive = useMemo(() => {
     //     return !!searchQuery || !!categoriesFilter;
     // }, [searchQuery, categoriesFilter]);
     const isAnyFilterActive = useMemo(() => {
-            return !!searchQuery ;
-        }, [searchQuery]);
+            return !!search ;
+        }, [search]);
 
 
     return {
-        searchQuery,
-        setSearchQuery,
+        search,
+        setSearch,
         page,
         setPage,
         size,
@@ -65,9 +78,13 @@ export function useProductTableFilters() {
         setSortBy,
         sort,
         setSort,
+        brand,
+        setBrand,
+        category,
+        setCategory,
+        price,
+        setPrice,
         resetFilters,
         isAnyFilterActive,
-        // categoriesFilter,
-        // setCategoriesFilter
     };
 }

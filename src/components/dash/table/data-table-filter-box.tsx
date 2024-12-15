@@ -22,14 +22,16 @@ import {PlusCircledIcon} from '@radix-ui/react-icons';
 import {CheckIcon} from 'lucide-react';
 import {Options} from 'nuqs';
 import React from 'react';
+import Image from "next/image";
 
-interface FilterOption {
+export interface FilterOption {
     value: string;
     label: string;
     icon?: React.ComponentType<{ className?: string }>;
+    image?: string;
 }
 
-interface FilterBoxProps {
+export interface FilterBoxProps {
     filterKey: string;
     title: string;
     options: FilterOption[];
@@ -47,6 +49,7 @@ export function DataTableFilterBox({
                                        setFilterValue,
                                        filterValue
                                    }: FilterBoxProps) {
+
     const selectedValuesSet = React.useMemo(() => {
         if (!filterValue) return new Set<string>();
         const values = filterValue.split('.');
@@ -132,6 +135,12 @@ export function DataTableFilterBox({
                                             aria-hidden="true"
                                         />
                                     )}
+                                    {
+                                        option.image && (
+                                            <Image src={option.image} alt={option.label} width={36} height={24}
+                                                   className="h-4 w-4 mr-2"/>
+                                        )
+                                    }
                                     <span>{option.label}</span>
                                 </CommandItem>
                             ))}
