@@ -12,7 +12,7 @@ import {Button} from "@medusajs/ui";
 import {Icons} from "../icons";
 import {Input} from "../ui/input";
 import Menu from "./home/sologan/menu";
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {getCart} from "@/services/CartService";
 import {useSession} from "next-auth/react";
 import {CartResponse} from "@/model/cart/CartResponse";
@@ -28,6 +28,7 @@ export function Header() {
 
     const [openMenu, setOpenMenu] = React.useState(false);
 
+    const inputRef = useRef<HTMLInputElement>(null);
     const [searchData, setSearchData] = useState<Product[]>([]);
     const [showSearchFrame, setShowSearchFrame] = useState(false);
 
@@ -74,7 +75,7 @@ export function Header() {
             const results = await getListProduct(0, 10, "name", "asc", keyword, "");
             setSearchData(results.data);
             setShowSearchFrame(true);
-        }else {
+        } else {
             setShowSearchFrame(false);
         }
     }
@@ -115,28 +116,53 @@ export function Header() {
 
                 <div className="relative lg:w-2/5 sm:w-3/5">
                     <Input
-                        onBlur={() => setShowSearchFrame(false)}
+                        ref={inputRef}
+                        onBlur={() => {
+                            setShowSearchFrame(false)
+                        }}
                         onInput={(e) => {
                             openSearchFrame((e.target as HTMLInputElement).value);
                         }}
                         placeholder="Input the product need to find"
                         className="text-gray font-[14px] outline-none bg-white placeholder:text-gray placeholder:text-base rounded-2xl border-0 pr-10 text-ellipsis focus:outline-none focus:ring-0 focus:border-0 "
                     />
+
+                    {
+                        inputRef.current?.value && (
+                            <Button
+                                variant="danger"
+                                className="absolute right-12 top-1/2 transform -translate-y-1/2  flex justify-center items-center w-5 h-5 bg-gray-300 rounded-full p-0 m-0"
+                                onClick={() => {
+                                    if (inputRef.current) {
+                                        inputRef.current.value = "";
+                                        setShowSearchFrame(false);
+                                    }
+                                }}
+                            >
+                                <Icons.close
+
+                                    className="absolute top-1/2 transform -translate-y-1/2  w-3 h-3 text-primaryred "/>
+                            </Button>
+                        )}
+
                     <Button
                         variant="danger"
                         className="absolute right-0 top-1/2 transform -translate-y-1/2 size-10"
                     >
                         <Icons.search
-                            className="absolute right-3 top-1/2 transform -translate-y-1/2 w-6 h-6 text-primaryred "/>
+                            className="absolute top-1/2 transform -translate-y-1/2 w-6 h-6 text-primaryred "/>
                     </Button>
 
                     {showSearchFrame && (
-                        <div className="absolute mt-1 left-0">
+                        <div
+                            className="absolute mt-1 left-0"
+
+                        >
                             <SearchFrame data={searchData}/>
                         </div>
                     )}
-
                 </div>
+
 
                 <div className="flex items-center space-x-5">
                     <Link
@@ -158,7 +184,7 @@ export function Header() {
                     >
                         <Button variant="transparent">
                             <Icons.circleUser className="mr-1 font-light w-7 h-7"/>
-                            <p className="hidden sm:block text-xs">Account</p>
+                            <p className="hidden sm:block text-xs">{session ? session.user.name : "Login"}</p>
                         </Button>
                     </Link>
 
