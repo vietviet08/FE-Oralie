@@ -17,10 +17,7 @@ async function PageProduct() {
     const formattedCategory = category ? category.charAt(0).toUpperCase() + category.slice(1) : "";
     const formattedBrand = brand ? brand.charAt(0).toUpperCase() + brand.slice(1) : "";
 
-    const data = await getProductByCategoryAndBrand(page, size, sortBy, sort, category || "", brand).then(res => {
-        console.log("products fetch", res);
-        return res;
-    });
+    const data = await getProductByCategoryAndBrand(page, size, sortBy, sort, category || "", brand);
 
     return (
         <div className="sm:px-32 px-6 py-6 mt-14">
@@ -30,19 +27,13 @@ async function PageProduct() {
                         `${formattedCategory}-${formattedBrand}` :
                         (formattedCategory || formattedBrand)} ({data.totalElements})
                 </h1>
-                {/*<DataTableSearch*/}
-                {/*    searchKey="search"*/}
-                {/*    searchQuery={search}*/}
-                {/*    setSearchQuery={setSearch}*/}
-                {/*    setPage={setPage}*/}
-                {/*/>*/}
             </div>
 
             <FilterTemplate/>
 
             <MainPageTemplate data={data.data}/>
 
-            <Pagination listResponse={data.data}/>
+            <Pagination listResponse={data}/>
         </div>
     );
 }

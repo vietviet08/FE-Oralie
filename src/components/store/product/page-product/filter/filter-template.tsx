@@ -6,7 +6,7 @@ import {Button} from "@/components/ui/button";
 import {Icons} from "@/components/icons";
 import {Brand} from "@/model/brand/Brand";
 import {getAllBrand} from "@/services/BrandService";
-import {getAllCategoriesNotId, getAllCategoriesSameParentBySlug} from "@/services/CategoryService";
+import {getAllCategoriesSameParentBySlug} from "@/services/CategoryService";
 import {useProductTableFilters} from "@/components/dash/product/product-tables/use-product-table-filters";
 import {useEffect, useState} from "react";
 import {CategoryGet} from "@/model/category/CategoryGet";
@@ -16,9 +16,6 @@ function FilterTemplate() {
     const {
         resetFilters,
         isAnyFilterActive,
-        // search,
-        // setSearch,
-        // setPage,
         category,
         setCategory,
         brand,
@@ -41,7 +38,7 @@ function FilterTemplate() {
         async function fetchBrandsAndCategories() {
             try {
                 const [brandRes, categoriesRes] = await Promise.all([
-                    getAllBrand(),
+                    brand && getAllBrand(),
                     getAllCategoriesSameParentBySlug(category),
                 ]);
                 console.log("brands", brandRes);
@@ -53,11 +50,17 @@ function FilterTemplate() {
             }
         }
         fetchBrandsAndCategories();
-    }, [category])
+    }, [category, brand]);
 
 
     return (
         <div className="my-4 flex flex-col gap-4">
+            {/*<DataTableSearch*/}
+            {/*    searchKey="search"*/}
+            {/*    searchQuery={search}*/}
+            {/*    setSearchQuery={setSearch}*/}
+            {/*    setPage={setPage}*/}
+            {/*/>*/}
 
             {/*delete filter */}
             <DataTableResetFilter
@@ -65,8 +68,8 @@ function FilterTemplate() {
                 onReset={resetFilters}
             />
 
-            {/*test*/}
-            {brands && (
+            {/*Filter by brand*/}
+            {brands.length > 0 && (
                 <FilterSection title="Brand"
                                className="grid grid-cols-4 gap-3 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-12 my-2"
                                options={brands.map((brandItem) => ({

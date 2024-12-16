@@ -5,7 +5,6 @@ import {Button} from "@/components/ui/button";
 import federatedLogout from "@/utils/federatedLogout";
 import {LogOut} from "lucide-react";
 import {useSession} from "next-auth/react";
-import Head from "next/head";
 import {useRouter} from "next/navigation";
 import React, {useEffect, useState} from "react";
 
@@ -35,7 +34,7 @@ const AccountPage: React.FC = () => {
         {
             name: "Cart",
             icon: <Icons.shoppingCart className="w-7 h-7"/>,
-            onClick: () => router.push("/store/cart"),
+            onClick: () => router.push("/cart"),
         },
         {name: "Orders", icon: <Icons.logs className="w-7 h-7"/>},
         {name: "Settings", icon: <Icons.settings className="w-7 h-7"/>},

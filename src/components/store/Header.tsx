@@ -16,6 +16,9 @@ import {useEffect, useState} from "react";
 import {getCart} from "@/services/CartService";
 import {useSession} from "next-auth/react";
 import {CartResponse} from "@/model/cart/CartResponse";
+import {Product} from "@/model/product/Product";
+import {getListProduct} from "@/services/ProductService";
+import SearchFrame from "@/components/common/search-frame/search-frame";
 
 export function Header() {
     const {data: session} = useSession();
@@ -24,6 +27,9 @@ export function Header() {
     const [cartItemCount, setCartItemCount] = useState<number>(0);
 
     const [openMenu, setOpenMenu] = React.useState(false);
+
+    const [searchData, setSearchData] = useState<Product[]>([]);
+    const [showSearchFrame, setShowSearchFrame] = useState(false);
 
     const menuRef = React.useRef<HTMLDivElement>(null);
 
@@ -62,6 +68,17 @@ export function Header() {
 
     }, [token, openMenu]);
 
+    async function openSearchFrame(keyword: string) {
+        if (keyword.length > 0) {
+            console.log(keyword);
+            const results = await getListProduct(0, 10, "name", "asc", keyword, "");
+            setSearchData(results.data);
+            setShowSearchFrame(true);
+        }else {
+            setShowSearchFrame(false);
+        }
+    }
+
     return (
         <header
             className=" z-50 fixed flex shadow-md py-2 md:px-32 px-6 mb-14 bg-gradient-to-b from-primaryred1 to-primaryred font-sans min-h-[70px] tracking-wide w-full">
@@ -98,8 +115,12 @@ export function Header() {
 
                 <div className="relative lg:w-2/5 sm:w-3/5">
                     <Input
+                        onBlur={() => setShowSearchFrame(false)}
+                        onInput={(e) => {
+                            openSearchFrame((e.target as HTMLInputElement).value);
+                        }}
                         placeholder="Input the product need to find"
-                        className="text-gray font-[14px] outline-none bg-white placeholder:text-gray placeholder:text-base rounded-2xl border-0 pr-10 text-ellipsis focus:outline-none focus:ring-0"
+                        className="text-gray font-[14px] outline-none bg-white placeholder:text-gray placeholder:text-base rounded-2xl border-0 pr-10 text-ellipsis focus:outline-none focus:ring-0 focus:border-0 "
                     />
                     <Button
                         variant="danger"
@@ -108,6 +129,13 @@ export function Header() {
                         <Icons.search
                             className="absolute right-3 top-1/2 transform -translate-y-1/2 w-6 h-6 text-primaryred "/>
                     </Button>
+
+                    {showSearchFrame && (
+                        <div className="absolute mt-1 left-0">
+                            <SearchFrame data={searchData}/>
+                        </div>
+                    )}
+
                 </div>
 
                 <div className="flex items-center space-x-5">
