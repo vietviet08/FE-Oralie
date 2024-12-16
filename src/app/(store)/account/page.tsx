@@ -82,10 +82,10 @@ const AccountPage: React.FC = () => {
     };
 
     return (
-        <div className="sm:px-32 px-6 py-6 mt-24">
-            <h2 className="text-2xl text-primaryred py-4">Account Manage</h2>
+        <div className="sm:px-32 px-6 py-6 mt-12">
+            <h2 className="text-2xl font-semibold text-primaryred py-4">Account Manage</h2>
             <div className="flex flex-col md:flex-row">
-                <div className="w-full md:w-1/4 mr-0 md:mr-2 mt-0 p-4 rounded-lg shadow-md">
+                <div className="w-full md:w-1/4 mr-0 md:mr-2 mt-0 p-4 rounded-lg shadow">
                     <ul className="space-y-4">
                         {links.map((link) => (
                             <li
@@ -111,7 +111,7 @@ const AccountPage: React.FC = () => {
                         ))}
                     </ul>
                 </div>
-                <div className="w-full md:w-3/4 ml-0 md:ml-2 mt-4 md:mt-0 p-4 rounded-lg shadow-md">
+                <div className="w-full md:w-3/4 ml-0 md:ml-2 mt-4 md:mt-0 p-4 rounded-lg shadow">
                     {renderSectionContent()}
                 </div>
             </div>
