@@ -1,5 +1,5 @@
-import type { Metadata } from "next";
-import { Header } from "@/components/store/Header";
+import type {Metadata} from "next";
+import {Header} from "@/components/store/Header";
 import Footer from "@/components/store/Footer";
 import React from "react";
 import ScrollToTop from "@/components/store/ScrollToTop";
@@ -17,11 +17,11 @@ export default function RootLayout({
 }>) {
     return (
         <div className="">
-            <Header />
-            <NextTopLoader showSpinner={false}/ >
+            <Header/>
+            <NextTopLoader showSpinner={false} color={"#f1e2e2"}/>
             <main className="w-full flex-1 overflow-hidden">{children}</main>
-            <ScrollToTop />
-            <Footer />
+            <ScrollToTop/>
+            <Footer/>
         </div>
     );
 }
