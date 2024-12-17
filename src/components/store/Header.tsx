@@ -19,6 +19,7 @@ import {CartResponse} from "@/model/cart/CartResponse";
 import {Product} from "@/model/product/Product";
 import {getListProduct} from "@/services/ProductService";
 import SearchFrame from "@/components/common/search-frame/search-frame";
+import {useLocation} from "react-router";
 
 export function Header() {
     const {data: session} = useSession();
@@ -38,6 +39,10 @@ export function Header() {
         if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
             setOpenMenu(false);
         }
+    };
+
+    const closeSearchFrame = () => {
+        setShowSearchFrame(false);
     };
 
     useEffect(() => {
@@ -117,9 +122,6 @@ export function Header() {
                 <div className="relative lg:w-2/5 sm:w-3/5">
                     <Input
                         ref={inputRef}
-                        onBlur={() => {
-                            setShowSearchFrame(false)
-                        }}
                         onInput={(e) => {
                             openSearchFrame((e.target as HTMLInputElement).value);
                         }}
@@ -156,9 +158,8 @@ export function Header() {
                     {showSearchFrame && (
                         <div
                             className="absolute mt-1 left-0"
-
                         >
-                            <SearchFrame data={searchData}/>
+                            <SearchFrame data={searchData} closeSearchFrame={closeSearchFrame}/>
                         </div>
                     )}
                 </div>
