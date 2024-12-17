@@ -6,38 +6,17 @@ import {CartItemResponse} from "@/model/cart/CartItemResponse";
 import Image from "next/image";
 import {Button} from "@/components/ui/button";
 import {Card, CardContent} from "@/components/ui/card";
-import React, {useEffect} from "react";
 import {CartResponse} from "@/model/cart/CartResponse";
-import {createOrderWithPayPal, successPaypalPayment} from "@/services/OrderService";
+import {createOrderWithPayPal} from "@/services/OrderService";
 import {useSession} from "next-auth/react";
+import {useRouter} from "next/navigation";
 
 const CheckoutTemplate = ({data}: { data: CartResponse }) => {
 
     const {data: session} = useSession();
     const token = session?.access_token as string;
 
-    // const router = useRouter();
-    useEffect(() => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const paymentId = urlParams.get('paymentId');
-        const PayerID = urlParams.get('PayerID');
-        if (paymentId && PayerID) {
-            handlePaymentSuccess(paymentId, PayerID);
-        }
-    }, []);
-
-    const handlePaymentSuccess = async (paymentId: string, PayerID: string) => {
-        try {
-            const response = await successPaypalPayment(token, paymentId, PayerID);
-            if (response.status === 200) {
-                // Handle successful payment, redirect to success page
-                console.log(response.data);
-            }
-        } catch (error) {
-            // Handle failed payment
-            console.error('Payment failed:', error);
-        }
-    }
+    const router = useRouter();
 
     const handleCheckout = async () => {
         const orderData = {
@@ -65,14 +44,12 @@ const CheckoutTemplate = ({data}: { data: CartResponse }) => {
         }
 
         try {
-            await createOrderWithPayPal(token, orderData);
-            // if (response.status === 200) {
-            //     setPaymentLink(response.data.links.find((link) => link.rel === 'approval_url').href);
-            //     window.location.href = paymentLink;
-            //
-            // } else {
-            //     throw new Error(`Request failed with status code: ${response.status}`);
-            // }
+            const response = await createOrderWithPayPal(token, orderData);
+            if (response) {
+               router.push(response.linkPaypalToExecute);
+            } else {
+                throw new Error(`handleCheckout Request failed with status code`);
+            }
         } catch (error) {
             console.error('Error during checkout:', error);
         }
@@ -187,16 +164,15 @@ const CheckoutTemplate = ({data}: { data: CartResponse }) => {
                                         <div className="text-lg font-semibold">$ 9999</div>
                                     </div>
                                     <Button type="button"
-                                            className="w-full h-12 bg-primaryred hover:bg-red-500 text-white">
+                                            className="w-full h-10 bg-primaryred hover:bg-red-500 text-white ">
                                         Order Now
                                     </Button>
                                     <Button type="button"
-                                            className="w-full h-12 bg-paypal hover:bg-paypal1 text-white"
-                                            onClick={handleCheckout}
-                                    >
+                                            className="w-full h-10 bg-paypal hover:bg-paypal1 text-white "
+                                            onClick={handleCheckout}>
                                         <Image
                                             src={"https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/2560px-PayPal.svg.png"}
-                                            alt={""} width={420} height={120} className="w-32 object-contain"/>
+                                            alt={""} width={420} height={120} className="w-24 object-contain"/>
                                     </Button>
                                 </div>
                             </CardContent>

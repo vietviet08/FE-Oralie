@@ -3,6 +3,7 @@ import { Header } from "@/components/store/Header";
 import Footer from "@/components/store/Footer";
 import React from "react";
 import ScrollToTop from "@/components/store/ScrollToTop";
+import NextTopLoader from "nextjs-toploader";
 
 export const metadata: Metadata = {
     title: "Oralie",
@@ -17,6 +18,7 @@ export default function RootLayout({
     return (
         <div className="">
             <Header />
+            <NextTopLoader showSpinner={false}/ >
             <main className="w-full flex-1 overflow-hidden">{children}</main>
             <ScrollToTop />
             <Footer />

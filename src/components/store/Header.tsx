@@ -50,7 +50,6 @@ export function Header() {
                 const res: CartResponse = await getCart(token);
                 if (res) {
                     setCartItemCount(res.quantity);
-                    console.log("cart in header " + res);
                 }
             } catch (error) {
                 console.error("Failed to fetch cart:", error);

@@ -52,6 +52,7 @@ import {
     ArrowUpWideNarrow,
     Flame,
     Eye,
+    BadgeCheckIcon,
 } from "lucide-react";
 
 export type Icon = LucideIcon;
@@ -125,4 +126,5 @@ export const Icons = {
     arrowUpWideNarrow: ArrowUpWideNarrow,
     flame: Flame,
     eye: Eye,
+    badgeCheck: BadgeCheckIcon,
 };

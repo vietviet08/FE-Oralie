@@ -37,12 +37,6 @@ export async function getListOrders(page: number,
 //button payment by paypal
 export async function createOrderWithPayPal(token: string, orderRequest: OrderRequest) {
 
-    // payPalInfoRequest.method = "paypal";
-    // payPalInfoRequest.currency = PAYPAL_CURRENCY;
-    // payPalInfoRequest.intent = PAYPAL_INTENT;
-    // payPalInfoRequest.cancelUrl = PAYPAL_CANCEL_URL;
-    // payPalInfoRequest.successUrl = PAYPAL_SUCCESS_URL;
-
     try {
         const response = await axios.post(`${baseUrl}/store/orders/paypal`, orderRequest, {
             headers: {
@@ -51,11 +45,8 @@ export async function createOrderWithPayPal(token: string, orderRequest: OrderRe
         });
 
         if (response && response.status == 200) {
-            // response.data.links.find((link) => link.rel === 'approval_url').href
-            const {approvalUrl} = response.data;
-            window.location.href = approvalUrl;
-        } else {
-            console.error("Failed to create PayPal order");
+            console.log(response);
+            return response.data;
         }
     } catch (error) {
         console.error("Error calling backend", error);
@@ -66,13 +57,32 @@ export async function createOrderWithPayPal(token: string, orderRequest: OrderRe
 //paypal success api
 export async function successPaypalPayment(token: string, paymentId: string, PayerID: string) {
     try {
-        const res = await axios.get(`${baseUrl}/store/payment/success?paymentId=${paymentId}&PayerID=${PayerID}`, {
+        const res = await axios.get(`${baseUrl}/store/orders/checkout/success?paymentId=${paymentId}&PayerID=${PayerID}`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         });
 
         if (res && res.status == 200) {
+            console.log(res);
+            return res.data;
+        }
+    } catch (error) {
+        console.error("Error calling backend payment confirmation:", error);
+        throw error;
+    }
+}
+
+export async function cancelPaypalPayment(token: string) {
+    try {
+        const res = await axios.get(`${baseUrl}/store/orders/checkout/cancel`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        if (res && res.status == 200) {
+            console.log(res);
             return res.data;
         }
     } catch (error) {
