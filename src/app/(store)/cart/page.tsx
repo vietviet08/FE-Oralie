@@ -330,7 +330,7 @@ export default function CartPage() {
                                     <div className="text-xl font-semibold">$ {cart?.totalPrice}</div>
                                 </div>
                                 <Button type="button" className="w-full bg-primaryred hover:bg-red-500 text-white">
-                                    Go To Payment
+                                    <Link href={"/checkout"}>Go To Payment</Link>
                                 </Button>
                             </div>
                         </CardContent>

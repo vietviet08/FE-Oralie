@@ -19,7 +19,6 @@ import {CartResponse} from "@/model/cart/CartResponse";
 import {Product} from "@/model/product/Product";
 import {getListProduct} from "@/services/ProductService";
 import SearchFrame from "@/components/common/search-frame/search-frame";
-import {useLocation} from "react-router";
 
 export function Header() {
     const {data: session} = useSession();

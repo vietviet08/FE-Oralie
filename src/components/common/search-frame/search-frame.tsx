@@ -1,11 +1,10 @@
-
 import {Product} from "@/model/product/Product";
 import Link from "next/link";
 import Image from "next/image";
 
 export default function SearchFrame({
                                         data,
-                                        closeSearchFrame, 
+                                        closeSearchFrame,
                                     }: {
     data: Product[];
     closeSearchFrame: () => void;
@@ -13,14 +12,14 @@ export default function SearchFrame({
     return (
         <div
             className="w-full h-72 py-2 flex flex-col rounded-xl overflow-y-auto bg-white shadow"
-            style={{ scrollbarWidth: 'thin', scrollbarColor: '#ff0000 #f0f0f0' }}
+            style={{scrollbarWidth: 'thin', scrollbarColor: '#ff0000 #f0f0f0'}}
         >
             {data.map((product: Product) => (
                 <div
                     key={product.id}
                     className="w-full h-[calc(4rem+)10px] p-2 border-b border-gray-200"
                 >
-                    <Link href={`/${product.slug}`} onClick={closeSearchFrame}> {/* Call closeSearchFrame on click */}
+                    <Link href={`/${product.slug}`} onClick={closeSearchFrame}>
                         <div className="flex gap-2 justify-between items-center w-full">
                             <div className="w-2/12">
                                 <Image

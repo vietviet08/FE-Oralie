@@ -71,7 +71,7 @@ function FilterTemplate() {
             {/*Filter by brand*/}
             {brands.length > 0 && (
                 <FilterSection title="Brand"
-                               className="grid grid-cols-4 gap-3 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-12 my-2"
+                               className="grid grid-cols-4 gap-2 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-12 my-2"
                                options={brands.map((brandItem) => ({
                                       label: "",
                                    value: brandItem?.slug?.toString() ?? "",
@@ -86,7 +86,7 @@ function FilterTemplate() {
             {/* Filter by category */}
             {categories && (
                 <FilterSection title="Category"
-                               className="grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 my-2"
+                               className="grid grid-cols-2 gap-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 my-2"
                                setFilterValue={setCategory}
                                filterValue={category}
                                options={categories.map((categoryItem) => ({
@@ -99,7 +99,7 @@ function FilterTemplate() {
 
             {/* Filter by price level */}
             <FilterSection title="Price level"
-                           className="grid grid-cols-3 gap-3 md:grid-cols-5 lg:grid-cols-8 my-2"
+                           className="grid grid-cols-3 gap-2 md:grid-cols-5 lg:grid-cols-8 my-2"
                            setFilterValue={setPrice}
                            filterValue={price}
                            options={[
@@ -115,7 +115,7 @@ function FilterTemplate() {
             </FilterSection>
 
             {/* Sort by options */}
-            <FilterSection title="Sort By" className="grid grid-cols-2 gap-3 lg:grid-cols-6  my-2">
+            <FilterSection title="Sort By" className="grid grid-cols-2 gap-2 lg:grid-cols-6  my-2">
                 <Button variant="outline" className="h-8 px-4">
                     <Icons.eye className="text-gray-500" width={16} height={16}/>
                     <span className="text-base">Most viewed</span>

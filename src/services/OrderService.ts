@@ -1,6 +1,5 @@
 import axios from "axios";
-import {PayPalInfoRequest} from "@/model/payment/PayPalInfoRequest";
-import {PAYPAL_CANCEL_URL, PAYPAL_CURRENCY, PAYPAL_INTENT, PAYPAL_SUCCESS_URL} from "@/constants/data";
+import {OrderRequest} from "@/model/order/OrderRequest";
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL + '/api/orders';
 
@@ -33,24 +32,26 @@ export async function getListOrders(page: number,
     }
 }
 
-
 //store
 
 //button payment by paypal
-export async function createOrderWithPayPal(token: string, payPalInfoRequest: PayPalInfoRequest) {
-    payPalInfoRequest.method = "paypal";
-    payPalInfoRequest.currency = PAYPAL_CURRENCY;
-    payPalInfoRequest.intent = PAYPAL_INTENT;
-    payPalInfoRequest.cancelUrl = PAYPAL_CANCEL_URL;
-    payPalInfoRequest.successUrl = PAYPAL_SUCCESS_URL;
+export async function createOrderWithPayPal(token: string, orderRequest: OrderRequest) {
+
+    // payPalInfoRequest.method = "paypal";
+    // payPalInfoRequest.currency = PAYPAL_CURRENCY;
+    // payPalInfoRequest.intent = PAYPAL_INTENT;
+    // payPalInfoRequest.cancelUrl = PAYPAL_CANCEL_URL;
+    // payPalInfoRequest.successUrl = PAYPAL_SUCCESS_URL;
+
     try {
-        const response = await axios.post("/api/store/orders/paypal", payPalInfoRequest, {
+        const response = await axios.post(`${baseUrl}/store/orders/paypal`, orderRequest, {
             headers: {
                 Authorization: `Bearer ${token}`
             },
         });
 
-        if (response && response.data) {
+        if (response && response.status == 200) {
+            // response.data.links.find((link) => link.rel === 'approval_url').href
             const {approvalUrl} = response.data;
             window.location.href = approvalUrl;
         } else {
@@ -71,9 +72,8 @@ export async function successPaypalPayment(token: string, paymentId: string, Pay
             }
         });
 
-        if (res && res.data) {
+        if (res && res.status == 200) {
             return res.data;
-
         }
     } catch (error) {
         console.error("Error calling backend payment confirmation:", error);

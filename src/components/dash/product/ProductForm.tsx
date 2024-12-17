@@ -168,7 +168,6 @@ export default function ProductForm({product}: ProductFormProps) {
     useEffect(() => {
         const fetchImages = async () => {
             if (!product?.images || product.images.length === 0) return;
-
             const filePromises = product.images.map(async (imageUrl, index) => {
                 try {
                     const response = await fetch(imageUrl.url);
@@ -580,7 +579,7 @@ export default function ProductForm({product}: ProductFormProps) {
                             </button>
                         </div>
 
-                        <Button type="submit">{product ? <>Update</> : <>Create</>}</Button>
+                        <Button disabled={form.formState.isSubmitting} type="submit">{product ? <>Update</> : <>Create</>}</Button>
                     </form>
                 </Form>
             </CardContent>
