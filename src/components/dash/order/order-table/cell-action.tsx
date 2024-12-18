@@ -5,7 +5,7 @@ import {AlertModal} from "@/components/dash/modal/alert-modal";
 import {useToast} from "@/hooks/use-toast";
 import {useSession} from "next-auth/react";
 import {
-    deleteBrand,
+    deleteBrand, updateBrand,
 } from "@/services/BrandService";
 import {Order} from "@/model/order/Order";
 import {
@@ -16,7 +16,9 @@ import {
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import {Button} from "@/components/ui/button";
-import { MoreHorizontal, Trash} from "lucide-react";
+import {MoreHorizontal, Plus, Trash} from "lucide-react";
+import {deleteOrder} from "@/services/OrderService";
+import {OrderDialog} from "@/components/dash/order/OrderDialog";
 
 interface CellActionProps {
     data: Order;
@@ -28,17 +30,17 @@ const CellAction: React.FC<CellActionProps> = ({data}) => {
 
     const {toast} = useToast();
     const {data: session} = useSession();
+    const token = session?.access_token as string;
 
     const [loading, setLoading] = useState(false);
-    const [open, setOpen] = useState(false);
 
+    const [open, setOpen] = useState(false);
     const onConfirm = async () => {
-        const token = session?.access_token as string;
 
         try {
-            const res = await deleteBrand(data.id as number, token);
+            const res = await deleteOrder(token, data.id as number);
 
-            if (res && res.status === 200) {
+            if (res && res.status === 204) {
                 toast({
                     variant: "success",
                     title: "Order deleted",
@@ -58,6 +60,10 @@ const CellAction: React.FC<CellActionProps> = ({data}) => {
             router.refresh();
             setLoading(false);
         }
+    };
+
+    const handleShowDetailOrder = () => {
+        <OrderDialog icon={<Plus className="mr-2 h-4 w-4"/>}/>
     };
 
     return (
@@ -83,6 +89,13 @@ const CellAction: React.FC<CellActionProps> = ({data}) => {
                         }}
                     >
                         <Trash className="mr-2 h-4 w-4 text-red-500"/> Delete
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                        onClick={() => {
+                            handleShowDetailOrder();
+                        }}
+                    >
+                        <Trash className="mr-2 h-4 w-4 text-red-500"/> Detail
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>

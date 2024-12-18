@@ -53,6 +53,7 @@ import {
     Flame,
     Eye,
     BadgeCheckIcon,
+    MessageSquareWarning,
 } from "lucide-react";
 
 export type Icon = LucideIcon;
@@ -127,4 +128,5 @@ export const Icons = {
     flame: Flame,
     eye: Eye,
     badgeCheck: BadgeCheckIcon,
+    messageSquareWarning: MessageSquareWarning,
 };

@@ -44,7 +44,7 @@ export const UpdateStatusAction: React.FC<UpdateStatusActionProps> = ({data}) =>
             console.log(e);
             toast({
                 variant: "destructive",
-                title: "Brand Update Failed",
+                title: "Order update failed",
                 description: (e as unknown as {
                     response?: { data?: { errorMessage?: string } }
                 }).response?.data?.errorMessage || "An unknown error occurred",
@@ -54,7 +54,7 @@ export const UpdateStatusAction: React.FC<UpdateStatusActionProps> = ({data}) =>
     };
     return (
         <div className="dropdown">
-            <Button onClick={handleClick} disabled={status === "CANCEL"}>
+            <Button onClick={handleClick} disabled={status === "CANCEL" || status === "FAILURE"}>
                 {status}
             </Button>
         </div>

@@ -46,7 +46,6 @@ export default async function OrderListPage() {
                             title={`Order (${totalOrders})`}
                             description="Manage Orders (Server side table functionalities.)"
                         />
-                        <OrderDialog icon={<Plus className="mr-2 h-4 w-4"/>}/>
                     </div>
                     <Separator/>
                     <OrderTable data={orders} totalData={totalOrders}/>

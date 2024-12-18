@@ -32,10 +32,46 @@ export async function getListOrders(page: number,
     }
 }
 
+export async function updateStatusOrder(token: string, orderId: number, status: string) {
+    try {
+        const res = await axios.get(`${baseUrl}/dash/orders/${orderId}?status=${status}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        if (res && res.status == 200) {
+            console.log(res);
+            return res.data;
+        }
+    } catch (error) {
+        console.error("Error calling backend payment confirmation:", error);
+        throw error;
+    }
+}
+
+export async function deleteOrder(token: string, orderId: number) {
+    try {
+        const res = await axios.delete(`${baseUrl}/dash/orders/${orderId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        if (res && res.status == 204) {
+            console.log(res);
+            return res;
+        }
+    } catch (error) {
+        console.error("Error calling backend payment confirmation:", error);
+        throw error;
+    }
+}
+
 //store
 export async function getOrders(token: string) {
     try {
-        const response = await axios.post(`${baseUrl}/store/orders`, {
+        const response = await axios.get(`${baseUrl}/store/orders`, {
             headers: {
                 Authorization: `Bearer ${token}`
             },
@@ -51,6 +87,41 @@ export async function getOrders(token: string) {
     }
 }
 
+export async function getOrderDetail(token: string, orderId: number) {
+    try {
+        const response = await axios.get(`${baseUrl}/store/orders/${orderId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+        });
+
+        if (response && response.status == 200) {
+            console.log(response);
+            return response.data;
+        }
+    } catch (error) {
+        console.error("Error calling backend", error);
+        throw error;
+    }
+}
+
+export async function cancelOrderByCustomer(token: string, orderId: number) {
+    try {
+        const response = await axios.put(`${baseUrl}/store/orders/${orderId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+        });
+
+        if (response && response.status == 200) {
+            console.log(response);
+            return response.data;
+        }
+    } catch (error) {
+        console.error("Error calling backend", error);
+        throw error;
+    }
+}
 
 //button payment by paypal
 export async function createOrderWithPayPal(token: string, orderRequest: OrderRequest) {
@@ -110,20 +181,3 @@ export async function cancelPaypalPayment(token: string) {
 }
 
 
-export async function updateStatusOrder(token: string, orderId: number, status: string) {
-    try {
-        const res = await axios.get(`${baseUrl}/dash/orders/${orderId}?status=${status}`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
-
-        if (res && res.status == 200) {
-            console.log(res);
-            return res.data;
-        }
-    } catch (error) {
-        console.error("Error calling backend payment confirmation:", error);
-        throw error;
-    }
-}

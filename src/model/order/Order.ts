@@ -8,12 +8,13 @@ export type Order = {
     address: OrderAddress;
     orderItems: OrderItem[];
     totalPrice: number;
-    voucherId?: string;
+    voucher?: string;
     discount?: number;
     shippingFee?: number;
     status: string;
     shippingMethod: string;
     paymentMethod: string;
     paymentStatus: string;
+    createdAt: string;
     note?: string;
 }
