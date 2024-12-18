@@ -33,6 +33,24 @@ export async function getListOrders(page: number,
 }
 
 //store
+export async function getOrders(token: string) {
+    try {
+        const response = await axios.post(`${baseUrl}/store/orders`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+        });
+
+        if (response && response.status == 200) {
+            console.log(response);
+            return response.data;
+        }
+    } catch (error) {
+        console.error("Error calling backend", error);
+        throw error;
+    }
+}
+
 
 //button payment by paypal
 export async function createOrderWithPayPal(token: string, orderRequest: OrderRequest) {
@@ -76,6 +94,25 @@ export async function successPaypalPayment(token: string, paymentId: string, Pay
 export async function cancelPaypalPayment(token: string) {
     try {
         const res = await axios.get(`${baseUrl}/store/orders/checkout/cancel`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        if (res && res.status == 200) {
+            console.log(res);
+            return res.data;
+        }
+    } catch (error) {
+        console.error("Error calling backend payment confirmation:", error);
+        throw error;
+    }
+}
+
+
+export async function updateStatusOrder(token: string, orderId: number, status: string) {
+    try {
+        const res = await axios.get(`${baseUrl}/dash/orders/${orderId}?status=${status}`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }

@@ -37,6 +37,7 @@ interface CellActionProps {
 }
 
 export const CellAction: React.FC<CellActionProps> = ({data}) => {
+
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [name, setName] = useState<string>(data.name);
     const [description, setDescription] = useState<string>(data.description);
@@ -100,6 +101,7 @@ export const CellAction: React.FC<CellActionProps> = ({data}) => {
                 {
                     name: name,
                     description: description,
+                    slug: name.toLowerCase().replace(/\s/g, "-"),
                     image: file[0],
                     isActive: isChecked,
                 },
