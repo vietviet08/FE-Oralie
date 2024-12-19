@@ -7,54 +7,121 @@ import Image from "next/image";
 import {Button} from "@/components/ui/button";
 import {Card, CardContent} from "@/components/ui/card";
 import {CartResponse} from "@/model/cart/CartResponse";
-import {createOrderWithPayPal} from "@/services/OrderService";
+import {createOrder, createOrderWithPayPal} from "@/services/OrderService";
 import {useSession} from "next-auth/react";
 import {useRouter} from "next/navigation";
+import {z} from "zod";
+import {useEffect, useState} from "react";
+import {parseJwt} from "@/utils/encryption";
+import {useForm} from "react-hook-form";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
+import {Input} from "@/components/ui/input";
+import * as React from "react";
+import {OrderRequest} from "@/model/order/OrderRequest";
+import {Label} from "@/components/ui/label";
+import {getCart} from "@/services/CartService";
 
-const orderData = {
-    address: {
-        addressDetail: "Tan Phu",
-        city: "HCM",
-        phoneNumber: "09090909",
-        email: "email@gmail.com"
-    },
-    orderItems: [{
-        productId: 123,
-        productName: "productName",
-        quantity: 2,
-        totalPrice: 500,
-        productImage: "https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/2560px-PayPal.svg.png"
-    }],
-    totalPrice: 500,
-    voucher: "",
-    discount: 0,
-    shippingFee: 0,
-    shippingMethod: "standard",
-    paymentMethod: "PAYPAL",
-    paymentStatus: "PENDING",
-    note: "note",
-    status: "PENDING"
-}
+const formSchema = z.object({
+    fullName: z.string().min(3, "Name is too short").nonempty("Name is required"),
+    phone: z.string().nonempty("Phone is required"),
+    address: z
+        .string()
+        .min(5, "Address is too short")
+        .nonempty("Address is required"),
+    city: z.string().nonempty("City is required"),
+    paymentMethod: z.string().nonempty("Payment method is required"),
+});
 
-const CheckoutTemplate = ({data}: { data: CartResponse }) => {
+const CheckoutTemplate = () => {
 
     const {data: session} = useSession();
     const token = session?.access_token as string;
+    const infoUser = parseJwt(token as string);
+    const [data, setData] = useState<CartResponse>();
 
     const router = useRouter();
 
-    const handleCheckout = async () => {
+    useEffect(() => {
+        async function fetchCart() {
+            try {
+                const res: CartResponse = await getCart(token);
+                if (res) {
+                    setData(res);
+                }
+            } catch (error) {
+                console.error("Failed to fetch cart:", error);
+            }
+        }
+
+        fetchCart();
+    }, [token]);
+
+    const [defaultValues, setDefaultValues] = useState<{
+        fullName: string;
+        phone: string;
+        address: string;
+        city: string;
+        email: string;
+    }>({
+        fullName: infoUser.name as string,
+        phone: infoUser.phone as string,
+        address: infoUser.address as string,
+        city: infoUser.city as string,
+        email: infoUser.email as string,
+    });
+
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
+        defaultValues: defaultValues,
+    });
+
+    async function onSubmit(values: z.infer<typeof formSchema>) {
+        const orderData: OrderRequest = {
+            address: {
+                addressDetail: values.address,
+                city: values.city,
+                phoneNumber: values.phone,
+                email: defaultValues.email,
+            },
+            orderItems: data?.cartItemResponses?.map((item: CartItemResponse) => ({
+                productId: item.productId,
+                productName: item.productName,
+                quantity: item.quantity,
+                totalPrice: item.price,
+                productImage: item.urlImageThumbnail
+            })) || [],
+            totalPrice: data?.totalPrice || 0,
+            voucher: "",
+            discount: 0,
+            shippingFee: 0,
+            shippingMethod: "standard",
+            paymentMethod: values.paymentMethod,
+            paymentStatus: "PENDING",
+            note: "note",
+            status: "PENDING"
+        }
+
         try {
-            const response = await createOrderWithPayPal(token, orderData);
-            if (response) {
-               router.push(response.linkPaypalToExecute);
-            } else {
-                throw new Error(`handleCheckout Request failed with status code`);
+            if (values.paymentMethod === "COD" || values.paymentMethod === "TRANSFER") {
+                const response = await createOrder(token, orderData);
+                if (response) {
+                    router.push(response.linkPaypalToExecute);
+                } else {
+                    throw new Error(`handleCheckout Request failed with status code`);
+                }
+            } else if (values.paymentMethod === "PAYPAL") {
+                const response = await createOrderWithPayPal(token, orderData);
+                if (response) {
+                    router.push(response.linkPaypalToExecute);
+                } else {
+                    throw new Error(`handleCheckout Request failed with status code`);
+                }
             }
         } catch (error) {
             console.error('Error during checkout:', error);
         }
-    };
+    }
 
     return (
         <div className="sm:px-32 px-6 py-6 mt-14">
@@ -69,13 +136,13 @@ const CheckoutTemplate = ({data}: { data: CartResponse }) => {
                 <div className="w-3/5 flex flex-col gap-5">
                     <div className="flex flex-col gap-2 rounded-xl border">
                         <div className="w-full flex justify-between items-center p-2 bg-gray-100 rounded-t-xl">
-                            <span className="text-base font-semibold">Product in bill (9)</span>
+                            <span className="text-base font-semibold">Product in bill ({data?.quantity})</span>
                         </div>
                         <div className="p-2 flex flex-col">
                             {data && data.cartItemResponses.map((item: CartItemResponse) => (
-                                <div key={item.id} className="w-full h-[calc(4rem+)10px] p-2 border-b border-gray-200">
+                                <div key={item.id} className="w-full p-2 border-b border-gray-200">
                                     <Link href={`/${item.productSlug}`}>
-                                        <div className="flex gap-2 justify-between items-center w-full">
+                                        <div className="flex gap-4 justify-between items-center w-full">
                                             <div className="w-2/12">
                                                 <Image src={item.urlImageThumbnail} alt={item.productName} width={120}
                                                        height={120}
@@ -83,10 +150,10 @@ const CheckoutTemplate = ({data}: { data: CartResponse }) => {
                                             </div>
                                             <div className="w-10/12">
                                                 <div className="flex flex-col gap-1 w-full">
-                                                <span
-                                                    className="text-sm font-semibold hover:text-primaryred line-clamp-2">
-                                                    {item.productName}
-                                                </span>
+                                                    <span
+                                                        className="text-md font-semibold hover:text-primaryred line-clamp-2">
+                                                        {item.productName}
+                                                    </span>
                                                     <div className="flex justify-between gap-2 items-center w-1/5">
                                                         <span className="text-md font-bold text-primaryred">
                                                             ${item.price}
@@ -106,35 +173,122 @@ const CheckoutTemplate = ({data}: { data: CartResponse }) => {
                             ))}
                         </div>
                     </div>
-                    <div className="flex flex-col gap-2 rounded-xl border ">
-                        <div className="w-full flex justify-between items-center p-2 bg-gray-100 rounded-t-xl">
-                            <span className="text-base font-semibold">Shipping Address</span>
-                            <Button variant="ghost" className="text-primaryred rounded-xl">Change</Button>
-                        </div>
-                        <div className="p-2">
-                            <p className="text-sm font-semibold">Name</p>
-                            <p className="text-sm">Nguyen Van A</p>
-                            <p className="text-sm font-semibold">Phone</p>
-                            <p className="text-sm">0123456789</p>
-                            <p className="text-sm font-semibold">Address</p>
-                            <p className="text-sm">123 Nguyen Van Linh, Da Nang</p>
-                        </div>
-                    </div>
-                    <div className="flex flex-col gap-2 rounded-xl border ">
-                        <div className="w-full flex justify-between items-center p-2 bg-gray-100 rounded-t-xl">
-                            <span className="text-base font-semibold">Payment Method</span>
-                            <Button variant="ghost" className="text-primaryred rounded-xl">Change</Button>
-                        </div>
-                        <div className="p-2">
-                            <div className="flex justify-between items-center">
-                                <div className="flex gap-2 items-center">
-                                    <Icons.product width={22} height={22}/>
-                                    <span className="text-lg font-semibold">Credit Card</span>
+                    <Form {...form}>
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                            <div className="grid grid-cols-1 gap-6">
+                                <div className="flex flex-col gap-2 rounded-xl border ">
+                                    <div
+                                        className="w-full flex justify-between items-center p-2 bg-gray-100 rounded-t-xl">
+                                        <span className="text-base font-semibold">Shipping Address</span>
+                                        <Button variant="ghost" className="text-primaryred rounded-xl">Change</Button>
+                                    </div>
+                                    <div className="p-2 flex flex-col gap-4">
+                                        <FormField
+                                            control={form.control}
+                                            name="fullName"
+                                            render={({field}) => (
+                                                <FormItem>
+                                                    <FormLabel>Full Name</FormLabel>
+                                                    <FormControl>
+                                                        <Input placeholder="Full name" {...field} />
+                                                    </FormControl>
+                                                    <FormMessage/>
+                                                </FormItem>
+                                            )}
+                                        />
+                                        <FormField
+                                            control={form.control}
+                                            name="phone"
+                                            render={({field}) => (
+                                                <FormItem>
+                                                    <FormLabel>Phone</FormLabel>
+                                                    <FormControl>
+                                                        <Input placeholder="Phone" {...field} />
+                                                    </FormControl>
+                                                    <FormMessage/>
+                                                </FormItem>
+                                            )}
+                                        />
+                                        <FormField
+                                            control={form.control}
+                                            name="address"
+                                            render={({field}) => (
+                                                <FormItem>
+                                                    <FormLabel>Address detail</FormLabel>
+                                                    <FormControl>
+                                                        <Input placeholder="Address detail" {...field} />
+                                                    </FormControl>
+                                                    <FormMessage/>
+                                                </FormItem>
+                                            )}
+                                        />
+                                        <FormField
+                                            control={form.control}
+                                            name="city"
+                                            render={({field}) => (
+                                                <FormItem>
+                                                    <FormLabel>City</FormLabel>
+                                                    <FormControl>
+                                                        <Input placeholder="City" {...field} />
+                                                    </FormControl>
+                                                    <FormMessage/>
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
                                 </div>
-                                <div className="text-sm font-semibold">**** **** **** 1234</div>
+                                <div className="flex flex-col gap-2 rounded-xl border ">
+                                    <div
+                                        className="w-full flex justify-between items-center p-2 bg-gray-100 rounded-t-xl">
+                                        <span className="text-base font-semibold">Payment Method</span>
+                                        <Button variant="ghost" className="text-primaryred rounded-xl">Change</Button>
+                                    </div>
+                                    <div className="p-2">
+                                        <FormField
+                                            control={form.control}
+                                            name="paymentMethod"
+                                            render={({field}) => (
+                                                <FormItem>
+                                                    <FormControl>
+                                                        <div className="flex flex-col justify-center items-start gap-1">
+                                                            <Label className="flex justify-start items-center">
+                                                                <Input
+                                                                    type="checkbox"
+                                                                    checked={field.value === "TRANSFER"}
+                                                                    onChange={() => field.onChange("TRANSFER")}
+                                                                />
+                                                                <span className="ml-2">Transfer</span>
+                                                            </Label>
+                                                            <Label className="flex justify-start items-center">
+                                                                <Input
+                                                                    type="checkbox"
+                                                                    checked={field.value === "COD"}
+                                                                    onChange={() => field.onChange("COD")}
+                                                                />
+                                                                <span className="ml-2">COD</span>
+                                                            </Label>
+
+                                                            <Label className="flex justify-start items-center">
+                                                                <Input
+                                                                    type="checkbox"
+                                                                    checked={field.value === "PAYPAL"}
+                                                                    onChange={() => field.onChange("PAYPAL")}
+                                                                />
+                                                                <span className="ml-2">Paypal</span>
+                                                            </Label>
+                                                        </div>
+                                                    </FormControl>
+                                                    <FormMessage/>
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
+                        </form>
+                    </Form>
+
+
                 </div>
                 <div className="w-2/5 rounded-xl">
                     <div className="w-full flex flex-col gap-2">
@@ -164,13 +318,12 @@ const CheckoutTemplate = ({data}: { data: CartResponse }) => {
                                         <p className="text-sm">Need to Pay</p>
                                         <div className="text-lg font-semibold">$ 9999</div>
                                     </div>
-                                    <Button type="button"
+                                    <Button type="submit"
                                             className="w-full h-10 bg-primaryred hover:bg-red-500 text-white ">
                                         Order Now
                                     </Button>
-                                    <Button type="button"
-                                            className="w-full h-10 bg-paypal hover:bg-paypal1 text-white "
-                                            onClick={handleCheckout}>
+                                    <Button type="submit"
+                                            className="w-full h-10 bg-paypal hover:bg-paypal1 text-white ">
                                         <Image
                                             src={"https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/2560px-PayPal.svg.png"}
                                             alt={""} width={420} height={120} className="w-24 object-contain"/>

@@ -1,10 +1,9 @@
 import React from "react";
-import {CartResponse} from "@/model/cart/CartResponse";
 import CheckoutTemplate from "@/components/store/checkout/CheckoutTemplate";
 
-const CheckoutPage: React.FC<{ data: CartResponse }> = ({data}) => {
+const CheckoutPage: React.FC = () => {
     return (
-        <CheckoutTemplate data={data}/>
+        <CheckoutTemplate/>
     );
 }
 

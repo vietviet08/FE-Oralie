@@ -18,7 +18,6 @@ import {z} from "zod";
 import Image from "next/image";
 import {parseJwt} from "@/utils/encryption";
 import * as React from "react";
-import {Label} from "@/components/ui/label";
 
 const ACCEPTED_IMAGE_TYPES = [
     "image/jpeg",
@@ -43,6 +42,7 @@ const formSchema = z.object({
         .string()
         .min(5, "Address is too short")
         .nonempty("Address is required"),
+    city: z.string().nonempty("City is required"),
 });
 
 export default function ProfileUserStore() {
@@ -57,6 +57,7 @@ export default function ProfileUserStore() {
         phone: string;
         email: string;
         address: string;
+        city: string;
     }>({
         picture: infoUser.picture as string,
         username: infoUser.preferred_username as string,
@@ -64,6 +65,7 @@ export default function ProfileUserStore() {
         phone: infoUser.phone as string,
         email: infoUser.email as string,
         address: infoUser.address as string,
+        city: infoUser.city as string
     });
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -77,8 +79,6 @@ export default function ProfileUserStore() {
 
     return (
         <div className="w-full flex gap-2 p-4 ">
-
-
             <div className="w-full lg:w-1/5 flex  flex-col justify-start items-center gap-2">
                 <div className="w-24 h-24 rounded-full overflow-hidden ">
                     <Image src={defaultValues.picture} alt={defaultValues.username} width={120} height={120}
@@ -147,6 +147,7 @@ export default function ProfileUserStore() {
                                     </FormItem>
                                 )}
                             />
+
                             <FormField
                                 control={form.control}
                                 name="address"
@@ -154,7 +155,21 @@ export default function ProfileUserStore() {
                                     <FormItem>
                                         <FormLabel>Address</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="Enter your Address" {...field} />
+                                            <Input placeholder="Enter your address" {...field} />
+                                        </FormControl>
+                                        <FormMessage/>
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
+                                name="city"
+                                render={({field}) => (
+                                    <FormItem>
+                                        <FormLabel>Address</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="Enter your city" {...field} />
                                         </FormControl>
                                         <FormMessage/>
                                     </FormItem>

@@ -123,6 +123,26 @@ export async function cancelOrderByCustomer(token: string, orderId: number) {
     }
 }
 
+//checkout
+export async function createOrder(token: string, orderRequest: OrderRequest) {
+    try {
+        const response = await axios.post(`${baseUrl}/store/orders`, orderRequest, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+        });
+
+        if (response && response.status == 200) {
+            console.log(response);
+            return response.data;
+        }
+    } catch (error) {
+        console.error("Error calling backend", error);
+        throw error;
+    }
+}
+
+
 //button payment by paypal
 export async function createOrderWithPayPal(token: string, orderRequest: OrderRequest) {
 
