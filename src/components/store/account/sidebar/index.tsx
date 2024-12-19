@@ -56,6 +56,11 @@ const SideBarAccountStore: React.FC<{ children?: React.ReactNode }> = ({children
             onClick: () => router.push("/account/password"),
         },
         {
+            name: "Access Token",
+            icon: <Icons.braces className="w-7 h-7"/>,
+            onClick: () => router.push("/account/token"),
+        },
+        {
             name: "Logout",
             icon: <LogOut className="w-7 h-7"/>,
             onClick: federatedLogout,

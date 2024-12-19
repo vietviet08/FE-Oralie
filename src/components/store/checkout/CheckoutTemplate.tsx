@@ -11,6 +11,31 @@ import {createOrderWithPayPal} from "@/services/OrderService";
 import {useSession} from "next-auth/react";
 import {useRouter} from "next/navigation";
 
+const orderData = {
+    address: {
+        addressDetail: "Tan Phu",
+        city: "HCM",
+        phoneNumber: "09090909",
+        email: "email@gmail.com"
+    },
+    orderItems: [{
+        productId: 123,
+        productName: "productName",
+        quantity: 2,
+        totalPrice: 500,
+        productImage: "https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/2560px-PayPal.svg.png"
+    }],
+    totalPrice: 500,
+    voucher: "",
+    discount: 0,
+    shippingFee: 0,
+    shippingMethod: "standard",
+    paymentMethod: "PAYPAL",
+    paymentStatus: "PENDING",
+    note: "note",
+    status: "PENDING"
+}
+
 const CheckoutTemplate = ({data}: { data: CartResponse }) => {
 
     const {data: session} = useSession();
@@ -19,30 +44,6 @@ const CheckoutTemplate = ({data}: { data: CartResponse }) => {
     const router = useRouter();
 
     const handleCheckout = async () => {
-        const orderData = {
-            address: {
-                addressDetail: "Tan Phu",
-                city: "HCM",
-                phoneNumber: "09090909",
-                email: "email@gmail.com"
-            },
-            orderItems: [{
-                productId: 123,
-                productName: "productName",
-                quantity: 2,
-                totalPrice: 500
-            }],
-            totalPrice: 500,
-            voucher: "",
-            discount: 0,
-            shippingFee: 0,
-            shippingMethod: "standard",
-            paymentMethod: "PAYPAL",
-            paymentStatus: "PENDING",
-            note: "note",
-            status: "PENDING"
-        }
-
         try {
             const response = await createOrderWithPayPal(token, orderData);
             if (response) {

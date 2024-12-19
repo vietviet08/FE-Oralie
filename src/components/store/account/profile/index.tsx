@@ -2,24 +2,23 @@
 
 import {Button} from "@/components/ui/button";
 import {
-    FormControl,
+    Form,
+    FormControl, FormDescription,
     FormField,
     FormItem,
     FormLabel,
     FormMessage,
 } from "@/components/ui/form";
 import {Input} from "@/components/ui/input";
-import {User} from "@/model/user/User";
-import {getImageProfile, getProfile} from "@/services/UserService";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {useSession} from "next-auth/react";
-import {useEffect, useState} from "react";
-import {Form, useForm} from "react-hook-form";
+import {useState} from "react";
+import {useForm} from "react-hook-form";
 import {z} from "zod";
-
-interface UserFormProps {
-    user: User;
-}
+import Image from "next/image";
+import {parseJwt} from "@/utils/encryption";
+import * as React from "react";
+import {Label} from "@/components/ui/label";
 
 const ACCEPTED_IMAGE_TYPES = [
     "image/jpeg",
@@ -28,149 +27,146 @@ const ACCEPTED_IMAGE_TYPES = [
     "image/webp",
 ];
 
-// const formSchema = z.object({
-//     userImage: z
-//         .any()
-//         .refine(
-//             (file) => !file || ACCEPTED_IMAGE_TYPES.includes(file.type),
-//             "Invalid image type"
-//         )
-//         .optional(),
-//     username: z
-//         .string()
-//         .min(3, "Username is too short")
-//         .nonempty("Username is required"),
-//     fullName: z.string().min(3, "Name is too short").nonempty("Name is required"),
-//     phone: z.string().nonempty("Phone is required"),
-//     email: z.string().email("Invalid email"),
-//     address: z
-//         .string()
-//         .min(5, "Address is too short")
-//         .nonempty("Address is required"),
-// });
+const formSchema = z.object({
+    username: z.string(),
+    picture: z
+        .any()
+        .refine(
+            (file) => !file || ACCEPTED_IMAGE_TYPES.includes(file.type),
+            "Invalid image type"
+        )
+        .optional(),
+    fullName: z.string().min(3, "Name is too short").nonempty("Name is required"),
+    phone: z.string().nonempty("Phone is required"),
+    email: z.string().email("Invalid email"),
+    address: z
+        .string()
+        .min(5, "Address is too short")
+        .nonempty("Address is required"),
+});
 
-export default function ProfileUserStore({user}: UserFormProps) {
+export default function ProfileUserStore() {
     const {data: session} = useSession();
     const token = session?.access_token as string;
+    const infoUser = parseJwt(token as string);
 
     const [defaultValues, setDefaultValues] = useState<{
-        userImage: string;
+        picture: string;
         username: string;
         fullName: string;
         phone: string;
         email: string;
         address: string;
     }>({
-        userImage: user.urlAvatar as string,
-        username: user.username as string,
-        fullName: `${user.firstName} ${user.lastName}` as string,
-        phone: user.phone as string,
-        email: user.email as string,
-        address: user.address as string,
+        picture: infoUser.picture as string,
+        username: infoUser.preferred_username as string,
+        fullName: infoUser.name as string,
+        phone: infoUser.phone as string,
+        email: infoUser.email as string,
+        address: infoUser.address as string,
     });
-    //
-    // const form = useForm<z.infer<typeof formSchema>>({
-    //     resolver: zodResolver(formSchema),
-    //     defaultValues: defaultValues,
-    // });
 
-    // useEffect(() => {
-    //     async function fetchUser() {
-    //         const response = await getProfile(token);
-    //         const data = response.data;
-    //         setDefaultValues({
-    //             userImage: data.urlAvatar,
-    //             username: data.username,
-    //             fullName: `${data.firstName} ${data.lastName}`,
-    //             phone: data.phone,
-    //             email: data.email,
-    //             address: data.address,
-    //         });
-    //     }
-    //
-    //     fetchUser();
-    //
-    //     async function fetchImage() {
-    //         const response = await getImageProfile(token);
-    //         const data = response.data;
-    //         setDefaultValues({
-    //             ...defaultValues,
-    //             userImage: data.urlAvatar,
-    //         });
-    //     }
-    //
-    //     fetchImage();
-    // }, [defaultValues, token]);
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
+        defaultValues: defaultValues,
+    });
 
-    // async function onSubmit(values: z.infer<typeof formSchema>) {
-    //     console.log(values);
-    // }
+    async function onSubmit(values: z.infer<typeof formSchema>) {
+        console.log(values);
+    }
 
     return (
-        <div className="">
-            {/*<Form {...form}>*/}
-            {/*    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">*/}
-            {/*        <FormField*/}
-            {/*            control={form.control}*/}
-            {/*            name="username"*/}
-            {/*            render={({field}) => (*/}
-            {/*                <FormItem className="w-full">*/}
-            {/*                    <FormLabel>Username</FormLabel>*/}
-            {/*                    <FormControl>*/}
-            {/*                        <Input disabled placeholder="Username" {...field} />*/}
-            {/*                    </FormControl>*/}
-            {/*                    <FormMessage/>*/}
-            {/*                </FormItem>*/}
-            {/*            )}*/}
-            {/*        />*/}
+        <div className="w-full flex gap-2 p-4 ">
 
-            {/*        <FormField*/}
-            {/*            control={form.control}*/}
-            {/*            name="fullName"*/}
-            {/*            render={({field}) => (*/}
-            {/*                <FormItem className="w-full">*/}
-            {/*                    <FormLabel>Full name</FormLabel>*/}
-            {/*                    <FormControl>*/}
-            {/*                        <Input placeholder="Enter full name" {...field} />*/}
-            {/*                    </FormControl>*/}
-            {/*                    <FormMessage/>*/}
-            {/*                </FormItem>*/}
-            {/*            )}*/}
-            {/*        />*/}
 
-            {/*        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">*/}
-            {/*            <FormField*/}
-            {/*                control={form.control}*/}
-            {/*                name="phone"*/}
-            {/*                render={({field}) => (*/}
-            {/*                    <FormItem>*/}
-            {/*                        <FormLabel>Phone</FormLabel>*/}
-            {/*                        <FormControl>*/}
-            {/*                            <Input placeholder="Enter your phone number" {...field} />*/}
-            {/*                        </FormControl>*/}
-            {/*                        <FormMessage/>*/}
-            {/*                    </FormItem>*/}
-            {/*                )}*/}
-            {/*            />*/}
-            {/*            <FormField*/}
-            {/*                control={form.control}*/}
-            {/*                name="email"*/}
-            {/*                render={({field}) => (*/}
-            {/*                    <FormItem>*/}
-            {/*                        <FormLabel>Email</FormLabel>*/}
-            {/*                        <Input placeholder="Enter your email" {...field} />*/}
-            {/*                        <FormMessage/>*/}
-            {/*                    </FormItem>*/}
-            {/*                )}*/}
-            {/*            />*/}
-            {/*        </div>*/}
-            {/*        <Button type="submit">Update profile</Button>*/}
-            {/*    </form>*/}
-            {/*</Form>*/}
-            PROFILE PAGE
-            <span className="w-3/5 ">
-                {token}
-            </span>
+            <div className="w-full lg:w-1/5 flex  flex-col justify-start items-center gap-2">
+                <div className="w-24 h-24 rounded-full overflow-hidden ">
+                    <Image src={defaultValues.picture} alt={defaultValues.username} width={120} height={120}
+                           className="w-full object-contain"/>
+                </div>
+                <div className=" ">
+                    <Input type="file" placeholder="Choose image" className="h-8"/>
+                </div>
+            </div>
+            <div className="w-full lg:w-4/5 flex flex-col justify-center items-start">
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                            <FormField
+                                control={form.control}
+                                name="username"
+                                render={({field}) => (
+                                    <FormItem className="w-full">
+                                        <FormLabel>Username</FormLabel>
+                                        <FormControl>
+                                            <Input disabled placeholder="Username" {...field} />
+                                        </FormControl>
+                                        <FormMessage/>
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
+                                name="fullName"
+                                render={({field}) => (
+                                    <FormItem>
+                                        <FormLabel>Full Name</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="Full name" {...field} />
+                                        </FormControl>
+                                        <FormMessage/>
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
+                                name="phone"
+                                render={({field}) => (
+                                    <FormItem>
+                                        <FormLabel>Phone</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="Enter your phone number" {...field} />
+                                        </FormControl>
+                                        <FormMessage/>
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
+                                name="email"
+                                render={({field}) => (
+                                    <FormItem>
+                                        <FormLabel>Email</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="Enter your email" {...field} />
+                                        </FormControl>
+                                        <FormMessage/>
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="address"
+                                render={({field}) => (
+                                    <FormItem>
+                                        <FormLabel>Address</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="Enter your Address" {...field} />
+                                        </FormControl>
+                                        <FormMessage/>
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
+                        <Button type="submit"
+                                className="border border-primaryred bg-primaryred text-white hover:bg-white hover:text-primaryred">Update
+                            profile</Button>
+                    </form>
+                </Form>
+            </div>
         </div>
     );
 }

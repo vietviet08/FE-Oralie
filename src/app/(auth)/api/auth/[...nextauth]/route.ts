@@ -43,7 +43,7 @@ export const authOptions: AuthOptions = {
                 token.idToken = account.id_token;
                 token.accessToken = account.access_token;
                 token.refreshToken = account.refresh_token;
-                token.expiresAt = account.expires_at;
+                token.expiresAt = account.expires_in;
                 return token;
             }
 

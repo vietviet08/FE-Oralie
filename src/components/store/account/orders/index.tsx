@@ -4,7 +4,7 @@ import React, {useEffect, useState} from "react";
 import {OrderResponse} from "@/model/order/response/OrderResponse";
 import {useSession} from "next-auth/react";
 import {getOrders} from "@/services/OrderService";
-import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
+import {Table, TableBody, TableCell, TableHeader, TableRow} from "@/components/ui/table";
 import {
     Dialog,
     DialogContent,
@@ -17,6 +17,18 @@ import {Button} from "@/components/ui/button";
 import Image from "next/image";
 import {Icons} from "@/components/icons";
 
+const orderHeader = [
+    {name: "Index", className: "text-left"},
+    {name: "Create at", className: ""},
+    {name: "Total price", className: ""},
+    {name: "Voucher", className: ""},
+    {name: "Discount", className: ""},
+    {name: "Shipping fee", className: ""},
+    {name: "Payment method", className: ""},
+    {name: "Payment status", className: ""},
+    {name: "Status order", className: ""},
+    {name: "", className: ""}
+];
 const OrdersTemplate = () => {
     const {data: session,} = useSession();
     const token = session?.access_token as string;
@@ -27,11 +39,13 @@ const OrdersTemplate = () => {
     useEffect(() => {
         async function fetchOrder() {
             const response = await getOrders(token);
-            setOrders(response);
+            setOrders(response.data);
         }
 
         fetchOrder();
-    }, [token])
+
+        console.log(orders);
+    }, [orders, token])
 
     const showDetailOrder = (orderResponse: OrderResponse) => {
         if (orderResponse.orderItems) {
@@ -78,22 +92,24 @@ const OrdersTemplate = () => {
     return (
         <div>
             <div className=" w-full rounded-lg p-4">
-                <h2 className=" font-bold text-lg">Your orders</h2>
+                {
+                    orders && orders.length === 0 && <div className="flex justify-center items-center h-full">
+                        <div className="w-full text-base flex justify-center items-center gap-4 p-4 h-full">
+                            <Icons.messageSquareWarning className="h-6 w-6 text-primaryred "/>
+                            <span className="my-2 text-lg">You don&#39;t have  orders</span>
+                        </div>
+                    </div>
+                }
                 {orders && orders.length > 0 &&
                     <Table className="w-full">
                         <TableBody>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHead>Index</TableHead>
-                                    <TableHead>Create at</TableHead>
-                                    <TableHead>Total price</TableHead>
-                                    <TableHead>Voucher</TableHead>
-                                    <TableHead>Discount</TableHead>
-                                    <TableHead>Shipping fee</TableHead>
-                                    <TableHead>Payment method</TableHead>
-                                    <TableHead>Payment status</TableHead>
-                                    <TableHead>Status order</TableHead>
-                                    <TableHead></TableHead>
+                                    {orderHeader.map((item, index) => (
+                                        <TableCell key={index} className={item.className}>
+                                            {item.name}
+                                        </TableCell>
+                                    ))}
                                 </TableRow>
                             </TableHeader>
                             {orders.map((item, index) => (
@@ -125,12 +141,6 @@ const OrdersTemplate = () => {
                             ))}
                         </TableBody>
                     </Table>
-                }
-                {
-                    orders && orders.length === 0 && <div className="text-base">
-                        <Icons.messageSquareWarning className="h-6 w-6 text-primaryred "/>
-                        <span className="my-2">You have no orders</span>
-                    </div>
                 }
             </div>
         </div>

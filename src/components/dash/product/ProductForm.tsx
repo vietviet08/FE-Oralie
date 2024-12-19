@@ -1,4 +1,5 @@
 "use client";
+
 import "react-quill/dist/quill.snow.css";
 import * as React from "react";
 import {useEffect, useState} from "react";
@@ -383,9 +384,6 @@ export default function ProductForm({product}: ProductFormProps) {
                                                 ))}
                                             </SelectContent>
                                         </Select>
-                                        {/* <FormDescription>
-                      Selected brand: {brandSelected?.name || ""}
-                    </FormDescription> */}
                                         <FormMessage/>
                                     </FormItem>
                                 )}
