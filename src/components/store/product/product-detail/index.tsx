@@ -75,17 +75,16 @@ const ProductPageDetail = ({product}: Props) => {
     }, [product.id, product.productCategories]);
 
     const handleAddToCart = async (quantity: number, productId: number, optionId: number) => {
-        console.log("Add to cart", productId);
-        const res = await addProductToCart(token, quantity, optionId, productId);
-        toast({
-            title: "Added to cart",
-            variant: "success",
-            description: "Product has been added to cart successfully",
-            duration: 3000,
-        });
-        if (res) {
-            console.log("Add to cart successfully");
 
+        const res = await addProductToCart(token, quantity, optionId, productId);
+
+        if (res) {
+            toast({
+                variant: "success",
+                title: "Added to cart",
+                description: "Product has been added to cart successfully",
+                duration: 3000,
+            });
         }
         setQuantity(1);
     };
@@ -95,6 +94,9 @@ const ProductPageDetail = ({product}: Props) => {
             <div className="flex justify-between items-center w-full py-4">
                 <div className="w-3/5">
                     <h2 className="text-2xl font-bold text-black">{product.name}</h2>
+                    <span className="text-sm my-2">
+                        SKU: {product.sku} - Brand: {product.brand?.name}
+                    </span>
                 </div>
                 <div className="">
                     {product.isAvailable ? (
@@ -375,6 +377,7 @@ const ProductPageDetail = ({product}: Props) => {
                                         <Icons.shoppingCart className="w-10 h-10 text-xl"/>
                                         <span className=" text-[12px]">Add to cart</span>
                                     </Button>
+
                                 </div>
                             </div>
 
@@ -502,7 +505,6 @@ const ProductPageDetail = ({product}: Props) => {
                             </div>
                         </div>
                     </div>
-
                 </main>
             </div>
 

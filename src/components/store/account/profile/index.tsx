@@ -78,7 +78,7 @@ export default function ProfileUserStore() {
     }
 
     return (
-        <div className="w-full flex gap-2 p-4 ">
+        <div className="w-full flex gap-4 p-4">
             <div className="w-full lg:w-1/5 flex  flex-col justify-start items-center gap-2">
                 <div className="w-24 h-24 rounded-full overflow-hidden ">
                     <Image src={defaultValues.picture} alt={defaultValues.username} width={120} height={120}
@@ -90,7 +90,7 @@ export default function ProfileUserStore() {
             </div>
             <div className="w-full lg:w-4/5 flex flex-col justify-center items-start">
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full">
                         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                             <FormField
                                 control={form.control}

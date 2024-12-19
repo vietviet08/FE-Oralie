@@ -82,12 +82,14 @@ const CheckoutTemplate = () => {
         address: string;
         city: string;
         email: string;
+        paymentMethod: string;
     }>({
         fullName: infoUser.name as string,
         phone: infoUser.phone as string,
         address: infoUser.address as string,
         city: infoUser.city as string,
         email: infoUser.email as string,
+        paymentMethod: "COD",
     });
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -174,8 +176,8 @@ const CheckoutTemplate = () => {
                                                         {item.productName}
                                                     </span>
                                                     <div className="flex justify-between gap-2 items-center w-1/5">
-                                                        <span className="text-md font-bold text-primaryred">
-                                                            ${item.price}
+                                                        <span className="text-md  text-primaryred">
+                                                            $ {item.price}
                                                         </span>
                                                         {/*{*/}
                                                         {/*    item.discount > 0 && (*/}
@@ -207,7 +209,7 @@ const CheckoutTemplate = () => {
                     </div>
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                        <div className="grid grid-cols-1 gap-6">
+                            <div className="grid grid-cols-1 gap-6">
                                 <div className="flex flex-col gap-2 rounded-xl border ">
                                     <div
                                         className="w-full flex justify-between items-center p-2 bg-gray-100 rounded-t-xl">
@@ -282,31 +284,58 @@ const CheckoutTemplate = () => {
                                             render={({field}) => (
                                                 <FormItem>
                                                     <FormControl>
-                                                        <div className="flex flex-col justify-center items-start gap-1">
-                                                            <Label className="flex justify-start items-center">
+                                                        <div className="flex flex-col justify-center items-start gap-3">
+                                                            <Label className="flex justify-start items-center h-10">
                                                                 <Input
-                                                                    type="checkbox"
-                                                                    checked={field.value === "TRANSFER"}
-                                                                    onChange={() => field.onChange("TRANSFER")}
-                                                                />
-                                                                <span className="ml-2">Transfer</span>
-                                                            </Label>
-                                                            <Label className="flex justify-start items-center">
-                                                                <Input
-                                                                    type="checkbox"
+                                                                    type="radio"
                                                                     checked={field.value === "COD"}
                                                                     onChange={() => field.onChange("COD")}
+                                                                    defaultChecked={true}
+                                                                    className={"w-4 h-4"}
                                                                 />
                                                                 <span className="ml-2">COD</span>
+                                                                <Image
+                                                                    src={"https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/oralie-file-pngtree-cash-on-delivery-bagde-olshop-png-image_3381308-removebg-preview.png"}
+                                                                    alt={""} width={20} height={20}
+                                                                    className="w-10 object-contain mx-2"/>
                                                             </Label>
 
-                                                            <Label className="flex justify-start items-center">
+                                                            <Label className="flex justify-start items-center h-10">
                                                                 <Input
-                                                                    type="checkbox"
+                                                                    type="radio"
+                                                                    checked={field.value === "TRANSFER"}
+                                                                    onChange={() => field.onChange("TRANSFER")}
+                                                                    className={"w-4 h-4"}
+                                                                />
+                                                                <span className="ml-2">Transfer</span>
+                                                                <Image
+                                                                    src={"https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/oralie-file-png.monster-483.png"}
+                                                                    alt={""} width={20} height={20}
+                                                                    className="w-10 object-contain mx-2"/>
+                                                            </Label>
+                                                            {field.value === "TRANSFER" && (
+                                                                <div className="mt-2">
+                                                                    <Image
+                                                                        src="https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/2560px-PayPal.svg.png"
+                                                                        alt="QR Code for bank transfer"
+                                                                        width={200}
+                                                                        height={200}
+                                                                    />
+                                                                </div>
+                                                            )}
+
+                                                            <Label className="flex justify-start items-center h-10">
+                                                                <Input
+                                                                    type="radio"
                                                                     checked={field.value === "PAYPAL"}
                                                                     onChange={() => field.onChange("PAYPAL")}
+                                                                    className={"w-4 h-4"}
                                                                 />
                                                                 <span className="ml-2">Paypal</span>
+                                                                <Image
+                                                                    src={"https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/2560px-PayPal.svg.png"}
+                                                                    alt={""} width={20} height={20}
+                                                                    className="w-10 object-contain mx-2"/>
                                                             </Label>
                                                         </div>
                                                     </FormControl>

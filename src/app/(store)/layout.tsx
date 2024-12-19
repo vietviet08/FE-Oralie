@@ -19,7 +19,9 @@ export default function RootLayout({
         <div className="">
             <Header/>
             <NextTopLoader showSpinner={false} color={"#f1e2e2"}/>
-            <main className="w-full flex-1 overflow-hidden">{children}</main>
+            <main className="w-full flex-1 overflow-hidden">
+                {children}
+            </main>
             <ScrollToTop/>
             <Footer/>
         </div>

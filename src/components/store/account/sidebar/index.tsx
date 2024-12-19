@@ -67,20 +67,6 @@ const SideBarAccountStore: React.FC<{ children?: React.ReactNode }> = ({children
         },
     ];
 
-    const user = {
-        email: session?.user?.email || "",
-        id: 0,
-        urlAvatar: "",
-        userId: "123",
-        username: "user",
-        phone: "0123456789",
-        firstName: "first",
-        lastName: "last",
-        password: "password",
-        address: "address",
-        gender: false,
-    };
-
     return (
         <div className="sm:px-32 px-6 py-6 mt-12">
             <h2 className="text-2xl font-semibold text-primaryred py-4">Account Manage</h2>
@@ -90,29 +76,28 @@ const SideBarAccountStore: React.FC<{ children?: React.ReactNode }> = ({children
                         {links.map((link) => (
                             <li
                                 key={link.name}
-                                onClick={
-                                    link.onClick
-                                        ? link.onClick
-                                        : () => handleSectionClick(link.name)
-                                }
-                                className={`cursor-pointer ${
+                                onClick={() => {
+                                    link.onClick?.();
+                                    handleSectionClick(link.name);
+                                }}
+                                    className={`cursor-pointer ${
                                     selectedSection === link.name
-                                        ? "bg-gray-200 rounded-lg shadow-sm"
-                                        : ""
+                                    ? "bg-gray-200 rounded-lg shadow-sm"
+                                    : ""
                                 }`}
-                            >
-                                <Button
+                                    >
+                                    <Button
                                     variant={"ghost"}
                                     className="hover:text-primaryred hover:bg-gray-100 w-full flex items-center justify-start py-2"
-                                >
-                                    {link.icon} <p className="text-base">{link.name}</p>
-                                </Button>
+                                    >
+                                {link.icon} <p className="text-base">{link.name}</p>
+                            </Button>
                             </li>
-                        ))}
+                            ))}
                     </ul>
                 </div>
                 <div className="w-full md:w-3/4 ml-0 md:ml-2 mt-4 md:mt-0 p-4 rounded-lg shadow">
-                    {children ? children : <ProfileUserStore user={user}/>}
+                    {children ? children : <ProfileUserStore/>}
                 </div>
             </div>
         </div>

@@ -20,6 +20,7 @@ import {
     SelectValue
 } from "@/components/ui/select";
 import Link from "next/link";
+import {toast} from "@/hooks/use-toast";
 
 export default function CartPage() {
     const domainUrl = process.env.NEXT_PUBLIC_URL;
@@ -168,7 +169,12 @@ export default function CartPage() {
 
     return (
         <div className="px-6 my-24 mb-8 md:mx-32 md:px-0">
-            <h1 className="text-2xl font-bold mb-4">Your Cart</h1>
+            <div className="mb-4">
+                <h1 className="text-2xl font-bold">Your Cart</h1>
+                <span className="text-xs">
+                There is currently {cart?.quantity} product.
+            </span>
+            </div>
             <div className="flex flex-col xl:flex-row gap-2">
                 <div className="w-full xl:w-3/5">
                     <div className="flex flex-col justify-center space-y-8 m-0 mb-4">

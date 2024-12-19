@@ -16,6 +16,8 @@ import {
 import {Button} from "@/components/ui/button";
 import Image from "next/image";
 import {Icons} from "@/components/icons";
+import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
+import {AlertCircle} from "lucide-react";
 
 const orderHeader = [
     {name: "Index", className: "text-left"},
@@ -91,13 +93,17 @@ const OrdersTemplate = () => {
     }
     return (
         <div>
-            <div className=" w-full rounded-lg p-4">
+            <div className="w-full rounded-lg p-4 flex justify-center items-center">
                 {
-                    orders && orders.length === 0 && <div className="flex justify-center items-center h-full">
-                        <div className="w-full text-base flex justify-center items-center gap-4 p-4 h-full">
-                            <Icons.messageSquareWarning className="h-6 w-6 text-primaryred "/>
-                            <span className="my-2 text-lg">You don&#39;t have  orders</span>
-                        </div>
+                    orders && orders.length === 0 &&
+                    <div className="flex justify-center items-center">
+                        <Alert variant="destructive">
+                            <AlertCircle className="h-4 w-4" />
+                            <AlertTitle>Oops</AlertTitle>
+                            <AlertDescription>
+                                Your don&#39;t have any order yet, let&#39;s buy something
+                            </AlertDescription>
+                        </Alert>
                     </div>
                 }
                 {orders && orders.length > 0 &&
