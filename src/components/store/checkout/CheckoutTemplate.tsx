@@ -21,6 +21,7 @@ import * as React from "react";
 import {OrderRequest} from "@/model/order/OrderRequest";
 import {Label} from "@/components/ui/label";
 import {getCart} from "@/services/CartService";
+import {getProductOptionById} from "@/services/ProductOptionService";
 
 const formSchema = z.object({
     fullName: z.string().min(3, "Name is too short").nonempty("Name is required"),
@@ -39,6 +40,7 @@ const CheckoutTemplate = () => {
     const token = session?.access_token as string;
     const infoUser = parseJwt(token as string);
     const [data, setData] = useState<CartResponse>();
+    const [productOption, setProductOption] = useState<string[]>();
 
     const router = useRouter();
 
@@ -55,7 +57,24 @@ const CheckoutTemplate = () => {
         }
 
         fetchCart();
-    }, [token]);
+
+        async function fetchProductOption() {
+            try {
+                const productOptions = await Promise.all(
+                    data?.cartItemResponses.map(async (item: CartItemResponse) => {
+                        const option = await getProductOptionById(item.productOptionId);
+                        return option.name;
+                    }) || []
+                );
+                setProductOption(productOptions.filter(Boolean) as string[]);
+            } catch (error) {
+                console.error("Failed to fetch product option:", error);
+            }
+        }
+
+        fetchProductOption();
+
+    }, [data?.cartItemResponses, token]);
 
     const [defaultValues, setDefaultValues] = useState<{
         fullName: string;
@@ -139,16 +158,16 @@ const CheckoutTemplate = () => {
                             <span className="text-base font-semibold">Product in bill ({data?.quantity})</span>
                         </div>
                         <div className="p-2 flex flex-col">
-                            {data && data.cartItemResponses.map((item: CartItemResponse) => (
-                                <div key={item.id} className="w-full p-2 border-b border-gray-200">
+                            {data && data.cartItemResponses.map((item: CartItemResponse, index) => (
+                                <div key={item.id} className="w-full p-2 border-b border-gray-200 ">
                                     <Link href={`/${item.productSlug}`}>
-                                        <div className="flex gap-4 justify-between items-center w-full">
-                                            <div className="w-2/12">
-                                                <Image src={item.urlImageThumbnail} alt={item.productName} width={120}
-                                                       height={120}
+                                        <div className="flex gap-4 justify-between items-center w-full h-20">
+                                            <div className="w-1/12">
+                                                <Image src={item.urlImageThumbnail} alt={item.productName} width={60}
+                                                       height={60}
                                                        className="w-full object-contain"/>
                                             </div>
-                                            <div className="w-10/12">
+                                            <div className="w-11/12 flex justify-center items-center gap-2">
                                                 <div className="flex flex-col gap-1 w-full">
                                                     <span
                                                         className="text-md font-semibold hover:text-primaryred line-clamp-2">
@@ -165,6 +184,19 @@ const CheckoutTemplate = () => {
                                                         {/*    )*/}
                                                         {/*}*/}
                                                     </div>
+
+                                                </div>
+                                                <div
+                                                    className="w-24 p-1 flex justify-center items-center bg-gray-200 rounded-xl text-xs">
+                                                    <div>
+                                                        {productOption?.[index]}
+                                                    </div>
+                                                </div>
+                                                <div className="flex justify-center items-center gap-1">
+                                                    <span className="block">
+                                                        x
+                                                    </span>
+                                                    {item.quantity}
                                                 </div>
                                             </div>
                                         </div>
@@ -175,7 +207,7 @@ const CheckoutTemplate = () => {
                     </div>
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                            <div className="grid grid-cols-1 gap-6">
+                        <div className="grid grid-cols-1 gap-6">
                                 <div className="flex flex-col gap-2 rounded-xl border ">
                                     <div
                                         className="w-full flex justify-between items-center p-2 bg-gray-100 rounded-t-xl">
@@ -301,13 +333,13 @@ const CheckoutTemplate = () => {
                                     <div
                                         className="w-full pb-2 flex justify-between items-center border-b border-dashed border-gray-400">
                                         <p className="text-sm">Total</p>
-                                        <div className="text-lg font-semibold">$ 9999</div>
+                                        <div className="text-lg font-semibold">$ {data?.totalPrice}</div>
                                     </div>
                                     <div
                                         className="flex flex-col space-y-2 pb-2 border-b border-dashed border-gray-400">
                                         <div className="w-full flex justify-between items-center">
                                             <p className="text-sm">Total Promotion</p>
-                                            <div className="text-lg font-semibold">$ 9999</div>
+                                            <div className="text-lg font-semibold">$ {data?.totalPrice}</div>
                                         </div>
                                         <div className="w-full flex justify-between items-center">
                                             <p className="text-sm">Shipping Fee</p>
@@ -316,7 +348,7 @@ const CheckoutTemplate = () => {
                                     </div>
                                     <div className="w-full flex justify-between items-center">
                                         <p className="text-sm">Need to Pay</p>
-                                        <div className="text-lg font-semibold">$ 9999</div>
+                                        <div className="text-lg font-semibold">$ {data?.totalPrice}</div>
                                     </div>
                                     <Button type="submit"
                                             className="w-full h-10 bg-primaryred hover:bg-red-500 text-white ">
