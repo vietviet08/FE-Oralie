@@ -53,6 +53,7 @@
     "react-dom": "^18",
     "react-dropzone": "^14.2.10",
     "react-hook-form": "^7.53.1",
+    "react-hot-toast": "^2.4.1",
     "react-loading-indicators": "^1.0.0",
     "react-quill": "^2.0.0",
     "react-responsive": "^10.0.0",
