@@ -4,10 +4,9 @@ import {Button} from "@/components/ui/button";
 import {DoubleArrowLeftIcon, DoubleArrowRightIcon} from "@radix-ui/react-icons";
 import {ChevronLeftIcon, ChevronRightIcon} from "lucide-react";
 import {useState} from "react";
-import {Product} from "@/model/product/Product";
 import {ListResponse} from "@/model/ListData";
 
-function Pagination({listResponse  } :{listResponse: ListResponse<Product>}){
+function Pagination({listResponse  } :{listResponse: ListResponse<unknown>}){
 
     const [pageIndex, setPageIndex] = useState(listResponse.pageNo);
 
