@@ -315,7 +315,8 @@ const ProductPageDetail = ({product}: Props) => {
                                 </div>
                             </div>
 
-                            <div className="my-4 flex flex-row lg:flex-col xl:flex-row justify-center items-center gap-2">
+                            <div
+                                className="my-4 flex flex-row lg:flex-col xl:flex-row justify-center items-center gap-2">
                                 <div
                                     className="rounded-lg bg-primaryblue w-3/6 md:w-full h-14 flex flex-col justify-center items-center m-0">
                                       <span
@@ -454,7 +455,8 @@ const ProductPageDetail = ({product}: Props) => {
                             totalElements={0}
                             totalPages={0}
                             isLast={false}
-                        ></ProductSlider>
+                            title={"Related Products"}
+                        />
                     </div>
                     <div className="py-2 my-8 border-b-[1px] border-b-primaryred2"></div>
                 </>

@@ -55,6 +55,19 @@ export async function getTop10ProductRelatedCategory(productId: number, category
     }
 }
 
+export async function getTop12ProductByCategorySlug(categorySlug: string) {
+    try {
+        const res = await axios.get(`${baseUrl}/store/products/top12?categorySlug=${categorySlug}`);
+        if (res && res.status === 200) {
+            console.log(res.data);
+            return res.data;
+        }
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
 export async function getProductOptionsByProductId(productId: number) {
     try {
         const res = await axios.get(`${baseUrl}/store/products/options/${productId}`);
@@ -75,16 +88,18 @@ export async function getProductByCategoryAndBrand(page: number,
                                                    category: string,
                                                    brand?: string) {
     try {
-        const params: { page: number;
+        const params: {
+            page: number;
             size: number;
             sortBy: string;
             sort: string;
             category: string;
-            brand?: string } = { page, size, sortBy, sort, category };
+            brand?: string
+        } = {page, size, sortBy, sort, category};
         if (brand) {
             params.brand = brand;
         }
-        const res = await axios.get(`${baseUrl}/store/categories`, { params });
+        const res = await axios.get(`${baseUrl}/store/categories`, {params});
         if (res && res.status === 200) {
             console.log(res.data);
             return res.data;

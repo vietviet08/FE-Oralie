@@ -120,7 +120,7 @@ function FilterTemplate() {
                     <Icons.eye className="text-gray-500" width={16} height={16}/>
                     <span className="text-base">Most viewed</span>
                 </Button>
-                <Button variant="outline" className="h-10 px-4" onClick={() => {
+                <Button variant="outline" className="h-8 px-4" onClick={() => {
                     setSort("asc");
                     setSortBy("id")
                 }}>

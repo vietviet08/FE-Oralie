@@ -17,8 +17,7 @@ import {CategoryGet} from "@/model/category/CategoryGet";
 import {getAllCategoryContainsName} from "@/services/CategoryService";
 import Link from "next/link";
 
-const ProductSlider: React.FC<ListResponse<Product>> = ({data}) => {
-
+const ProductSlider: React.FC<ListResponse<Product> & { title: string }> = ({data, title}) => {
     const prevRef = useRef<HTMLDivElement>(null);
     const nextRef = useRef<HTMLDivElement>(null);
     const swiperRef = useRef<SwiperType>();
@@ -33,7 +32,8 @@ const ProductSlider: React.FC<ListResponse<Product>> = ({data}) => {
                 const nameCategory = data?.[0]?.productCategories?.[0]?.category?.name || "";
                 if (nameCategory !== "") {
                     const res = await getAllCategoryContainsName(nameCategory);
-                    setCategories(res);
+                    const shuffledCategories = res.sort(() => 0.5 - Math.random()).slice(0, 5);
+                    setCategories(shuffledCategories);
                     console.log("getAllCategoryContainsName ok ", res);
                 }
             } catch (error) {
@@ -58,11 +58,11 @@ const ProductSlider: React.FC<ListResponse<Product>> = ({data}) => {
     return (
         <div>
             <div className="flex justify-between items-center my-2">
-        <span>
-          <h2 className="text-2xl font-semibold text-primaryred">
-            Featured Products
-          </h2>
-        </span>
+                <div>
+                    <h2 className="text-xl font-semibold text-primaryred">
+                        {title}
+                    </h2>
+                </div>
 
                 <div className="flex items-center justify-center space-x-2">
                     {categories && categories.map((category) => (

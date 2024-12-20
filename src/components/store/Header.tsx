@@ -92,7 +92,7 @@ export function Header() {
 
                     <div
                         ref={menuRef}
-                        className="absolute top-20 left-32 bg-white rounded-xl shadow-xl w-[16%] mr-5 h-[364px] z-0"
+                        className="absolute top-20 left-32 bg-white rounded-xl shadow-xl w-[13%] mr-5 h-[364px] z-0"
                     >
                         <Menu/>
                     </div>
@@ -171,8 +171,8 @@ export function Header() {
                         <Button variant="transparent">
                             <Icons.phoneCall className="mr-2 font-light w-7 h-7"/>
                             <div className="hidden sm:flex text-xs flex-col justify-center items-start">
-                                <p>Hotline</p>
-                                <p className="">1800 0000</p>
+                                <p>Contact us</p>
+                                <p className="">9090 0000</p>
                             </div>
                         </Button>
                     </Link>
