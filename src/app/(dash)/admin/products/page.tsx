@@ -1,5 +1,5 @@
 import {SearchParams} from "nuqs/parsers";
-import {searchParamsCacheProduct} from "@/lib/searchparam";
+import {searchParamsCache, searchParamsCacheProduct} from "@/lib/searchparam";
 import ProductListPage from "@/components/dash/product/ProductListPage";
 
 type pageProps = {

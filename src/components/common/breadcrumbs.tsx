@@ -22,12 +22,12 @@ export function Breadcrumbs({items}: { items: BreadcrumbItemProps[] }) {
                     <Fragment key={item.title}>
                         {index !== items.length - 1 && (
                             <BreadcrumbItem>
-                                <BreadcrumbLink href={item.link}>{item.title}</BreadcrumbLink>
+                                <BreadcrumbLink href={item.link} className="text-sky-600">{item.title}</BreadcrumbLink>
                             </BreadcrumbItem>
                         )}
                         {index < items.length - 1 && (
                             <BreadcrumbSeparator>
-                                <Slash/>
+                                <Slash className="text-sky-600"/>
                             </BreadcrumbSeparator>
                         )}
                         {index === items.length - 1 && (

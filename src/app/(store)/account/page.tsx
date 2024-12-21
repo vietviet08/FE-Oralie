@@ -1,22 +1,18 @@
 import ProfileUserStore from "@/components/store/account/profile";
+import {Breadcrumbs} from "@/components/common/breadcrumbs";
+import React from "react";
 
-const user = {
-    email: "email@gmail.com",
-    id: 0,
-    urlAvatar: "",
-    userId: "123",
-    username: "user",
-    phone: "0123456789",
-    firstName: "first",
-    lastName: "last",
-    password: "password",
-    address: "address",
-    gender: false,
-};
+const breadcrumbItems = [
+    {title: 'Home', link: '/'},
+    {title: 'Account', link: '/account'}
+];
 
 const Page: React.FC = () => {
     return (
-        <ProfileUserStore user={user}/>
+        <div>
+            <Breadcrumbs items={breadcrumbItems}/>
+            <ProfileUserStore/>
+        </div>
     );
 };
 

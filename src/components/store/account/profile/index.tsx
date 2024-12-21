@@ -167,7 +167,7 @@ export default function ProfileUserStore() {
                                 name="city"
                                 render={({field}) => (
                                     <FormItem>
-                                        <FormLabel>Address</FormLabel>
+                                        <FormLabel>City</FormLabel>
                                         <FormControl>
                                             <Input placeholder="Enter your city" {...field} />
                                         </FormControl>

@@ -29,6 +29,7 @@ import toast from 'react-hot-toast';
 import {FooterSologan} from "@/components/store/product/product-detail/footer-sologan";
 import {ProductSpecification} from "@/components/store/product/product-detail/product-specification";
 import {ProductPolicy} from "@/components/store/product/product-detail/product-policy";
+import {Breadcrumbs} from "@/components/common/breadcrumbs";
 
 type Props = {
     product: Product;
@@ -37,7 +38,6 @@ type Props = {
 const ProductPageDetail = ({product}: Props) => {
     const {data: session} = useSession();
     const token = session?.access_token as string;
-
 
     const [selectedOptionId, setSelectedOptionId] = useState<number>(product.options[0].id!);
     const [quantity, setQuantity] = useState<number>(1);
@@ -86,9 +86,17 @@ const ProductPageDetail = ({product}: Props) => {
         }
         setQuantity(1);
     };
+    const breadcrumbItems = [
+        {title: 'Store', link: '/'},
+        {title: 'Products', link: '/products'},
+        {title: product.productCategories?.[0]?.category.name || '', link: `/products?category=${product.productCategories?.[0]?.category.slug || ''}`},
+        {title: product.brand?.name || '', link: `/products?category=''&brand=${product.brand?.slug || ''}`},
+        {title: product.name, link: `/${product.slug}`},
+    ];
 
     return (
         <div className="sm:px-32 px-6 py-6 mt-14">
+            <Breadcrumbs items={breadcrumbItems}/>
             <div className="flex flex-col md:flex-row justify-between items-center gap-2 w-full py-4">
                 <div className="w-full md:w-4/5">
                     <h2 className="text-2xl font-bold text-black">{product.name}</h2>

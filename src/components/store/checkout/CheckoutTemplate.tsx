@@ -22,6 +22,7 @@ import {OrderRequest} from "@/model/order/OrderRequest";
 import {Label} from "@/components/ui/label";
 import {getCart} from "@/services/CartService";
 import {getProductOptionById} from "@/services/ProductOptionService";
+import {Breadcrumbs} from "@/components/common/breadcrumbs";
 
 const formSchema = z.object({
     fullName: z.string().min(3, "Name is too short").nonempty("Name is required"),
@@ -35,7 +36,6 @@ const formSchema = z.object({
 });
 
 const CheckoutTemplate = () => {
-
     const {data: session} = useSession();
     const token = session?.access_token as string;
     const infoUser = parseJwt(token as string);

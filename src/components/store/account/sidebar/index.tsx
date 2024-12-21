@@ -12,7 +12,7 @@ import ProfileUserStore from "@/components/store/account/profile";
 const SideBarAccountStore: React.FC<{ children?: React.ReactNode }> = ({children}) => {
     const {data: session} = useSession();
     const router = useRouter();
-    const [selectedSection, setSelectedSection] = useState<string>("");
+    const [selectedSection, setSelectedSection] = useState<string>("Profile");
 
     const handleSectionClick = (section: string) => {
         setSelectedSection(section);

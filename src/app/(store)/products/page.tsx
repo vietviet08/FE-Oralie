@@ -8,6 +8,7 @@ import {SearchParams} from "nuqs/parsers";
 import {Suspense} from "react";
 import {SkeletonCard} from "@/components/common/skeleton-card";
 import {Separator} from "@/components/ui/separator";
+import {Breadcrumbs} from "@/components/common/breadcrumbs";
 
 type pageProps = {
     searchParams: SearchParams;
@@ -74,12 +75,19 @@ export async function generateMetadata({searchParams}: Props): Promise<Metadata>
 }
 
 export default async function Page({searchParams}: pageProps) {
+    const breadcrumbItems = [
+        {title: 'Home', link: '/'},
+        {title: 'Product', link: `'/products?category=''&brand=''`}
+    ];
+
     searchParamsCacheProduct.parse(searchParams);
 
     const key = serializeProduct({...searchParams});
 
     return <div className="sm:px-32 px-6 py-6 mt-14">
-        <Separator />
+        <div className="mb-6">
+            <Breadcrumbs items={breadcrumbItems}/>
+        </div>
         <Suspense
             key={key}
             fallback={<SkeletonCard/>}

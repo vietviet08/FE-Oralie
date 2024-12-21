@@ -20,9 +20,14 @@ import {
     SelectValue
 } from "@/components/ui/select";
 import Link from "next/link";
-import {toast} from "@/hooks/use-toast";
+import {Breadcrumbs} from "@/components/common/breadcrumbs";
 
 export default function CartPage() {
+    const breadcrumbItems = [
+        {title: 'Home', link: '/'},
+        {title: 'Cart', link: '/cart'}
+    ];
+
     const domainUrl = process.env.NEXT_PUBLIC_URL;
 
     const {data: session} = useSession();
@@ -168,7 +173,10 @@ export default function CartPage() {
     };
 
     return (
-        <div className="px-6 my-24 mb-8 md:mx-32 md:px-0">
+        <div className="px-6 my-24 mb-8 md:mx-32 md:px-0 sm:px-32 px-6 py-6 mt-14">
+            <div className="mb-4">
+                <Breadcrumbs items={breadcrumbItems}/>
+            </div>
             <div className="mb-4">
                 <h1 className="text-2xl font-bold">Your Cart</h1>
                 <span className="text-xs">
