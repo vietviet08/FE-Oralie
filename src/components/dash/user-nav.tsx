@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import {useSession} from 'next-auth/react';
 import federatedLogout from "@/utils/federatedLogout";
+import Link from "next/link";
 
 export function UserNav() {
     const {data: session} = useSession();
@@ -44,7 +45,9 @@ export function UserNav() {
                     <DropdownMenuSeparator/>
                     <DropdownMenuGroup>
                         <DropdownMenuItem>
-                            Profile
+                            <Link href={"/admin/profile"}>
+                                Profile
+                            </Link>
                             <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
                         </DropdownMenuItem>
                         <DropdownMenuItem>

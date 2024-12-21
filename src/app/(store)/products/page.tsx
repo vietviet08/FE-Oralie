@@ -1,27 +1,33 @@
-// src/app/(store)/products/page.tsx
-import { Metadata } from "next";
-import { getProductByCategoryAndBrand } from "@/services/ProductService";
-import { baseOpenGraph } from "@/components/common/base-open-graph";
+import {Metadata} from "next";
+import {getProductByCategoryAndBrand} from "@/services/ProductService";
+import {baseOpenGraph} from "@/components/common/base-open-graph";
 import PageProduct from "@/components/store/product/page-product";
-import {searchParamsCacheProduct } from "@/lib/searchparam";
-import { ParsedUrlQuery } from "querystring";
-import { unstable_noStore as noStore } from "next/cache";
+import {searchParamsCacheProduct, serializeProduct} from "@/lib/searchparam";
+import {unstable_noStore as noStore} from "next/cache";
+import {SearchParams} from "nuqs/parsers";
+import {Suspense} from "react";
+import {SkeletonCard} from "@/components/common/skeleton-card";
+import {Separator} from "@/components/ui/separator";
+
+type pageProps = {
+    searchParams: SearchParams;
+};
 
 type Props = {
     searchParams: {
         category: string;
         brand?: string;
+        page?: number;
+        size?: number;
+        sortBy?: string;
+        sort?: string;
     };
 };
 
-type pageProps = {
-    searchParams: ParsedUrlQuery;
-}
-
-export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
+export async function generateMetadata({searchParams}: Props): Promise<Metadata> {
 
     noStore();
-    const { category, brand } = searchParams || {};
+    const {category, brand, page, size, sortBy, sort} = searchParams || {};
     if (!category) {
         return {
             title: "Category not specified",
@@ -29,7 +35,12 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
         };
     }
 
-    const productList = await getProductByCategoryAndBrand(0, 20, "id", "asc", category, brand as string);
+    const productList = await getProductByCategoryAndBrand(page ?? 1,
+        size ?? 10,
+        sortBy ?? "id",
+        sort ?? "asc",
+        category,
+        brand as string);
 
     if (!productList) {
         return {
@@ -62,8 +73,18 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
     };
 }
 
-
-export default function Page({searchParams }: pageProps) {
+export default async function Page({searchParams}: pageProps) {
     searchParamsCacheProduct.parse(searchParams);
-    return <PageProduct />;
+
+    const key = serializeProduct({...searchParams});
+
+    return <div className="sm:px-32 px-6 py-6 mt-14">
+        <Separator />
+        <Suspense
+            key={key}
+            fallback={<SkeletonCard/>}
+        >
+            <PageProduct/>
+        </Suspense>
+    </div>;
 }

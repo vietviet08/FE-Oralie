@@ -33,7 +33,6 @@ export async function getListProduct(page: number,
             },
         });
         if (res && res.status === 200) {
-            console.log(res.data);
             return res.data;
         }
     } catch (error) {
@@ -46,7 +45,6 @@ export async function getTop10ProductRelatedCategory(productId: number, category
     try {
         const res = await axios.get(`${baseUrl}/store/products/top10/${productId}?categoryName=${categoryName}`);
         if (res && res.status === 200) {
-            console.log(res.data);
             return res.data;
         }
     } catch (error) {
@@ -59,7 +57,6 @@ export async function getTop12ProductByCategorySlug(categorySlug: string) {
     try {
         const res = await axios.get(`${baseUrl}/store/products/top12?categorySlug=${categorySlug}`);
         if (res && res.status === 200) {
-            console.log(res.data);
             return res.data;
         }
     } catch (error) {
@@ -72,7 +69,6 @@ export async function getProductOptionsByProductId(productId: number) {
     try {
         const res = await axios.get(`${baseUrl}/store/products/options/${productId}`);
         if (res && res.status === 200) {
-            console.log(res.data);
             return res.data;
         }
     } catch (error) {
@@ -101,7 +97,6 @@ export async function getProductByCategoryAndBrand(page: number,
         }
         const res = await axios.get(`${baseUrl}/store/categories`, {params});
         if (res && res.status === 200) {
-            console.log(res.data);
             return res.data;
         }
     } catch (error) {
@@ -115,7 +110,6 @@ export async function getProductById(id: number) {
     try {
         const res = await axios.get(`${baseUrl}/store/products/id/${id}`);
         if (res && res.status === 200) {
-            console.log(res.data);
             return res.data;
         } else if (res.status === 404) {
             return null;
@@ -131,7 +125,6 @@ export async function getProductBySlug(slug: string) {
     try {
         const res = await axios.get(`${baseUrl}/store/products/${slug}`);
         if (res && res.status === 200) {
-            console.log(res.data);
             return res.data;
         } else if (res.status === 404) {
             return null;
@@ -199,7 +192,6 @@ export async function createProduct(product: ProductPost, token: string) {
             }
         });
         if (res && res.status === 200) {
-            console.log(res.data);
             return res;
         }
     } catch (error) {
@@ -265,7 +257,6 @@ export async function updateProduct(id: number, product: ProductPost, token: str
             }
         });
         if (res && res.status === 200) {
-            console.log(res.data);
             return res;
         }
     } catch (error) {
@@ -286,7 +277,6 @@ export async function updateAvailabelProduct(id: number, token: string) {
             }
         });
         if (res && res.status === 200) {
-            console.log(res);
             return res;
         }
     } catch (error) {
@@ -304,7 +294,6 @@ export async function deleteProduct(id: number, token: string) {
             }
         });
         if (res && res.status === 204) {
-            console.log(res);
             return res;
         }
     } catch (error) {

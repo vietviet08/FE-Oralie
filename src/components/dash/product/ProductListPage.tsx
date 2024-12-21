@@ -16,8 +16,8 @@ const breadcrumbItems = [
     {title: 'Products', link: '/admin/products'}
 ];
 
-
 export default async function ProductListPage() {
+
     const search = searchParamsCacheProduct.get('search');
     const category = searchParamsCacheProduct.get('category');
     const page = searchParamsCacheProduct.get('page') - 1;

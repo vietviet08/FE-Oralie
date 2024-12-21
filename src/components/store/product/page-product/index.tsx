@@ -4,9 +4,9 @@ import MainPageTemplate from "@/components/store/product/page-product/main-page/
 import FilterTemplate from "@/components/store/product/page-product/filter/filter-template";
 import {searchParamsCacheProduct} from "@/lib/searchparam";
 
-async function PageProduct() {
+export default async function PageProduct() {
 
-    const search = searchParamsCacheProduct.get('search');
+    // const search = searchParamsCacheProduct.get('search');
     const category = searchParamsCacheProduct.get('category');
     const brand = searchParamsCacheProduct.get('brand');
     const page = searchParamsCacheProduct.get('page') - 1;
@@ -18,24 +18,24 @@ async function PageProduct() {
     const formattedBrand = brand ? brand.charAt(0).toUpperCase() + brand.slice(1) : "";
 
     const data = await getProductByCategoryAndBrand(page, size, sortBy, sort, category || "", brand);
+    const products = data.data;
+    const totalProducts = data.totalElements;
 
     return (
-        <div className="sm:px-32 px-6 py-6 mt-14">
+        <div>
             <div className="flex flex-col lg:flex-row justify-between items-center">
                 <h1 className="text-2xl font-semibold">
                     {formattedCategory && formattedBrand ?
                         `${formattedCategory}-${formattedBrand}` :
-                        (formattedCategory || formattedBrand)} ({data.totalElements})
+                        (formattedCategory || formattedBrand)} ({totalProducts})
                 </h1>
             </div>
 
             <FilterTemplate/>
 
-            <MainPageTemplate data={data.data}/>
+            <MainPageTemplate data={products}/>
 
             <Pagination listResponse={data}/>
         </div>
     );
 }
-
-export default PageProduct;

@@ -22,6 +22,9 @@ export const searchParamsProduct = {
 
 export const searchParamsCacheProduct = createSearchParamsCache(searchParamsProduct);
 
+export const serializeProduct = createSerializer(searchParamsProduct);
+
 export const searchParamsCache = createSearchParamsCache(searchParams);
 
-export const serialize = createSerializer(searchParamsProduct);
+export const serialize = createSerializer(searchParams);
+
