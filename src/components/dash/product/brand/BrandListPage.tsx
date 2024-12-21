@@ -5,12 +5,13 @@ import {searchParamsCache} from "@/lib/searchparam";
 import PageContainer from "@/components/dash/page-container";
 import {Breadcrumbs} from "@/components/common/breadcrumbs";
 import {Brand} from "@/model/brand/Brand";
-import {getListBrand} from "@/services/BrandService";
+import {exportBrand, getListBrand} from "@/services/BrandService";
 import BrandTable from "@/components/dash/product/brand/brand-table";
 import {getServerSession, Session} from "next-auth";
 import {authOptions} from "@/app/(auth)/api/auth/[...nextauth]/route";
 import {BrandDialog} from "@/components/dash/product/brand/BrandDialog";
 import NotFound from "@/app/not-found";
+import {Button} from "@/components/ui/button";
 
 const breadcrumbItems = [
     {title: "Dashboard", link: "/admin"},
@@ -34,6 +35,8 @@ export default async function BrandListPage() {
 
     console.log(brands);
 
+
+
     if (data == null) return <NotFound/>;
     else
         return (
@@ -45,7 +48,9 @@ export default async function BrandListPage() {
                             title={`Brand (${totalBrands})`}
                             description="Manage brands (Server side table functionalities.)"
                         />
+                        <div className="flex items-center justify-between">
                         <BrandDialog icon={<Plus className="mr-2 h-4 w-4"/>}/>
+                        </div>
                     </div>
                     <Separator/>
                     <BrandTable data={brands} totalData={totalBrands}/>

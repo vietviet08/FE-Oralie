@@ -159,3 +159,20 @@ export async function deleteBrand(id: number, token: string) {
         throw error;
     }
 }
+
+export async function exportBrand(token: string) {
+    try {
+        const res = await axios.get(`${baseUrl}/dash/export-brands`,{
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        if (res) {
+            console.log("OK");
+        }
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
