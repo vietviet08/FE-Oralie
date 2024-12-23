@@ -34,7 +34,7 @@ export async function getListOrders(page: number,
 
 export async function updateStatusOrder(token: string, orderId: number, status: string) {
     try {
-        const res = await axios.get(`${baseUrl}/dash/orders/${orderId}?status=${status}`, {
+        const res = await axios.put(`${baseUrl}/dash/orders/${orderId}?status=${status}`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }

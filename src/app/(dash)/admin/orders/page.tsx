@@ -1,11 +1,19 @@
-export const metadata = {
-    title: "Dash - Orders",
+import {SearchParams} from "nuqs/parsers";
+import {searchParamsCache} from "@/lib/searchparam";
+import OrderListPage from "@/components/dash/order/OrderListPage";
+
+type pageProps = {
+    searchParams: SearchParams;
 }
 
-export default function Page() {
-    return (
-        <div>
-            <h1>Page Orders</h1>
-        </div>
-    )
+export const metadata = {
+    title: 'Dash - Orders',
+    description: 'Manage orders',
+}
+
+export default function Page({searchParams}: pageProps) {
+
+    searchParamsCache.parse(searchParams);
+
+    return <OrderListPage/>
 }

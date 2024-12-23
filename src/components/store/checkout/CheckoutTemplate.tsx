@@ -22,7 +22,7 @@ import {OrderRequest} from "@/model/order/OrderRequest";
 import {Label} from "@/components/ui/label";
 import {getCart} from "@/services/CartService";
 import {getProductOptionById} from "@/services/ProductOptionService";
-import {Breadcrumbs} from "@/components/common/breadcrumbs";
+import {useToast} from "@/hooks/use-toast";
 
 const formSchema = z.object({
     fullName: z.string().min(3, "Name is too short").nonempty("Name is required"),
@@ -41,40 +41,9 @@ const CheckoutTemplate = () => {
     const infoUser = parseJwt(token as string);
     const [data, setData] = useState<CartResponse>();
     const [productOption, setProductOption] = useState<string[]>();
-
     const router = useRouter();
+    const {toast} = useToast();
 
-    useEffect(() => {
-        async function fetchCart() {
-            try {
-                const res: CartResponse = await getCart(token);
-                if (res) {
-                    setData(res);
-                }
-            } catch (error) {
-                console.error("Failed to fetch cart:", error);
-            }
-        }
-
-        fetchCart();
-
-        async function fetchProductOption() {
-            try {
-                const productOptions = await Promise.all(
-                    data?.cartItemResponses.map(async (item: CartItemResponse) => {
-                        const option = await getProductOptionById(item.productOptionId);
-                        return option.name;
-                    }) || []
-                );
-                setProductOption(productOptions.filter(Boolean) as string[]);
-            } catch (error) {
-                console.error("Failed to fetch product option:", error);
-            }
-        }
-
-        fetchProductOption();
-
-    }, [data?.cartItemResponses, token]);
 
     const [defaultValues, setDefaultValues] = useState<{
         fullName: string;
@@ -96,6 +65,53 @@ const CheckoutTemplate = () => {
         resolver: zodResolver(formSchema),
         defaultValues: defaultValues,
     });
+
+    useEffect(() => {
+        async function fetchCart() {
+            try {
+                const res: CartResponse = await getCart(token);
+                if (res && res.cartItemResponses && res.cartItemResponses.length > 0) {
+                    setData(res);
+                } else {
+                    router.push("/cart");
+                }
+            } catch (error) {
+                console.error("Failed to fetch cart:", error);
+            }
+        }
+
+        fetchCart();
+    }, [token, router]);
+
+    useEffect(() => {
+        async function fetchProductOption() {
+            if (!data?.cartItemResponses) return;
+
+            try {
+                const productOptions = await Promise.all(
+                    data?.cartItemResponses.map(async (item: CartItemResponse) => {
+                        const option = await getProductOptionById(item.productOptionId);
+                        return option.name;
+                    })
+                );
+                setProductOption(productOptions.filter(Boolean) as string[]);
+            } catch (error) {
+                console.error("Failed to fetch product option:", error);
+            }
+        }
+
+        fetchProductOption();
+
+    }, [data]);
+
+    const handlePaymentMethodChange = (paymentMethod: string) => {
+        form.setValue("paymentMethod", paymentMethod);
+    };
+
+    const handlePaypalButtonClick = () => {
+        handlePaymentMethodChange("PAYPAL");
+        form.handleSubmit(onSubmit)();
+    }
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         const orderData: OrderRequest = {
@@ -122,25 +138,43 @@ const CheckoutTemplate = () => {
             note: "note",
             status: "PENDING"
         }
-
         try {
             if (values.paymentMethod === "COD" || values.paymentMethod === "TRANSFER") {
                 const response = await createOrder(token, orderData);
                 if (response) {
-                    router.push(response.linkPaypalToExecute);
+                    toast({
+                        title: "Order successfully",
+                    });
+                    router.push("/account/orders");
                 } else {
-                    throw new Error(`handleCheckout Request failed with status code`);
-                }
-            } else if (values.paymentMethod === "PAYPAL") {
-                const response = await createOrderWithPayPal(token, orderData);
-                if (response) {
-                    router.push(response.linkPaypalToExecute);
-                } else {
+                    toast({
+                        variant: "destructive",
+                        title: "Order failed, please try again",
+                    });
                     throw new Error(`handleCheckout Request failed with status code`);
                 }
             }
+            else if (values.paymentMethod === "PAYPAL") {
+                const response = await createOrderWithPayPal(token, orderData);
+                if (response) {
+                    window.location.href = response.linkPaypalToExecute;
+                }
+                else {
+                    toast({
+                        variant: "destructive",
+                        title: "Order with PayPal failed, please try again",
+                    });
+                    throw new Error(`handleCheckout with PayPal Request failed with status code`);
+                }
+            }
+
         } catch (error) {
             console.error('Error during checkout:', error);
+            toast({
+                variant: "destructive",
+                title: "Error during checkout",
+                description: (error as Error).message
+            });
         }
     }
 
@@ -152,63 +186,60 @@ const CheckoutTemplate = () => {
                     <span className="text-base text-blue-600">Back to cart</span>
                 </Link>
             </div>
-            <div
-                className="flex flex-col-reverse lg:flex-row justify-between  items-center lg:items-start gap-5 w-full">
-                <div className="w-3/5 flex flex-col gap-5">
-                    <div className="flex flex-col gap-2 rounded-xl border">
-                        <div className="w-full flex justify-between items-center p-2 bg-gray-100 rounded-t-xl">
-                            <span className="text-base font-semibold">Product in bill ({data?.quantity})</span>
-                        </div>
-                        <div className="p-2 flex flex-col">
-                            {data && data.cartItemResponses.map((item: CartItemResponse, index) => (
-                                <div key={item.id} className="w-full p-2 border-b border-gray-200 ">
-                                    <Link href={`/${item.productSlug}`}>
-                                        <div className="flex gap-4 justify-between items-center w-full h-20">
-                                            <div className="w-1/12">
-                                                <Image src={item.urlImageThumbnail} alt={item.productName} width={60}
-                                                       height={60}
-                                                       className="w-full object-contain"/>
-                                            </div>
-                                            <div className="w-11/12 flex justify-center items-center gap-2">
-                                                <div className="flex flex-col gap-1 w-full">
+            <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                    <div
+                        className="flex flex-col-reverse lg:flex-row justify-between  items-center lg:items-start gap-5 w-full">
+                        <div className="w-3/5 flex flex-col gap-5">
+                            <div className="flex flex-col gap-2 rounded-xl border">
+                                <div className="w-full flex justify-between items-center p-2 bg-gray-100 rounded-t-xl">
+                                    <span className="text-base font-semibold">Product in bill ({data?.quantity})</span>
+                                </div>
+                                <div className="p-2 flex flex-col">
+                                    {data && data.cartItemResponses.map((item: CartItemResponse, index) => (
+                                        <div key={item.id} className="w-full p-2 border-b border-gray-200 ">
+                                            <Link href={`/${item.productSlug}`}>
+                                                <div className="flex gap-4 justify-between items-center w-full h-20">
+                                                    <div className="w-1/12">
+                                                        <Image src={item.urlImageThumbnail} alt={item.productName}
+                                                               width={60}
+                                                               height={60}
+                                                               className="w-full object-contain"/>
+                                                    </div>
+                                                    <div className="w-11/12 flex justify-center items-center gap-2">
+                                                        <div className="flex flex-col gap-1 w-full">
                                                     <span
                                                         className="text-md font-semibold hover:text-primaryred line-clamp-2">
                                                         {item.productName}
                                                     </span>
-                                                    <div className="flex justify-between gap-2 items-center w-1/5">
+                                                            <div
+                                                                className="flex justify-between gap-2 items-center w-1/5">
                                                         <span className="text-md  text-primaryred">
                                                             $ {item.price}
                                                         </span>
-                                                        {/*{*/}
-                                                        {/*    item.discount > 0 && (*/}
-                                                        {/*        <span*/}
-                                                        {/*            className="text-sm text-gray line-through text-gray-400">${item.price}</span>*/}
-                                                        {/*    )*/}
-                                                        {/*}*/}
-                                                    </div>
+                                                            </div>
 
-                                                </div>
-                                                <div
-                                                    className="w-24 p-1 flex justify-center items-center bg-gray-200 rounded-xl text-xs">
-                                                    <div>
-                                                        {productOption?.[index]}
-                                                    </div>
-                                                </div>
-                                                <div className="flex justify-center items-center gap-1">
+                                                        </div>
+                                                        <div
+                                                            className="w-24 p-1 flex justify-center items-center bg-gray-200 rounded-xl text-xs">
+                                                            <div>
+                                                                {productOption?.[index]}
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex justify-center items-center gap-1">
                                                     <span className="block">
                                                         x
                                                     </span>
-                                                    {item.quantity}
+                                                            {item.quantity}
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            </Link>
                                         </div>
-                                    </Link>
+                                    ))}
                                 </div>
-                            ))}
-                        </div>
-                    </div>
-                    <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                            </div>
+
                             <div className="grid grid-cols-1 gap-6">
                                 <div className="flex flex-col gap-2 rounded-xl border ">
                                     <div
@@ -289,8 +320,7 @@ const CheckoutTemplate = () => {
                                                                 <Input
                                                                     type="radio"
                                                                     checked={field.value === "COD"}
-                                                                    onChange={() => field.onChange("COD")}
-                                                                    defaultChecked={true}
+                                                                    onChange={() => handlePaymentMethodChange("COD")}
                                                                     className={"w-4 h-4"}
                                                                 />
                                                                 <span className="ml-2">COD</span>
@@ -304,7 +334,7 @@ const CheckoutTemplate = () => {
                                                                 <Input
                                                                     type="radio"
                                                                     checked={field.value === "TRANSFER"}
-                                                                    onChange={() => field.onChange("TRANSFER")}
+                                                                    onChange={() => handlePaymentMethodChange("TRANSFER")}
                                                                     className={"w-4 h-4"}
                                                                 />
                                                                 <span className="ml-2">Transfer</span>
@@ -328,7 +358,7 @@ const CheckoutTemplate = () => {
                                                                 <Input
                                                                     type="radio"
                                                                     checked={field.value === "PAYPAL"}
-                                                                    onChange={() => field.onChange("PAYPAL")}
+                                                                    onChange={() => handlePaymentMethodChange("PAYPAL")}
                                                                     className={"w-4 h-4"}
                                                                 />
                                                                 <span className="ml-2">Paypal</span>
@@ -346,55 +376,55 @@ const CheckoutTemplate = () => {
                                     </div>
                                 </div>
                             </div>
-                        </form>
-                    </Form>
+                        </div>
 
-
-                </div>
-                <div className="w-2/5 rounded-xl">
-                    <div className="w-full flex flex-col gap-2">
-                        <Card className="w-full">
-                            <CardContent className="flex w-full justify-between items-center p-2">
-                                <div className="w-full flex-col gap-2 space-y-4 justify-between items-center">
-                                    <div>
-                                        <h2 className="text-lg font-semibold">Order Information</h2>
-                                    </div>
-                                    <div
-                                        className="w-full pb-2 flex justify-between items-center border-b border-dashed border-gray-400">
-                                        <p className="text-sm">Total</p>
-                                        <div className="text-lg font-semibold">$ {data?.totalPrice}</div>
-                                    </div>
-                                    <div
-                                        className="flex flex-col space-y-2 pb-2 border-b border-dashed border-gray-400">
-                                        <div className="w-full flex justify-between items-center">
-                                            <p className="text-sm">Total Promotion</p>
-                                            <div className="text-lg font-semibold">$ {data?.totalPrice}</div>
+                        <div className="w-2/5 rounded-xl">
+                            <div className="w-full flex flex-col gap-2">
+                                <Card className="w-full">
+                                    <CardContent className="flex w-full justify-between items-center p-2">
+                                        <div className="w-full flex-col gap-2 space-y-4 justify-between items-center">
+                                            <div>
+                                                <h2 className="text-lg font-semibold">Order Information</h2>
+                                            </div>
+                                            <div
+                                                className="w-full pb-2 flex justify-between items-center border-b border-dashed border-gray-400">
+                                                <p className="text-sm">Total</p>
+                                                <div className="text-lg font-semibold">$ {data?.totalPrice}</div>
+                                            </div>
+                                            <div
+                                                className="flex flex-col space-y-2 pb-2 border-b border-dashed border-gray-400">
+                                                <div className="w-full flex justify-between items-center">
+                                                    <p className="text-sm">Total Promotion</p>
+                                                    <div className="text-lg font-semibold">$ {data?.totalPrice}</div>
+                                                </div>
+                                                <div className="w-full flex justify-between items-center">
+                                                    <p className="text-sm">Shipping Fee</p>
+                                                    <div className="text-sm font-base">Free</div>
+                                                </div>
+                                            </div>
+                                            <div className="w-full flex justify-between items-center">
+                                                <p className="text-sm">Need to Pay</p>
+                                                <div className="text-lg font-semibold">$ {data?.totalPrice}</div>
+                                            </div>
+                                            <Button type="submit"
+                                                    className="w-full h-10 bg-primaryred hover:bg-red-500 text-white ">
+                                                Order Now
+                                            </Button>
+                                            <Button type="button"
+                                                    className="w-full h-10 bg-paypal hover:bg-paypal1 text-white "
+                                                    onClick={handlePaypalButtonClick}>
+                                                <Image
+                                                    src={"https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/2560px-PayPal.svg.png"}
+                                                    alt={""} width={420} height={120} className="w-24 object-contain"/>
+                                            </Button>
                                         </div>
-                                        <div className="w-full flex justify-between items-center">
-                                            <p className="text-sm">Shipping Fee</p>
-                                            <div className="text-sm font-base">Free</div>
-                                        </div>
-                                    </div>
-                                    <div className="w-full flex justify-between items-center">
-                                        <p className="text-sm">Need to Pay</p>
-                                        <div className="text-lg font-semibold">$ {data?.totalPrice}</div>
-                                    </div>
-                                    <Button type="submit"
-                                            className="w-full h-10 bg-primaryred hover:bg-red-500 text-white ">
-                                        Order Now
-                                    </Button>
-                                    <Button type="submit"
-                                            className="w-full h-10 bg-paypal hover:bg-paypal1 text-white ">
-                                        <Image
-                                            src={"https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/2560px-PayPal.svg.png"}
-                                            alt={""} width={420} height={120} className="w-24 object-contain"/>
-                                    </Button>
-                                </div>
-                            </CardContent>
-                        </Card>
+                                    </CardContent>
+                                </Card>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
+                </form>
+            </Form>
         </div>
     );
 }
