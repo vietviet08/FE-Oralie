@@ -5,10 +5,10 @@ const baseUrl = process.env.NEXT_PUBLIC_API_URL + '/api/rates';
 
 
 export async function getListRates(
-                                             page: number,
-                                             size: number,
-                                             sortBy: string,
-                                             sort: string,
+    page: number,
+    size: number,
+    sortBy: string,
+    sort: string,
 ) {
     try {
         const res = await axios.get(`${baseUrl}/dash/rates/`, {
@@ -30,10 +30,10 @@ export async function getListRates(
 }
 
 export async function getListRateByProductId(productId: number,
-                                  page: number,
-                                  size: number,
-                                  sortBy: string,
-                                  sort: string,
+                                             page: number,
+                                             size: number,
+                                             sortBy: string,
+                                             sort: string,
 ) {
     try {
         const res = await axios.get(`${baseUrl}/store/rates/` + productId, {
@@ -54,9 +54,13 @@ export async function getListRateByProductId(productId: number,
     }
 }
 
-export async function postRate(productId: number, ratePost: RatePost) {
+export async function postRate(token: string, productId: number, ratePost: RatePost) {
     try {
-        const res = await axios.post(`${baseUrl}/store/rates/` + productId, ratePost);
+        const res = await axios.post(`${baseUrl}/store/rates/` + productId, ratePost, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        });
         if (res && res.status === 200) {
             console.log(res.data);
             return res.data;
@@ -67,9 +71,13 @@ export async function postRate(productId: number, ratePost: RatePost) {
     }
 }
 
-export async function updateRate(productId: number, ratePost: RatePost) {
+export async function updateRate(token: string, productId: number, ratePost: RatePost) {
     try {
-        const res = await axios.put(`${baseUrl}/store/rates/` + productId, ratePost);
+        const res = await axios.put(`${baseUrl}/store/rates/` + productId, ratePost, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        });
         if (res && res.status === 200) {
             console.log(res.data);
             return res.data;
@@ -80,9 +88,13 @@ export async function updateRate(productId: number, ratePost: RatePost) {
     }
 }
 
-export async function deleteRate(rateId: number) {
+export async function deleteRate(token: string, rateId: number) {
     try {
-        const res = await axios.delete(`${baseUrl}/store/rates/` + rateId);
+        const res = await axios.delete(`${baseUrl}/store/rates/` + rateId, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        });
         if (res && res.status === 204) {
             console.log("Delete rate successfully");
             return;
@@ -93,9 +105,13 @@ export async function deleteRate(rateId: number) {
     }
 }
 
-export async function likeComment(productId: number, rateId: number) {
+export async function likeComment(token: string, productId: number, rateId: number) {
     try {
-        const res = await axios.put(`${baseUrl}/store/rates/like/` + productId + '?rateId=' + rateId);
+        const res = await axios.put(`${baseUrl}/store/rates/like/` + productId + '?rateId=' + rateId, {}, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        });
         if (res && res.status === 204) {
             console.log("Like successfully");
             return;
@@ -106,9 +122,13 @@ export async function likeComment(productId: number, rateId: number) {
     }
 }
 
-export async function dislikeComment(productId: number, rateId: number) {
+export async function dislikeComment(token: string, productId: number, rateId: number) {
     try {
-        const res = await axios.put(`${baseUrl}/store/rates/dislike/` + productId + '?rateId=' + rateId);
+        const res = await axios.put(`${baseUrl}/store/rates/dislike/` + productId + '?rateId=' + rateId, {}, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        });
         if (res && res.status === 204) {
             console.log("Dislike successfully");
             return;
@@ -119,9 +139,13 @@ export async function dislikeComment(productId: number, rateId: number) {
     }
 }
 
-export async function updateAvailableComment(rateId: number) {
+export async function updateAvailableComment(token: string, rateId: number) {
     try {
-        const res = await axios.put(`${baseUrl}/store/rates/available/` + rateId);
+        const res = await axios.put(`${baseUrl}/store/rates/available/` + rateId, {}, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        });
         if (res && res.status === 204) {
             console.log("Comment availability updated successfully");
             return;

@@ -5,4 +5,5 @@ export type OrderItemResponse = {
     productImage: string;
     quantity: number;
     totalPrice: number;
+    isRated: boolean;
 }

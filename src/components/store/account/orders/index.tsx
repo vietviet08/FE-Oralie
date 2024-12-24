@@ -16,7 +16,16 @@ import {Button} from "@/components/ui/button";
 import Image from "next/image";
 import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
 import {AlertCircle} from "lucide-react";
-import toast from "react-hot-toast";
+import {postRate} from "@/services/RateService";
+import {useForm} from "react-hook-form";
+import {z} from "zod";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {RatePost} from "@/model/rate/RatePost";
+import {useToast} from "@/hooks/use-toast";
+import {OrderItemResponse} from "@/model/order/response/OrderItemResponse";
+import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
+import {FileUploader} from "@/components/common/file-uploader";
+import {Input} from "@/components/ui/input";
 
 const orderHeader = [
     {name: "Index", className: "text-left"},
@@ -31,13 +40,71 @@ const orderHeader = [
     {name: "", className: ""}
 ];
 
+const MAX_FILE_SIZE = 8000000;
+const ACCEPTED_IMAGE_TYPES = [
+    "image/jpeg",
+    "image/jpg",
+    "image/png",
+    "image/webp",
+    "video/mp4",
+];
+
+const formSchema = z.object({
+    userId: z.string().nonempty("Name is required"),
+    productId: z.number().min(1, "Product ID is required"),
+    rateStar: z.number().min(1, "Rate star is required"),
+    content: z.string().nonempty("Content is required"),
+    urlFile: z
+        .any()
+        .refine((files) => files?.length <= 4, "You can upload up to 8 images.")
+        .refine((files) => files?.length >= 1, "At least one image is required.")
+        .refine(
+            (files) =>
+                files?.every((file: { size: number }) => file.size <= MAX_FILE_SIZE),
+            `Max file size is 8MB.`
+        )
+        .refine(
+            (files) =>
+                files?.every((file: { type: string }) =>
+                    ACCEPTED_IMAGE_TYPES.includes(file.type)
+                ),
+            ".jpg, .jpeg, .png, .webp, and .mp4 files are accepted."
+        ).optional(),
+});
+
 const OrdersTemplate = () => {
+
+    const {toast} = useToast();
+
     const {data: session,} = useSession();
     const token = session?.access_token as string;
 
-    const [isOpen, setIsOpen] = useState(false);
     const [orders, setOrders] = useState<OrderResponse[]>([]);
+
+    const [isOpen, setIsOpen] = useState(false);
     const [selectedOrder, setSelectedOrder] = useState<OrderResponse | null>(null);
+
+    const [isOpenRate, setIsOpenRate] = useState(false);
+    const [selectedOrderItem, setSelectedOrderItem] = useState<OrderItemResponse | null>(null);
+
+    const [defaultValues, setDefaultValues] = useState<{
+        userId: string,
+        productId: 0,
+        rateStar: 0,
+        content: string,
+        urlFile: File[],
+    }>({
+        userId: "",
+        productId: 0,
+        rateStar: 0,
+        content: "",
+        urlFile: [],
+    });
+
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
+        defaultValues: defaultValues,
+    });
 
     useEffect(() => {
         async function fetchOrder() {
@@ -59,17 +126,55 @@ const OrdersTemplate = () => {
         setSelectedOrder(null);
     }
 
+    const handleOpenRate = (orderItemResponse: OrderItemResponse) => {
+        setSelectedOrderItem(orderItemResponse);
+        setIsOpenRate(true);
+    };
+
+    const handleCloseDialogRate = () => {
+        setIsOpenRate(false);
+        setSelectedOrderItem(null);
+    }
+
     const handledCancelOrder = async (orderResponse: OrderResponse) => {
         try {
             const res = await cancelOrderByCustomer(token, orderResponse.id as number);
             if (res) {
-                toast.success("Cancel order successfully");
+                toast({
+                    title: "Order Cancelled",
+                    description: `Order has been cancelled successfully with id ${res.data.id}`,
+                    duration: 3000,
+                });
             }
         } catch (e) {
             console.log(e);
         }
     }
 
+    async function handleRateProduct(values: z.infer<typeof formSchema>) {
+
+        const rateRequest = {
+            userId: values.userId,
+            productId: values.productId,
+            rateStar: values.rateStar,
+            content: values.content,
+            urlFile: values.urlFile,
+        } as RatePost;
+
+        try {
+            const res = await postRate(token, values.productId as number, rateRequest);
+            if (res) {
+                toast({
+                    title: "Product Updated",
+                    description: `Product has been updated successfully with id ${res.data.id}`,
+                    duration: 3000,
+                });
+            }
+
+        } catch (e) {
+            console.log(e);
+        }
+    }
 
     return (
         <div>
@@ -169,6 +274,15 @@ const OrdersTemplate = () => {
                                         <TableCell className=" text-ellipsis">{item.productName}</TableCell>
                                         <TableCell className=" ">{item.quantity}</TableCell>
                                         <TableCell className=" ">{item.totalPrice}</TableCell>
+                                        <TableCell className=" ">
+                                            <Button
+                                                variant="outline"
+                                                onClick={() => handleOpenRate(item)}
+                                                disabled={item.isRated}
+                                            >
+                                                Rate
+                                            </Button>
+                                        </TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>
@@ -183,6 +297,78 @@ const OrdersTemplate = () => {
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
+
+
+            <Dialog open={isOpenRate} onOpenChange={setIsOpenRate}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Rate {selectedOrderItem?.productName}</DialogTitle>
+                        <DialogDescription>
+                            Product code: {selectedOrderItem?.productId}
+                        </DialogDescription>
+                    </DialogHeader>
+
+                    <Form {...form}>
+                        <form onSubmit={form.handleSubmit(handleRateProduct)} className="space-y-8">
+                            <FormField
+                                control={form.control}
+                                name="urlFile"
+                                render={({field}) => (
+                                    <FormItem className="w-full">
+                                        <FormLabel>Images</FormLabel>
+                                        <FormControl>
+                                            <FileUploader
+                                                value={field.value}
+                                                onValueChange={field.onChange}
+                                                maxFiles={4}
+                                                maxSize={4 * 1024 * 1024}
+                                            />
+                                        </FormControl>
+                                        <FormMessage/>
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
+                                name="rateStar"
+                                render={({field}) => (
+                                    <FormItem>
+                                        <FormLabel>Rate Star</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="Enter rate star" {...field} />
+                                        </FormControl>
+                                        <FormMessage/>
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
+                                name="content"
+                                render={({field}) => (
+                                    <FormItem>
+                                        <FormLabel>Product Name</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="Enter product name" {...field} />
+                                        </FormControl>
+                                        <FormMessage/>
+                                    </FormItem>
+                                )}
+                            />
+                            <Button disabled={form.formState.isSubmitting} type="submit">Rate</Button>
+                        </form>
+                    </Form>
+
+                    <DialogFooter>
+                        <Button type="button" variant="outline" onClick={handleCloseDialogRate}
+                                className="bg-primaryred text-white border-primaryred hover:bg-white hover:text-primaryred">
+                            Close
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
         </div>
     )
 }
