@@ -56,9 +56,30 @@ export async function getListRateByProductId(productId: number,
 
 export async function postRate(token: string, productId: number, ratePost: RatePost) {
     try {
-        const res = await axios.post(`${baseUrl}/store/rates/` + productId, ratePost, {
+        const formData = new FormData();
+        if (ratePost?.id !== undefined) {
+            formData.append('id', ratePost.id.toString());
+        }
+        formData.append('userId', ratePost.userId);
+        formData.append('productId', ratePost.productId.toString());
+        formData.append('orderItemId', ratePost.orderItemId.toString());
+        formData.append('rateStar', ratePost.rateStar.toString());
+        formData.append('content', ratePost.content);
+        formData.append('isAvailable', ratePost.isAvailable.toString());
+        formData.append('parentRate', ratePost.parentRate.toString());
+
+        ratePost.files.forEach((file, index) => {
+            formData.append(`files[${index}]`, file);
+        });
+
+        ratePost.subRates.forEach((subRate, index) => {
+            formData.append(`subRates[${index}]`, JSON.stringify(subRate));
+        });
+
+        const res = await axios.post(`${baseUrl}/store/rates/` + productId, formData, {
             headers: {
                 Authorization: `Bearer ${token}`,
+                'Content-Type': 'multipart/form-data',
             }
         });
         if (res && res.status === 200) {
