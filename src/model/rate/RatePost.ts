@@ -1,8 +1,9 @@
 import {Rate} from "@/model/rate/Rate";
+import {UserInfo} from "@/model/rate/UserInfo";
 
 export type RatePost = {
     id?: number | undefined;
-    userId: string;
+    userInfo: UserInfo;
     productId: number;
     orderItemId: number;
     rateStar: number;

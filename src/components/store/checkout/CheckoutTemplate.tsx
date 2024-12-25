@@ -155,17 +155,18 @@ const CheckoutTemplate = () => {
                 }
             }
             else if (values.paymentMethod === "PAYPAL") {
-                const response = await createOrderWithPayPal(token, orderData);
-                if (response) {
-                    window.location.href = response.linkPaypalToExecute;
-                }
-                else {
-                    toast({
-                        variant: "destructive",
-                        title: "Order with PayPal failed, please try again",
-                    });
-                    throw new Error(`handleCheckout with PayPal Request failed with status code`);
-                }
+                // const response = await createOrderWithPayPal(token, orderData);
+                // if (response) {
+                //     window.location.href = response.linkPaypalToExecute;
+                // }
+                // else {
+                //     toast({
+                //         variant: "destructive",
+                //         title: "Order with PayPal failed, please try again",
+                //     });
+                //     throw new Error(`handleCheckout with PayPal Request failed with status code`);
+                // }
+                console.log(orderData);
             }
 
         } catch (error) {

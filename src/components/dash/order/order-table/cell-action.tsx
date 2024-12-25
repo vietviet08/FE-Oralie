@@ -4,9 +4,6 @@ import React, {useState} from "react";
 import {AlertModal} from "@/components/dash/modal/alert-modal";
 import {useToast} from "@/hooks/use-toast";
 import {useSession} from "next-auth/react";
-import {
-    deleteBrand, updateBrand,
-} from "@/services/BrandService";
 import {Order} from "@/model/order/Order";
 import {
     DropdownMenu,

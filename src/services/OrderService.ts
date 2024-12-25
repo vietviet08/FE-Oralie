@@ -34,7 +34,7 @@ export async function getListOrders(page: number,
 
 export async function updateStatusOrder(token: string, orderId: number, status: string) {
     try {
-        const res = await axios.put(`${baseUrl}/dash/orders/${orderId}?status=${status}`, {
+        const res = await axios.put(`${baseUrl}/dash/orders/${orderId}/status?status=${status}`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -107,7 +107,7 @@ export async function getOrderDetail(token: string, orderId: number) {
 
 export async function cancelOrderByCustomer(token: string, orderId: number) {
     try {
-        const response = await axios.put(`${baseUrl}/store/orders/${orderId}`, {
+        const response = await axios.put(`${baseUrl}/store/orders/${orderId}/cancel`, {
             headers: {
                 Authorization: `Bearer ${token}`
             },

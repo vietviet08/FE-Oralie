@@ -179,7 +179,7 @@ export async function updateAvailableComment(token: string, rateId: number) {
 
 export async function getAvgRateStarByProductId(productId: number) {
     try {
-        const res = await axios.get(`${baseUrl}/store/rates/avg/` + productId);
+        const res = await axios.get(`${baseUrl}/store/rates/avg/${productId}`);
         if (res && res.status === 200) {
             console.log(res.data);
             return res.data;
