@@ -1,0 +1,101 @@
+[
+  {
+    "id": 1,
+    "title": "",
+    "tagline": "",
+    "image": "https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/ASUS_Peripherlas_XMAS_920x470.jpg",
+    "buttons": [
+      {
+        "id": 1,
+        "text": "Roberto Nickson",
+        "link": "https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/ASUS_Peripherlas_XMAS_920x470.jpg",
+        "type": "btn-dark btn-circle"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "title": "",
+    "tagline": "",
+    "image": "https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/MASeries_1.png",
+    "buttons": [
+      {
+        "id": 1,
+        "text": "Julia M Cameron",
+        "link": "https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/MASeries_1.png",
+        "type": "btn-dark btn-circle"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "title": "",
+    "tagline": "",
+    "image": "https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/TUF_GamingF15_FX507_DigitalBanner_JW_Windows_920x470px.jpg",
+    "buttons": [
+      {
+        "id": 1,
+        "text": "Roberto Nickson",
+        "link": "https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/TUF_GamingF15_FX507_DigitalBanner_JW_Windows_920x470px.jpg",
+        "type": "btn-dark btn-circle"
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "title": "",
+    "tagline": "",
+    "image": "https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/MSI_Holiday_Sale_920_x_470.png",
+    "buttons": [
+      {
+        "id": 1,
+        "text": "Roberto Nickson",
+        "link": "https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/MSI_Holiday_Sale_920_x_470.png",
+        "type": "btn-dark btn-circle"
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "title": "",
+    "tagline": "",
+    "image": "https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/TENDA_BF_920x470.jpg",
+    "buttons": [
+      {
+        "id": 1,
+        "text": "Roberto Nickson",
+        "link": "https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/TENDA_BF_920x470.jpg",
+        "type": "btn-dark btn-circle"
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "title": "",
+    "tagline": "",
+    "image": "https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/MSI_Components_Holiday_920x470.jpg",
+    "buttons": [
+      {
+        "id": 1,
+        "text": "Roberto Nickson",
+        "link": "https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/MSI_Components_Holiday_920x470.jpg",
+        "type": "btn-dark btn-circle"
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "title": "",
+    "tagline": "",
+    "image": "https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/Mastex_Christmas_920x470.jpg",
+    "buttons": [
+      {
+        "id": 1,
+        "text": "Roberto Nickson",
+        "link": "https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/Mastex_Christmas_920x470.jpg",
+        "type": "btn-dark btn-circle"
+      }
+    ]
+  }
+]
+  
