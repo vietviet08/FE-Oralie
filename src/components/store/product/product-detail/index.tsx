@@ -25,7 +25,7 @@ import { getTop10ProductRelatedCategory } from "@/services/ProductService";
 import { addProductToCart } from "@/services/CartService";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import toast from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 import { FooterSologan } from "@/components/store/product/product-detail/footer-sologan";
 import { ProductSpecification } from "@/components/store/product/product-detail/product-specification";
 import { ProductPolicy } from "@/components/store/product/product-detail/product-policy";
@@ -70,21 +70,89 @@ const ProductPageDetail = ({ product }: Props) => {
   }, [product.id, product.productCategories]);
 
   const handleAddToCart = async (quantity: number, productId: number, optionId: number) => {
+    try {
+      const selectedOption = product.options.find(option => option.id === optionId);
+      const optionName = selectedOption ? selectedOption.name : '';
+      const optionPrice = selectedOption ? selectedOption.value : 0;
+      const productImage = product.images.length > 0 ? product.images[0].url : '';
+      
+      const res = await addProductToCart(token, quantity, optionId, productId);
 
-    const res = await addProductToCart(token, quantity, optionId, productId);
-
-    if (res) {
-      toast.success("Add to cart successfully", {
-        position: "bottom-right",
-        duration: 3000,
-      });
-    } else {
-      toast.error("Add to cart failed", {
+      if (res) {
+        toast.custom((t) => (
+          <div 
+            className={`
+              max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5
+              ${t.visible ? 'animate-enter' : 'animate-leave'}
+            `}
+          >
+            <div className="flex-1 w-0 p-4">
+              <div className="flex items-start">
+                <div className="flex-shrink-0 pt-0.5">
+                  <img className="h-16 w-16 rounded-md object-cover border border-gray-200" src={productImage} alt={product.name} />
+                </div>
+                <div className="ml-3 flex-1 overflow-hidden">
+                  <div className="flex justify-between items-center">
+                    <p className="text-sm font-medium text-green-600 flex items-center">
+                      <Icons.check className="mr-1 h-4 w-4" />
+                      Added to cart
+                    </p>
+                    <button 
+                      onClick={() => toast.dismiss(t.id)}
+                      className="ml-2 text-gray-400 hover:text-gray-500"
+                    >
+                      <Icons.close className="h-4 w-4" />
+                    </button>
+                  </div>
+                  <div className="mt-1 text-sm text-gray-700 overflow-hidden">
+                    <p className="truncate max-w-[230px] font-medium">
+                      {product.name}
+                    </p>
+                    <p className="text-gray-500 text-xs mt-0.5">
+                      Option: {optionName}
+                    </p>
+                  </div>
+                  <div className="mt-2 flex items-center justify-between">
+                    <p className="text-sm font-medium text-primaryred">
+                      ${optionPrice} × {quantity}
+                    </p>
+                    <Link 
+                      href="/cart" 
+                      className="text-xs text-blue-600 hover:text-blue-800 hover:underline"
+                    >
+                      View Cart
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        ), { 
+          position: "bottom-right", 
+          duration: 4000 
+        });
+      } else {
+        toast.error("Failed to add item to cart", {
+          position: "bottom-right",
+          duration: 3000,
+          style: {
+            border: '1px solid #E53E3E',
+            padding: '16px',
+          },
+          iconTheme: {
+            primary: '#E53E3E',
+            secondary: '#FFFAEE',
+          },
+        });
+      }
+      setQuantity(1);
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+      toast.error("Failed to add item to cart", {
         position: "bottom-right",
         duration: 3000,
       });
     }
-    setQuantity(1);
   };
   const breadcrumbItems = [
     { title: 'Store', link: '/' },
@@ -96,6 +164,7 @@ const ProductPageDetail = ({ product }: Props) => {
 
   return (
     <div className="sm:px-32 px-6 py-6 mt-14">
+      <Toaster />
       <Breadcrumbs items={breadcrumbItems} />
       <div className="flex flex-col md:flex-row justify-between items-center gap-2 w-full py-4">
         <div className="w-full md:w-4/5">

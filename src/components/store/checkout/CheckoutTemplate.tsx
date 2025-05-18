@@ -43,6 +43,7 @@ const CheckoutTemplate = () => {
     const [productOption, setProductOption] = useState<string[]>();
     const router = useRouter();
     const {toast} = useToast();
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
 
     const [defaultValues, setDefaultValues] = useState<{
@@ -114,6 +115,9 @@ const CheckoutTemplate = () => {
     }
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
+        if (isLoading) return; // Prevent multiple submissions
+        setIsLoading(true);
+        
         const orderData: OrderRequest = {
             address: {
                 addressDetail: values.address,
@@ -228,6 +232,8 @@ const CheckoutTemplate = () => {
                 title: "Error during checkout",
                 description: errorMessage
             });
+        } finally {
+            setIsLoading(false);
         }
     }
 
@@ -460,15 +466,31 @@ const CheckoutTemplate = () => {
                                                 <div className="text-lg font-semibold">$ {data?.totalPrice}</div>
                                             </div>
                                             <Button type="submit"
-                                                    className="w-full h-10 bg-primaryred hover:bg-red-500 text-white ">
-                                                Order Now
+                                                    className="w-full h-10 bg-primaryred hover:bg-red-500 text-white"
+                                                    disabled={isLoading}>
+                                                {isLoading ? (
+                                                    <div className="flex items-center justify-center">
+                                                        <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                                                        Processing...
+                                                    </div>
+                                                ) : (
+                                                    "Order Now"
+                                                )}
                                             </Button>
                                             <Button type="button"
-                                                    className="w-full h-10 bg-paypal hover:bg-paypal1 text-white "
-                                                    onClick={handlePaypalButtonClick}>
-                                                <Image
-                                                    src={"https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/2560px-PayPal.svg.png"}
-                                                    alt={""} width={420} height={120} className="w-24 object-contain"/>
+                                                    className="w-full h-10 bg-paypal hover:bg-paypal1 text-white"
+                                                    onClick={handlePaypalButtonClick}
+                                                    disabled={isLoading}>
+                                                {isLoading ? (
+                                                    <div className="flex items-center justify-center">
+                                                        <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                                                        Processing...
+                                                    </div>
+                                                ) : (
+                                                    <Image
+                                                        src={"https://oralie-bucket.s3.ap-southeast-1.amazonaws.com/2560px-PayPal.svg.png"}
+                                                        alt={""} width={420} height={120} className="w-24 object-contain"/>
+                                                )}
                                             </Button>
                                         </div>
                                     </CardContent>
