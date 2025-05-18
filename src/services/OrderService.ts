@@ -38,16 +38,18 @@ export async function getListOrders(page: number,
 
 export async function updateStatusOrder(token: string, orderId: number, status: string) {
     try {
-        const res = await axios.put(`${baseUrl}/dash/orders/${orderId}/status?status=${status}`, {
+        console.log("Updating order status with token:", token ? token.substring(0, 15) + "..." : "MISSING TOKEN");
+        console.log("Order ID:", orderId);
+        console.log("Target status:", status);
+        
+        const res = await axios.put(`${baseUrl}/dash/orders/${orderId}/status?status=${status}`, null, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         });
 
-        if (res && res.status == 200) {
-            console.log(res);
-            return res.data;
-        }
+        console.log("Update order status response:", res);
+        return res.data;
     } catch (error) {
         console.error("Error calling backend payment confirmation:", error);
         throw error;
@@ -111,7 +113,7 @@ export async function getOrderDetail(token: string, orderId: number) {
 
 export async function cancelOrderByCustomer(token: string, orderId: number) {
     try {
-        const response = await axios.put(`${baseUrl}/store/orders/${orderId}/cancel`, {
+        const response = await axios.put(`${baseUrl}/store/orders/${orderId}/cancel`, null, {
             headers: {
                 Authorization: `Bearer ${token}`
             },

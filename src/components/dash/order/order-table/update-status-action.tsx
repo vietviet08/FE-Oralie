@@ -16,6 +16,12 @@ export const UpdateStatusAction: React.FC<UpdateStatusActionProps> = ({data}) =>
     const {data: session} = useSession();
     const accessToken = session?.access_token as string;
 
+    console.log("Session info:", {
+        hasSession: !!session,
+        hasAccessToken: !!accessToken,
+        tokenStart: accessToken ? accessToken.substring(0, 15) + "..." : "MISSING TOKEN"
+    });
+
     const {toast} = useToast();
 
     const handleClick = async () => {
@@ -32,7 +38,7 @@ export const UpdateStatusAction: React.FC<UpdateStatusActionProps> = ({data}) =>
                 statuses[nextIndex]
             );
 
-            if (res && res.status === 200) {
+            if (res) {
                 toast({
                     variant: "success",
                     title: "Order status updated",
