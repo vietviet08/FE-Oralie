@@ -55,7 +55,7 @@ const CheckoutTemplate = () => {
     }>({
         fullName: infoUser.name as string,
         phone: infoUser.phone as string,
-        address: infoUser.address as string,
+        address: infoUser.address_detail as string,
         city: infoUser.city as string,
         email: infoUser.email as string,
         paymentMethod: "COD",

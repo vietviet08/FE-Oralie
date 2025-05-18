@@ -69,7 +69,7 @@ export const CellAction: React.FC<CellActionProps> = ({data}) => {
     }, [data.id]);
 
     const onConfirm = async () => {
-        const token = session?.acess_token as string;
+        const token = session?.access_token as string;
 
         try {
             let res;
@@ -108,6 +108,20 @@ export const CellAction: React.FC<CellActionProps> = ({data}) => {
 
     const handleSubmit = async () => {
         const accessToken = session?.access_token as string;
+        
+        // Check if we have a valid token
+        if (!accessToken) {
+            toast({
+                variant: "destructive",
+                title: "Authentication Error",
+                description: "You are not authenticated. Please login again.",
+                duration: 3000,
+            });
+            return;
+        }
+        
+        console.log('Session data:', session);
+        
         const slug = name.toLowerCase().replace(/ /g, "-");
         try {
             const res = await updateCategory(
@@ -115,7 +129,7 @@ export const CellAction: React.FC<CellActionProps> = ({data}) => {
                 {
                     name: name,
                     description: description,
-                    image: file[0],
+                    image: file && file.length > 0 ? file[0] : undefined,
                     slug: slug,
                     isDeleted: !isChecked,
                     parentId: parentId == 0 ? undefined : parentId,

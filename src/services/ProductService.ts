@@ -82,7 +82,8 @@ export async function getProductByCategoryAndBrand(page: number,
                                                    sortBy: string,
                                                    sort: string,
                                                    category: string,
-                                                   brand?: string) {
+                                                   brand?: string,
+                                                   price?: string) {
     try {
         const params: {
             page: number;
@@ -90,18 +91,65 @@ export async function getProductByCategoryAndBrand(page: number,
             sortBy: string;
             sort: string;
             category: string;
-            brand?: string
+            brand?: string;
+            brands?: string[];
+            minPrice?: number;
+            maxPrice?: number;
+            priceRanges?: { min: number, max: number }[];
         } = {page, size, sortBy, sort, category};
+        
+        // Handle brand parameter - could be a single brand or multiple brands separated by dots
         if (brand) {
-            params.brand = brand;
+            // Check if the brand parameter contains multiple brands
+            if (brand.includes('.')) {
+                // Split by dot and create an array of brands
+                const brandArray = brand.split('.');
+                params.brands = brandArray;
+            } else {
+                params.brand = brand;
+            }
         }
+        
+        // Parse price range(s) if provided
+        if (price) {
+            // Check if multiple price ranges are provided (separated by dot)
+            if (price.includes('.')) {
+                // Handle multiple price ranges
+                const priceRanges = price.split('.');
+                params.priceRanges = priceRanges.map(range => {
+                    const [min, max] = range.split('-').map(Number);
+                    return { min: isNaN(min) ? 0 : min, max: isNaN(max) ? Number.MAX_SAFE_INTEGER : max };
+                });
+            } else {
+                // Handle single price range
+                const [minPrice, maxPrice] = price.split('-').map(Number);
+                if (!isNaN(minPrice)) {
+                    params.minPrice = minPrice;
+                }
+                if (!isNaN(maxPrice)) {
+                    params.maxPrice = maxPrice;
+                }
+            }
+        }
+        
+        console.log("Calling API with params:", JSON.stringify(params));
+        
         const res = await axios.get(`${baseUrl}/store/categories`, {params});
         if (res && res.status === 200) {
             return res.data;
         }
     } catch (error) {
-        console.log(error);
-        throw error;
+        console.log("Error in getProductByCategoryAndBrand:", error);
+        // Return default structure to prevent UI from breaking
+        return {
+            data: [],
+            totalElements: 0,
+            totalPages: 0,
+            pageNo: 0,
+            lastPage: false,
+            pageSize: 10,
+            isLast: true
+        };
     }
 }
 

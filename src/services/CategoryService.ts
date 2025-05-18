@@ -50,14 +50,19 @@ export async function getAllCategoryNotParent() {
 
 export async function getAllCategoriesSameParentBySlug(slug: string) {
     try {
+        if (!slug || slug.trim() === '') {
+            console.log("Skipping API call with empty slug");
+            return [];
+        }
+        
         const res = await axios.get(`${baseUrl}/store/categories/same-parent/${slug}`);
         if (res) {
             console.log(res.data);
             return res.data;
         }
     } catch (error) {
-        console.log(error);
-        throw error;
+        console.log("Error in getAllCategoriesSameParentBySlug:", error);
+        return [];
     }
 }
 
@@ -177,17 +182,22 @@ export async function updateCategory(id: number, category: CategoryPost, token: 
         Object.keys(category).forEach(key => {
             const value = category[key as keyof CategoryPost];
             if (value !== undefined) {
-                if (typeof value === "number" || typeof value === "boolean") {
+                if (key === 'image' && value instanceof File) {
+                    formData.append(key, value);
+                } else if (typeof value === "number" || typeof value === "boolean") {
                     formData.append(key, value.toString());
-                } else {
+                } else if (typeof value === 'string') {
                     formData.append(key, value);
                 }
             }
         });
 
+        // Log the request headers and token for debugging
+        console.log('Token used:', token);
+        
         const res = await axios.put(`${baseUrl}/dash/categories/${id}`, formData, {
             headers: {
-                Authorization: `Bearer ${token}`,
+                'Authorization': `Bearer ${token}`,
                 'Content-Type': 'multipart/form-data',
             }
         });
