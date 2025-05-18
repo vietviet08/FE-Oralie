@@ -268,6 +268,7 @@ export async function updateProduct(id: number, product: ProductPost, token: str
         formData.append('isAvailable', product.isAvailable?.toString() ?? 'false');
         formData.append('isDeleted', product.isDeleted?.toString() ?? 'false');
         formData.append('isFeatured', product.isFeatured?.toString() ?? 'false');
+        formData.append('isPromoted', product.isPromoted?.toString() ?? 'false');
 
         product.categoryIds?.forEach((id, index) => {
             formData.append(`categoryIds[${index}]`, id.toString());
@@ -277,6 +278,16 @@ export async function updateProduct(id: number, product: ProductPost, token: str
 
         product.images?.forEach((image) => {
             formData.append(`images`, image);
+        });
+
+        // Handle deleted image URLs
+        product.deletedImageUrls?.forEach((url, index) => {
+            formData.append(`deletedImageUrls[${index}]`, url);
+        });
+
+        // Handle existing image URLs that are being kept
+        product.existingImageUrls?.forEach((url, index) => {
+            formData.append(`existingImageUrls[${index}]`, url);
         });
 
         product.options?.forEach((option, index) => {
@@ -293,26 +304,19 @@ export async function updateProduct(id: number, product: ProductPost, token: str
             console.log(`${key}: ${value}`);
         });
 
-
-        // const test = `${testUrl}/dash/products/${id}`;
-
         const mainUrl = `${baseUrl}/dash/products/${id}`;
-
         const res = await axios.put(mainUrl, formData, {
             headers: {
                 Authorization: `Bearer ${token}`,
-                'Content-Type': 'multipart/form-data',
+                'Content-Type': 'multipart/form-data'
             }
         });
+
         if (res && res.status === 200) {
             return res;
         }
     } catch (error) {
-        if (axios.isAxiosError(error)) {
-            console.error('Error response:', error.response?.data);
-        } else {
-            console.error('Unexpected error:', error);
-        }
+        console.log(error);
         throw error;
     }
 }
