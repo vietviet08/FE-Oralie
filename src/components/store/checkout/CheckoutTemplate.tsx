@@ -155,26 +155,78 @@ const CheckoutTemplate = () => {
                 }
             }
             else if (values.paymentMethod === "PAYPAL") {
-                // const response = await createOrderWithPayPal(token, orderData);
-                // if (response) {
-                //     window.location.href = response.linkPaypalToExecute;
-                // }
-                // else {
-                //     toast({
-                //         variant: "destructive",
-                //         title: "Order with PayPal failed, please try again",
-                //     });
-                //     throw new Error(`handleCheckout with PayPal Request failed with status code`);
-                // }
-                console.log(orderData);
+                console.log("Initiating PayPal checkout with order data:", orderData);
+                
+                try {
+                    console.log("Creating PayPal order...");
+                    const response = await createOrderWithPayPal(token, orderData);
+                    console.log("PayPal response:", response);
+                    
+                    // Try multiple possible locations for the PayPal URL
+                    const redirectUrl = response?.linkPaypalToExecute || response?.link;
+                    
+                    if (redirectUrl) {
+                        console.log("PayPal redirect URL found:", redirectUrl);
+                        // Show success toast before redirecting
+                        toast({
+                            title: "Redirecting to PayPal",
+                            description: "You will be redirected to complete payment."
+                        });
+                        
+                        // Give the toast time to appear before redirecting
+                        setTimeout(() => {
+                            window.location.href = redirectUrl;
+                        }, 1000);
+                        return;
+                    } else {
+                        // No redirect URL found in the response
+                        console.error("No PayPal redirect URL found in response:", response);
+                        
+                        // Try to provide more useful error information
+                        let errorDetail = "Server response did not contain a redirect URL";
+                        if (response.error) {
+                            errorDetail = `Error (${response.status}): ${response.message || "Unknown error"}`;
+                        }
+                        
+                        toast({
+                            variant: "destructive",
+                            title: "PayPal Checkout Error",
+                            description: `Unable to get PayPal checkout URL. ${errorDetail}`
+                        });
+                    }
+                } catch (error) {
+                    console.error('Error during PayPal checkout:', error);
+                    
+                    let errorMessage = "An unexpected error occurred during PayPal checkout";
+                    if (error instanceof Error) {
+                        errorMessage = error.message;
+                    } else if (typeof error === 'object' && error !== null) {
+                        errorMessage = JSON.stringify(error);
+                    }
+                    
+                    toast({
+                        variant: "destructive",
+                        title: "PayPal Checkout Failed",
+                        description: errorMessage
+                    });
+                }
             }
 
         } catch (error) {
             console.error('Error during checkout:', error);
+            
+            // More detailed error information
+            let errorMessage = "An unexpected error occurred";
+            if (error instanceof Error) {
+                errorMessage = error.message;
+            } else if (typeof error === 'object' && error !== null) {
+                errorMessage = JSON.stringify(error);
+            }
+            
             toast({
                 variant: "destructive",
                 title: "Error during checkout",
-                description: (error as Error).message
+                description: errorMessage
             });
         }
     }
