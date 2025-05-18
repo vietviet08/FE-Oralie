@@ -12,6 +12,25 @@ body {
   }
 }
 
+/* Toast Animation Styles */
+@keyframes enter {
+  0% { transform: translateX(100%); opacity: 0; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes leave {
+  0% { transform: translateX(0); opacity: 1; }
+  100% { transform: translateX(100%); opacity: 0; }
+}
+
+.animate-enter {
+  animation: enter 0.35s ease-out forwards;
+}
+
+.animate-leave {
+  animation: leave 0.35s ease-in forwards;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

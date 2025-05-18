@@ -25,7 +25,7 @@ import { getTop10ProductRelatedCategory } from "@/services/ProductService";
 import { addProductToCart } from "@/services/CartService";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import toast from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 import { FooterSologan } from "@/components/store/product/product-detail/footer-sologan";
 import { ProductSpecification } from "@/components/store/product/product-detail/product-specification";
 import { ProductPolicy } from "@/components/store/product/product-detail/product-policy";
@@ -70,21 +70,89 @@ const ProductPageDetail = ({ product }: Props) => {
   }, [product.id, product.productCategories]);
 
   const handleAddToCart = async (quantity: number, productId: number, optionId: number) => {
+    try {
+      const selectedOption = product.options.find(option => option.id === optionId);
+      const optionName = selectedOption ? selectedOption.name : '';
+      const optionPrice = selectedOption ? selectedOption.value : 0;
+      const productImage = product.images.length > 0 ? product.images[0].url : '';
+      
+      const res = await addProductToCart(token, quantity, optionId, productId);
 
-    const res = await addProductToCart(token, quantity, optionId, productId);
-
-    if (res) {
-      toast.success("Add to cart successfully", {
-        position: "bottom-right",
-        duration: 3000,
-      });
-    } else {
-      toast.error("Add to cart failed", {
+      if (res) {
+        toast.custom((t) => (
+          <div 
+            className={`
+              max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5
+              ${t.visible ? 'animate-enter' : 'animate-leave'}
+            `}
+          >
+            <div className="flex-1 w-0 p-4">
+              <div className="flex items-start">
+                <div className="flex-shrink-0 pt-0.5">
+                  <img className="h-16 w-16 rounded-md object-cover border border-gray-200" src={productImage} alt={product.name} />
+                </div>
+                <div className="ml-3 flex-1 overflow-hidden">
+                  <div className="flex justify-between items-center">
+                    <p className="text-sm font-medium text-green-600 flex items-center">
+                      <Icons.check className="mr-1 h-4 w-4" />
+                      Added to cart
+                    </p>
+                    <button 
+                      onClick={() => toast.dismiss(t.id)}
+                      className="ml-2 text-gray-400 hover:text-gray-500"
+                    >
+                      <Icons.close className="h-4 w-4" />
+                    </button>
+                  </div>
+                  <div className="mt-1 text-sm text-gray-700 overflow-hidden">
+                    <p className="truncate max-w-[230px] font-medium">
+                      {product.name}
+                    </p>
+                    <p className="text-gray-500 text-xs mt-0.5">
+                      Option: {optionName}
+                    </p>
+                  </div>
+                  <div className="mt-2 flex items-center justify-between">
+                    <p className="text-sm font-medium text-primaryred">
+                      ${optionPrice} × {quantity}
+                    </p>
+                    <Link 
+                      href="/cart" 
+                      className="text-xs text-blue-600 hover:text-blue-800 hover:underline"
+                    >
+                      View Cart
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        ), { 
+          position: "bottom-right", 
+          duration: 4000 
+        });
+      } else {
+        toast.error("Failed to add item to cart", {
+          position: "bottom-right",
+          duration: 3000,
+          style: {
+            border: '1px solid #E53E3E',
+            padding: '16px',
+          },
+          iconTheme: {
+            primary: '#E53E3E',
+            secondary: '#FFFAEE',
+          },
+        });
+      }
+      setQuantity(1);
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+      toast.error("Failed to add item to cart", {
         position: "bottom-right",
         duration: 3000,
       });
     }
-    setQuantity(1);
   };
   const breadcrumbItems = [
     { title: 'Store', link: '/' },
@@ -95,16 +163,17 @@ const ProductPageDetail = ({ product }: Props) => {
   ];
 
   return (
-    <div className="sm:px-32 px-6 py-6 mt-14">
+    <div className="px-4 sm:px-6 md:px-10 lg:px-16 xl:px-32 py-6 mt-14">
+      <Toaster />
       <Breadcrumbs items={breadcrumbItems} />
-      <div className="flex flex-col md:flex-row justify-between items-center gap-2 w-full py-4">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-2 w-full py-4">
         <div className="w-full md:w-4/5">
-          <h2 className="text-2xl font-bold text-black">{product.name}</h2>
-          <span className="text-sm my-2">
+          <h2 className="text-xl sm:text-2xl font-bold text-black">{product.name}</h2>
+          <span className="text-xs sm:text-sm my-2 block">
             SKU: {product.sku} - Brand: {product.brand?.name}
           </span>
         </div>
-        <div className="w-full md:w-1/5 flex justify-start items-center md:justify-end">
+        <div className="w-full md:w-1/5 flex justify-start items-center md:justify-end mt-2 md:mt-0">
           {product.isAvailable ? (
             <Badge
               variant={"allower"}
@@ -122,12 +191,12 @@ const ProductPageDetail = ({ product }: Props) => {
           )}
         </div>
       </div>
-      <div className=" border-b-[1px] border-b-primaryred2"></div>
-      <div className="pt-8">
+      <div className="border-b-[1px] border-b-primaryred2"></div>
+      <div className="pt-4 sm:pt-6 md:pt-8">
         <main>
-          <div className="flex flex-col lg:flex-row md:justify-center ">
-            <div className="w-full lg:w-3/5 mr-0 md:mr-2 mt-0 m-4 ml-0 ">
-              <div className="relative w-full h-full ">
+          <div className="flex flex-col lg:flex-row md:justify-center gap-4 lg:gap-6">
+            <div className="w-full lg:w-3/5">
+              <div className="relative w-full h-full">
                 <Swiper
                   onSwiper={(swiper) => {
                     swiperRef.current = swiper;
@@ -153,7 +222,7 @@ const ProductPageDetail = ({ product }: Props) => {
                 >
                   {product.images.map((image, index) => (
                     <SwiperSlide key={index}>
-                      <div className="relative w-full h-[360px]">
+                      <div className="relative w-full h-[250px] sm:h-[300px] md:h-[360px]">
                         <Image
                           width={500}
                           height={500}
@@ -233,30 +302,39 @@ const ProductPageDetail = ({ product }: Props) => {
                 <Swiper
                   onSwiper={setThumbsSwiper}
                   spaceBetween={10}
-                  slidesPerView={8}
+                  slidesPerView={4}
                   freeMode={true}
                   watchSlidesProgress={true}
                   modules={[FreeMode, Navigation, Thumbs]}
-                  className="mySwiper mt-3 px-4"
+                  className="mySwiper mt-3 px-2 sm:px-4"
                   breakpoints={{
                     320: {
+                      slidesPerView: 3,
+                      spaceBetween: 5,
+                    },
+                    480: {
                       slidesPerView: 4,
                       spaceBetween: 5,
                     },
                     640: {
                       slidesPerView: 4,
+                      spaceBetween: 8,
                     },
                     768: {
-                      slidesPerView: 4,
+                      slidesPerView: 5,
+                      spaceBetween: 8,
                     },
                     1024: {
-                      slidesPerView: 5,
+                      slidesPerView: 6,
+                      spaceBetween: 10,
                     },
                     1280: {
                       slidesPerView: 7,
+                      spaceBetween: 10,
                     },
                     1536: {
                       slidesPerView: 8,
+                      spaceBetween: 10,
                     },
                   }}
                 >
@@ -289,92 +367,83 @@ const ProductPageDetail = ({ product }: Props) => {
               </div>
             </div>
 
-            <div className="w-full lg:w-2/5 ml-0 md:ml-2 mt-0 m-4 mr-0 rounded-lg ">
-              <div className="grid grid-cols-3 gap-3 mb-4">
+            <div className="w-full lg:w-2/5 mt-4 lg:mt-0">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3 mb-4">
                 {product.options.map((option) => (
                   <Button
                     key={option.id}
-                    className={`flex flex-col justify-center items-center rounded-xl text-primaryred1 bg-white border border-primaryred2 hover:text-white hover:bg-primaryred1 overflow-hidden w-full h-full ${selectedOptionId === option.id ? 'bg-primaryred1 text-white' : 'bg-transparent'}`}
+                    className={`flex flex-col justify-center items-center rounded-xl text-primaryred1 bg-white border border-primaryred2 hover:text-white hover:bg-primaryred1 overflow-hidden w-full h-full py-2 ${selectedOptionId === option.id ? 'bg-primaryred1 text-white' : 'bg-transparent'}`}
                     onClick={() => setSelectedOptionId(option.id!)}
                   >
-                    <div className=" font-bold text-sm">{option.name}</div>
-                    <div className=" text-sm">$ {option.value}</div>
+                    <div className="font-bold text-xs sm:text-sm">{option.name}</div>
+                    <div className="text-xs sm:text-sm">$ {option.value}</div>
                   </Button>
                 ))}
               </div>
 
-              <div className="flex justify-between items-center space-x-3 my-4">
+              <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-3 my-4">
                 <Button
-                  className="rounded-lg bg-primaryred w-5/6 h-14 flex flex-col justify-center items-center text-white hover:bg-white hover:text-primaryred border  hover:border-primaryred">
-                  <span className="text-sm space-y-1 flex flex-col justify-center items-center">
+                  className="rounded-lg bg-primaryred w-full sm:w-5/6 h-12 sm:h-14 flex flex-col justify-center items-center text-white hover:bg-white hover:text-primaryred border hover:border-primaryred">
+                  <span className="text-xs sm:text-sm space-y-1 flex flex-col justify-center items-center">
                     <span className="font-bold uppercase">Pay now</span>
-                    <span>Shiping or take direct in the store</span>
+                    <span className="text-xs">Shiping or take direct in the store</span>
                   </span>
                 </Button>
-                <div className="h-14 flex items-center">
+                <div className="h-12 sm:h-14 flex items-center justify-center sm:justify-start">
                   <Button
-                    className="flex flex-col justify-center items-center rounded-lg border text-primaryred border-primaryred bg-white w-20 h-14 transition-all duration-300 ease-in-out hover:bg-primaryred hover:text-white"
+                    className="flex flex-col justify-center items-center rounded-lg border text-primaryred border-primaryred bg-white h-12 sm:h-14 w-full sm:w-20 transition-all duration-300 ease-in-out hover:bg-primaryred hover:text-white"
                     onClick={() => handleAddToCart(quantity, product.id!, selectedOptionId)}
                   >
-                    <Icons.shoppingCart className="w-10 h-10 text-xl" />
-                    <span className=" text-[12px]">Add to cart</span>
+                    <Icons.shoppingCart className="w-6 h-6 sm:w-8 sm:h-8" />
+                    <span className="text-[10px] sm:text-[12px]">Add to cart</span>
                   </Button>
-
                 </div>
               </div>
 
-              <div
-                className="my-4 flex flex-row lg:flex-col xl:flex-row justify-center items-center gap-2">
-                <div
-                  className="rounded-lg bg-primaryblue w-3/6 md:w-full h-14 flex flex-col justify-center items-center m-0">
-                  <span
-                    className="text-sm text-white space-y-1 flex flex-col justify-center items-center">
+              <div className="my-4 flex flex-col sm:flex-row lg:flex-col xl:flex-row justify-center items-stretch gap-2">
+                <div className="rounded-lg bg-primaryblue w-full sm:w-1/2 lg:w-full xl:w-1/2 h-12 sm:h-14 flex flex-col justify-center items-center m-0">
+                  <span className="text-xs sm:text-sm text-white space-y-0.5 sm:space-y-1 flex flex-col justify-center items-center">
                     <span className="font-bold uppercase">INSTALLMENT 0%</span>
                     <span>0% down payment</span>
                   </span>
                 </div>
-                <div
-                  className="rounded-lg bg-primaryblue w-3/6 md:w-full h-14 flex flex-col justify-center items-center m-0">
-                  <span
-                    className="text-sm text-white space-y-1 flex flex-col justify-center items-center">
-                    <span className="font-bold uppercase">
-                      0% installment by card
-                    </span>
+                <div className="rounded-lg bg-primaryblue w-full sm:w-1/2 lg:w-full xl:w-1/2 h-12 sm:h-14 flex flex-col justify-center items-center m-0">
+                  <span className="text-xs sm:text-sm text-white space-y-0.5 sm:space-y-1 flex flex-col justify-center items-center">
+                    <span className="font-bold uppercase">0% installment by card</span>
                     <span>(VISA, Mastercard, JCB)</span>
                   </span>
                 </div>
               </div>
 
               <div className="my-4 rounded-xl border border-gray-200 overflow-hidden">
-                <h2 className="text-md font-bold text-primaryred  bg-gray-100 px-4 py-2.5">
+                <h2 className="text-sm sm:text-md font-bold text-primaryred bg-gray-100 px-3 sm:px-4 py-2 sm:py-2.5">
                   Additional Offers
                 </h2>
-                <ul className="text-sm space-y-1 px-4 py-3">
+                <ul className="text-xs sm:text-sm space-y-1 px-3 sm:px-4 py-2 sm:py-3">
                   <li>
-                    <Icons.check className="text-green-400 size-4 inline-block mr-2" />
+                    <Icons.check className="text-green-400 size-3 sm:size-4 inline-block mr-1 sm:mr-2" />
                     Full Accessories Included
                   </li>
                   <li>
-                    <Icons.check className="text-green-400 size-4 inline-block mr-2" />
+                    <Icons.check className="text-green-400 size-3 sm:size-4 inline-block mr-1 sm:mr-2" />
                     Lifetime Software Support
                   </li>
                   <li>
-                    <Icons.check className="text-green-400 size-4 inline-block mr-2" />
+                    <Icons.check className="text-green-400 size-3 sm:size-4 inline-block mr-1 sm:mr-2" />
                     Free Windows Installation + Machine Cleaning
                   </li>
                   <li>
-                    <Icons.check className="text-green-400 size-4 inline-block mr-2" />
+                    <Icons.check className="text-green-400 size-3 sm:size-4 inline-block mr-1 sm:mr-2" />
                     Support for Old-For-New Exchange - Best Price Subsidy
                   </li>
                 </ul>
               </div>
 
-              <div
-                className="flex flex-col overflow-hidden bg-white mb:container-full rounded-xl border border-gray-200">
-                <h3 className="text-md text-primaryred text-black-opacity-100 font-semibold px-4 py-2.5 bg-gray-100">
+              <div className="flex flex-col overflow-hidden bg-white mb:container-full rounded-xl border border-gray-200">
+                <h3 className="text-sm sm:text-md text-primaryred text-black-opacity-100 font-semibold px-3 sm:px-4 py-2 sm:py-2.5 bg-gray-100">
                   Other gifts and promotions
                 </h3>
-                <div className="flex flex-col gap-2 text-sm px-4 py-3">
+                <div className="flex flex-col gap-2 text-xs sm:text-sm px-3 sm:px-4 py-2 sm:py-3">
                   <div className="flex gap-1 ">
                     <div className="h-7 w-7 flex-shrink-0 p-0.5 pt-1.5">
                       <Image width={30} height={30}
