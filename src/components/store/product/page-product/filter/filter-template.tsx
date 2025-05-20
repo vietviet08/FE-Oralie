@@ -8,7 +8,7 @@ import {Brand} from "@/model/brand/Brand";
 import {getAllBrand} from "@/services/BrandService";
 import {getAllCategoriesSameParentBySlug} from "@/services/CategoryService";
 import {useProductTableFilters} from "@/components/dash/product/product-tables/use-product-table-filters";
-import {useEffect, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {CategoryGet} from "@/model/category/CategoryGet";
 import {useRouter} from "next/navigation";
 import { AlertCircle } from "lucide-react";
@@ -47,10 +47,22 @@ function FilterTemplate() {
     const [categories, setCategories] = useState<CategoryGet[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
+    
+    // Enhanced function to handle filter updates
+    const updateFiltersAndRefresh = useCallback(() => {
+        // Reset to page 1 when filters change
+        setPage(1);
+        // Force router refresh to apply changes
+        router.refresh();
+    }, [router, setPage]);
 
     // Handle multiple brands (e.g., "dell.apple")
-    const handleBrandSelection = (value: string | null) => {
-        if (!value) return;
+    const handleBrandSelection = useCallback((value: string | null) => {
+        if (!value) {
+            setBrand('');
+            updateFiltersAndRefresh();
+            return;
+        }
         
         // If the brand already contains the selected value, remove it
         if (brand && brand.includes(value)) {
@@ -65,12 +77,16 @@ function FilterTemplate() {
         else {
             setBrand(`${brand}.${value}`);
         }
-        router.refresh();
-    };
+        updateFiltersAndRefresh();
+    }, [brand, setBrand, updateFiltersAndRefresh]);
 
     // Handle multiple price ranges (e.g., "700-1000.1000-1500")
-    const handlePriceSelection = (value: string | null) => {
-        if (!value) return;
+    const handlePriceSelection = useCallback((value: string | null) => {
+        if (!value) {
+            setPrice('');
+            updateFiltersAndRefresh();
+            return;
+        }
         
         // If the price already contains the selected value, remove it
         if (price && price.includes(value)) {
@@ -85,8 +101,20 @@ function FilterTemplate() {
         else {
             setPrice(`${price}.${value}`);
         }
-        router.refresh();
-    };
+        updateFiltersAndRefresh();
+    }, [price, setPrice, updateFiltersAndRefresh]);
+    
+    // Handle category selection
+    const handleCategorySelection = useCallback((value: string | null) => {
+        setCategory(value);
+        updateFiltersAndRefresh();
+    }, [setCategory, updateFiltersAndRefresh]);
+    
+    // Handle global reset
+    const handleResetAllFilters = useCallback(() => {
+        resetFilters();
+        updateFiltersAndRefresh();
+    }, [resetFilters, updateFiltersAndRefresh]);
 
     useEffect(() => {
         async function fetchBrandsAndCategories() {
@@ -124,27 +152,17 @@ function FilterTemplate() {
             }
         }
         fetchBrandsAndCategories();
-    }, [category, brand]);
+    }, [category]);
     
-    // Reset page to 1 when filters change
-    useEffect(() => {
-        setPage(1);
-    }, [category, brand, price, setPage]);
-
-    // Check if a brand is selected (for UI highlighting)
-    const isBrandSelected = (value: string) => {
-        if (!brand) return false;
-        return brand.split('.').includes(value);
-    };
-
-    // Check if a price range is selected (for UI highlighting)
-    const isPriceSelected = (value: string) => {
-        if (!price) return false;
-        return price.split('.').includes(value);
-    };
+    // Handle Sort Selection
+    const handleSortSelection = useCallback((sortDirection: string, sortByField: string) => {
+        setSort(sortDirection);
+        setSortBy(sortByField);
+        updateFiltersAndRefresh();
+    }, [setSort, setSortBy, updateFiltersAndRefresh]);
 
     return (
-        <div className="my-4 flex flex-col gap-4">
+        <div className="my-6 flex flex-col gap-6">
             {error && (
                 <div className="bg-red-50 p-4 rounded-md flex items-center text-red-700 mb-4">
                     <AlertCircle className="h-5 w-5 mr-2" />
@@ -152,126 +170,114 @@ function FilterTemplate() {
                 </div>
             )}
 
-            {/*delete filter */}
-            <DataTableResetFilter
-                isFilterActive={isAnyFilterActive}
-                onReset={() => {
-                    resetFilters();
-                    router.refresh();
-                }}
-            />
+            {/* Global reset filter button */}
+            {isAnyFilterActive && (
+                <div className="flex justify-between items-center bg-gray-50 p-4 rounded-lg">
+                    <div className="font-medium">Active filters</div>
+                    <Button
+                        variant="destructive"
+                        size="sm"
+                        onClick={handleResetAllFilters}
+                        className="text-xs"
+                    >
+                        Reset all filters
+                    </Button>
+                </div>
+            )}
 
-            {/*Filter by brand*/}
+            {/* Filter by brand */}
             {!loading && brands.length > 0 && (
-                <FilterSection title="Brand"
-                               className="grid grid-cols-4 gap-2 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-12 my-2"
-                               options={brands.map((brandItem) => ({
-                                      label: "",
-                                      value: brandItem?.slug?.toString() ?? "",
-                                      image: brandItem.image,
-                               }))}
-                               setFilterValue={handleBrandSelection}
-                               filterValue={brand}
-                >
-                </FilterSection>
+                <div className="p-4 border rounded-lg shadow-sm hover:shadow transition-shadow">
+                    <FilterSection 
+                        title="Brand"
+                        className="grid grid-cols-4 gap-3 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-12 my-2"
+                        options={brands.map((brandItem) => ({
+                            label: brandItem.name || "",
+                            value: brandItem?.slug?.toString() ?? "",
+                            image: brandItem.image,
+                        }))}
+                        setFilterValue={handleBrandSelection}
+                        filterValue={brand}
+                    />
+                </div>
             )}
 
             {/* Filter by category */}
             {!loading && categories.length > 0 && (
-                <FilterSection title="Category"
-                               className="grid grid-cols-2 gap-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 my-2"
-                               setFilterValue={(value) => {
-                                   setCategory(value);
-                                   router.refresh();
-                               }}
-                               filterValue={category}
-                               options={categories.map((categoryItem) => ({
-                                   label: categoryItem.name ?? "",
-                                   value: categoryItem?.slug?.toString() ?? "",
-                               }))}
-                >
-                </FilterSection>
+                <div className="p-4 border rounded-lg shadow-sm hover:shadow transition-shadow">
+                    <FilterSection 
+                        title="Category"
+                        className="grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 my-2"
+                        setFilterValue={handleCategorySelection}
+                        filterValue={category}
+                        options={categories.map((categoryItem) => ({
+                            label: categoryItem.name ?? "",
+                            value: categoryItem?.slug?.toString() ?? "",
+                        }))}
+                    />
+                </div>
             )}
 
             {/* Filter by price level */}
-            <FilterSection title="Price level"
-                           className="grid grid-cols-3 gap-2 md:grid-cols-5 lg:grid-cols-8 my-2"
-                           setFilterValue={handlePriceSelection}
-                           filterValue={price}
-                           options={[
-                               {label: "Under $500", value: "0-500"},
-                               {label: "$500 - $700", value: "500-700"},
-                               {label: "$700 - $1000", value: "700-1000"},
-                               {label: "$1000 - $1500", value: "1000-1500"},
-                               {label: "$1500 - $2000", value: "1500-2000"},
-                               {label: "Over $2000", value: "2000-9999999"},
-                           ]}
-            >
-            </FilterSection>
+            <div className="p-4 border rounded-lg shadow-sm hover:shadow transition-shadow">
+                <FilterSection 
+                    title="Price Range"
+                    className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-6 my-2"
+                    setFilterValue={handlePriceSelection}
+                    filterValue={price}
+                    options={[
+                        {label: "Under $500", value: "0-500"},
+                        {label: "$500 - $700", value: "500-700"},
+                        {label: "$700 - $1000", value: "700-1000"},
+                        {label: "$1000 - $1500", value: "1000-1500"},
+                        {label: "$1500 - $2000", value: "1500-2000"},
+                        {label: "Over $2000", value: "2000-9999999"},
+                    ]}
+                />
+            </div>
 
-            {/* Sort by options */}
-            <FilterSection title="Sort By" className="grid grid-cols-2 gap-2 lg:grid-cols-6 my-2">
-                <Button variant="outline" 
-                        className={`h-8 px-4 ${sort === 'desc' && sortBy === 'viewCount' ? 'bg-gray-200' : ''}`}
-                        onClick={() => {
-                            setSort("desc");
-                            setSortBy("viewCount");
-                            router.refresh();
-                        }}>
-                    <Icons.eye className="text-gray-500" width={16} height={16}/>
-                    <span className="text-base">Most viewed</span>
-                </Button>
-                <Button variant="outline" 
-                        className={`h-8 px-4 ${sort === 'desc' && sortBy === 'id' ? 'bg-gray-200' : ''}`}
-                        onClick={() => {
-                            setSort("desc");
-                            setSortBy("id");
-                            router.refresh();
-                        }}>
-                    <Icons.clock className="text-gray-500" width={16} height={16}/>
-                    <span className="text-base">Latest</span>
-                </Button>
-                <Button variant="outline" 
-                        className={`h-8 px-4 ${sort === 'desc' && sortBy === 'price' ? 'bg-gray-200' : ''}`}
-                        onClick={() => {
-                            setSort("desc");
-                            setSortBy("price");
-                            router.refresh();
-                        }}>
-                    <Icons.arrowDownWideNarrow className="text-gray-500" width={16} height={16}/>
-                    <span className="text-base">Price decrease</span>
-                </Button>
-                <Button variant="outline" 
-                        className={`h-8 px-4 ${sort === 'asc' && sortBy === 'price' ? 'bg-gray-200' : ''}`}
-                        onClick={() => {
-                            setSort("asc");
-                            setSortBy("price");
-                            router.refresh();
-                        }}>
-                    <Icons.arrowUpWideNarrow className="text-gray-500" width={16} height={16}/>
-                    <span className="text-base">Price increase</span>
-                </Button>
-                <Button variant="outline" 
-                        className={`h-8 px-4 ${sort === 'desc' && sortBy === 'discount' ? 'bg-gray-200' : ''}`}
-                        onClick={() => {
-                            setSort("desc");
-                            setSortBy("discount");
-                            router.refresh();
-                        }}>
-                    <Icons.flame className="text-gray-500" width={16} height={16}/>
-                    <span className="text-base">Hot discount</span>
-                </Button>
-                <Button variant="outline" 
-                        className={`h-8 px-4 ${sort === 'desc' && sortBy === 'salesCount' ? 'bg-gray-200' : ''}`}
-                        onClick={() => {
-                            setSort("desc");
-                            setSortBy("salesCount");
-                            router.refresh();
-                        }}>
-                    <Icons.star className="text-gray-500" width={16} height={16}/>
-                    <span className="text-base">Best sellers</span>
-                </Button>
-            </FilterSection>
+            {/* Sort by options - with a different style to distinguish from filters */}
+            <div className="p-4 bg-gray-50 border border-gray-100 rounded-lg">
+                <h2 className="text-lg font-semibold mb-3">Sort By</h2>
+                <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+                    <Button
+                        variant={sort === 'desc' && sortBy === 'viewCount' ? "default" : "outline"}
+                        className={`h-10 ${sort === 'desc' && sortBy === 'viewCount' 
+                            ? 'bg-indigo-100 text-indigo-800 border-2 border-indigo-300 hover:bg-indigo-200' 
+                            : 'hover:border-indigo-200 hover:bg-indigo-50'}`}
+                        onClick={() => handleSortSelection("desc", "viewCount")}>
+                        <Icons.eye className={sort === 'desc' && sortBy === 'viewCount' ? "text-indigo-600" : "text-gray-500"} width={16} height={16}/>
+                        <span className="ml-2">Most viewed</span>
+                    </Button>
+                    <Button
+                        variant={sort === 'desc' && sortBy === 'id' ? "default" : "outline"}
+                        className={`h-10 ${sort === 'desc' && sortBy === 'id' 
+                            ? 'bg-indigo-100 text-indigo-800 border-2 border-indigo-300 hover:bg-indigo-200' 
+                            : 'hover:border-indigo-200 hover:bg-indigo-50'}`}
+                        onClick={() => handleSortSelection("desc", "id")}>
+                        <Icons.clock className={sort === 'desc' && sortBy === 'id' ? "text-indigo-600" : "text-gray-500"} width={16} height={16}/>
+                        <span className="ml-2">Latest</span>
+                    </Button>
+                    <Button
+                        variant={sort === 'desc' && sortBy === 'price' ? "default" : "outline"}
+                        className={`h-10 ${sort === 'desc' && sortBy === 'price' 
+                            ? 'bg-indigo-100 text-indigo-800 border-2 border-indigo-300 hover:bg-indigo-200' 
+                            : 'hover:border-indigo-200 hover:bg-indigo-50'}`}
+                        onClick={() => handleSortSelection("desc", "price")}>
+                        <Icons.arrowDownWideNarrow className={sort === 'desc' && sortBy === 'price' ? "text-indigo-600" : "text-gray-500"} width={16} height={16}/>
+                        <span className="ml-2">Price decrease</span>
+                    </Button>
+                    <Button
+                        variant={sort === 'asc' && sortBy === 'price' ? "default" : "outline"}
+                        className={`h-10 ${sort === 'asc' && sortBy === 'price' 
+                            ? 'bg-indigo-100 text-indigo-800 border-2 border-indigo-300 hover:bg-indigo-200' 
+                            : 'hover:border-indigo-200 hover:bg-indigo-50'}`}
+                        onClick={() => handleSortSelection("asc", "price")}>
+                        <Icons.arrowUpWideNarrow className={sort === 'asc' && sortBy === 'price' ? "text-indigo-600" : "text-gray-500"} width={16} height={16}/>
+                        <span className="ml-2">Price increase</span>
+                    </Button>
+                </div>
+            </div>
         </div>
     )
 }

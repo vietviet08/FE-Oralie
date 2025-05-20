@@ -85,51 +85,23 @@ export async function getProductByCategoryAndBrand(page: number,
                                                    brand?: string,
                                                    price?: string) {
     try {
-        const params: {
-            page: number;
-            size: number;
-            sortBy: string;
-            sort: string;
-            category: string;
-            brand?: string;
-            brands?: string[];
-            minPrice?: number;
-            maxPrice?: number;
-            priceRanges?: { min: number, max: number }[];
-        } = {page, size, sortBy, sort, category};
+        // Request parameters
+        const params: any = {
+            page,
+            size,
+            sortBy,
+            sort,
+            category
+        };
         
-        // Handle brand parameter - could be a single brand or multiple brands separated by dots
+        // Add brand if provided (API accepts comma-separated values)
         if (brand) {
-            // Check if the brand parameter contains multiple brands
-            if (brand.includes('.')) {
-                // Split by dot and create an array of brands
-                const brandArray = brand.split('.');
-                params.brands = brandArray;
-            } else {
-                params.brand = brand;
-            }
+            params.brand = brand;
         }
         
-        // Parse price range(s) if provided
+        // Add price if provided
         if (price) {
-            // Check if multiple price ranges are provided (separated by dot)
-            if (price.includes('.')) {
-                // Handle multiple price ranges
-                const priceRanges = price.split('.');
-                params.priceRanges = priceRanges.map(range => {
-                    const [min, max] = range.split('-').map(Number);
-                    return { min: isNaN(min) ? 0 : min, max: isNaN(max) ? Number.MAX_SAFE_INTEGER : max };
-                });
-            } else {
-                // Handle single price range
-                const [minPrice, maxPrice] = price.split('-').map(Number);
-                if (!isNaN(minPrice)) {
-                    params.minPrice = minPrice;
-                }
-                if (!isNaN(maxPrice)) {
-                    params.maxPrice = maxPrice;
-                }
-            }
+            params.price = price;
         }
         
         console.log("Calling API with params:", JSON.stringify(params));
