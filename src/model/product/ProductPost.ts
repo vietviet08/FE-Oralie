@@ -2,15 +2,11 @@ import { ProductOption } from "./ProductOption";
 import { ProductSpecification } from "./ProductSpecification";
 
 export type ProductPost = {
-    name?: string;
-    slug: string;
+    id?: number;
+    name: string;
+    slug?: string;
     description: string;
     sku?: string;
-    categoryIds?: number[];
-    brandId?: number;
-    images?: File[];
-    options?: ProductOption[];
-    specifications?: ProductSpecification[];
     price: number;
     discount?: number;
     quantity: number;
@@ -18,4 +14,12 @@ export type ProductPost = {
     isAvailable?: boolean;
     isDeleted?: boolean;
     isFeatured?: boolean;
+    isPromoted?: boolean;
+    categoryIds?: number[];
+    brandId?: number;
+    images?: File[];
+    deletedImageUrls?: string[];
+    existingImageUrls?: string[];
+    options?: { name: string, value: string }[];
+    specifications?: { name: string, value: string }[];
 }

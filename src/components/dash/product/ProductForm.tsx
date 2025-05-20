@@ -20,13 +20,15 @@ import { getAllBrand } from "@/services/BrandService";
 import { useSession } from "next-auth/react";
 import { CategoryGet } from "@/model/category/CategoryGet";
 import { ProductPost } from "@/model/product/ProductPost";
-import { TrashIcon } from "lucide-react";
+import { TrashIcon, XCircleIcon } from "lucide-react";
 import { MultiSelect } from "@/components/common/multi-select";
 import { PlusIcon } from "@radix-ui/react-icons";
 import { useToast } from "@/hooks/use-toast";
 import { Product } from "@/model/product/Product";
 import ReactQuill from "react-quill";
 import { useRouter } from "next/navigation";
+import { ProductImage } from "@/model/product/ProductImage";
+import Image from "next/image";
 
 interface ProductFormProps {
   product?: Product;
@@ -42,52 +44,23 @@ const ACCEPTED_IMAGE_TYPES = [
 
 const modulesQuill = {
   toolbar: [
-    [{ header: [1, 2, 3, 4, 5, 6, false] }],
-    ["bold", "italic", "underline", "strike", "blockquote"],
-    [{ align: ["right", "center", "justify"] }],
-    [{ list: "ordered" }, { list: "bullet" }],
-    ["link", "image"],
+    [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+    ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+    [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+    ['link', 'image'],
+    ['clean']
   ],
 };
 
 const formSchema = z.object({
-  image: z
-    .any()
-    .refine((files) => files?.length <= 8, "You can upload up to 8 images.")
-    .refine((files) => files?.length >= 1, "At least one image is required.")
-    .refine(
-      (files) =>
-        files?.every((file: { size: number }) => file.size <= MAX_FILE_SIZE),
-      `Max file size is 8MB.`
-    )
-    .refine(
-      (files) =>
-        files?.every((file: { type: string }) =>
-          ACCEPTED_IMAGE_TYPES.includes(file.type)
-        ),
-      ".jpg, .jpeg, .png and .webp files are accepted."
-    ),
-  name: z.string().min(2, {
-    message: "Product name must be at least 2 characters.",
-  }),
-  category: z.array(z.string()).nonempty({
-    message: "You have to select at least one category.",
-  }),
-  brand: z.string().min(1, {
-    message: "You have to select at least one brand.",
-  }),
-  price: z.string().refine((value) => !isNaN(parseFloat(value)), {
-    message: "Price must be a valid number.",
-  }),
-  discount: z.string().refine((value) => !isNaN(parseFloat(value)), {
-    message: "Discount must be a valid number.",
-  }),
-  quantity: z.string().refine((value) => !isNaN(parseFloat(value)), {
-    message: "Quantity must be a valid number.",
-  }),
-  description: z.string().min(10, {
-    message: "Description must be at least 10 characters.",
-  }),
+  name: z.string().min(1, "Product name is required"),
+  image: z.array(z.instanceof(File)).optional(),
+  category: z.array(z.string()).min(1, "At least one category is required"),
+  brand: z.string().min(1, "Brand is required"),
+  price: z.string().min(1, "Price is required"),
+  discount: z.string().optional(),
+  quantity: z.string().min(1, "Quantity is required"),
+  description: z.string().min(1, "Description is required"),
   options: z
     .array(
       z.object({
@@ -107,18 +80,10 @@ const formSchema = z.object({
 });
 
 export default function ProductForm({ product }: ProductFormProps) {
-  // const convertUrlsToFiles = async (urls: string[]) => {
-  //     const files = await Promise.all(
-  //         urls.map(async (url) => {
-  //             const response = await fetch(url);
-  //             const blob = await response.blob();
-  //             const filename = url.split("/").pop() || "file";
-  //             const mimeType = blob.type;
-  //             return new File([blob], filename, {type: mimeType});
-  //         })
-  //     );
-  //     return files;
-  // };
+  const [existingImages, setExistingImages] = useState<ProductImage[]>(
+    product?.images || []
+  );
+  const [imagesToDelete, setImagesToDelete] = useState<string[]>([]);
 
   const [defaultValues, setDefaultValues] = useState<{
     name: string;
@@ -159,96 +124,127 @@ export default function ProductForm({ product }: ProductFormProps) {
   const { toast } = useToast();
 
   const [categories, setCategories] = useState<Category[]>([]);
+  const [categoriesOptions, setCategoriesOptions] = useState<Array<{
+    label: string;
+    value: string;
+    icon?: React.ComponentType<{ className?: string }>;
+  }>>([]);
   const [brands, setBrands] = useState<Brand[]>([]);
-
-  const { fields, append, remove } = useFieldArray({
+  const { fields: optionsFields, append: appendOption, remove: removeOption } = useFieldArray({
     control: form.control,
     name: "options",
   });
+  const {
+    fields: specificationsFields,
+    append: appendSpecification,
+    remove: removeSpecification,
+  } = useFieldArray({
+    control: form.control,
+    name: "specifications",
+  });
 
   useEffect(() => {
-    const fetchImages = async () => {
-      if (!product?.images || product.images.length === 0) return;
-      const filePromises = product.images.map(async (imageUrl, index) => {
-        try {
-          const response = await fetch(imageUrl.url);
-          console.log("image fetched: ", response);
-          const blob = await response.blob();
-          const file = new File([blob], `image-${index}.jpg`, {
-            type: blob.type,
-          });
-          return file;
-        } catch (e) {
-          console.log("error while fetch image: ", e)
-          return null
-        }
-
-      });
-
-      const files = (await Promise.all(filePromises)).filter(file => file !== null) as File[];
-      setDefaultValues((prev) => {
-        return ({ ...prev, image: files })
-      });
+    const fetchData = async () => {
+      try {
+        const fetchedCategories = await getAllCategoriesNotId(0, false);
+        const fetchedBrands = await getAllBrand();
+        const optionsMapped = fetchedCategories.map((category: Category) => {
+          return {
+            label: category.name,
+            value: category.id?.toString() || "",
+          };
+        });
+        setCategories(fetchedCategories);
+        setCategoriesOptions(optionsMapped);
+        setBrands(fetchedBrands);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
     };
 
-    fetchImages();
+    fetchData();
+  }, []);
 
-    async function fetchCategories() {
-      try {
-        const categoryGets: CategoryGet[] = await getAllCategoriesNotId(0, false);
-        setCategories(categoryGets);
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      }
-    }
+  // Handle removing an existing image
+  const handleRemoveExistingImage = (imageUrl: string) => {
+    setExistingImages(existingImages.filter(img => img.url !== imageUrl));
+    setImagesToDelete([...imagesToDelete, imageUrl]);
+  };
 
-    fetchCategories();
+  // Fetch existing images as visual preview
+  const getVisualExistingImages = () => {
+    if (!existingImages || existingImages.length === 0) return null;
 
-    async function fetchBrands() {
-      try {
-        const brandsGet: Brand[] = await getAllBrand();
-        setBrands(brandsGet);
-      } catch (error) {
-        console.error("Error fetching brands:", error);
-      }
-    }
-
-    fetchBrands();
-  }, [product?.images]);
-
-  console.log("images", defaultValues.image);
+    return (
+      <div className="flex flex-wrap gap-4 mt-2">
+        {existingImages.map((image, index) => (
+          <div key={index} className="relative w-24 h-24 border rounded-md overflow-hidden">
+            <Image
+              src={image.url}
+              alt={image.name || `Product image ${index}`}
+              width={96}
+              height={96}
+              className="w-full h-full object-cover"
+            />
+            <button
+              type="button"
+              onClick={() => handleRemoveExistingImage(image.url)}
+              className="absolute top-0 right-0 bg-white rounded-full p-1"
+            >
+              <XCircleIcon className="h-4 w-4 text-red-500" />
+            </button>
+          </div>
+        ))}
+      </div>
+    );
+  };
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    // Create a list of existing image URLs that are being kept (not marked for deletion)
+    const keptExistingImageUrls = existingImages.map(img => img.url);
+    
     const productPost: ProductPost = {
       name: values.name,
-      images: values.image,
       slug: values.name
         .toLowerCase()
-        .replace(/[^a-z0-9\s]/g, "")
-        .replace(/\s+/g, "-"),
+        .replaceAll(" ", "-")
+        .replaceAll(/[^a-z0-9-]/g, ""),
       description: values.description,
-      sku: Math.random().toString(36).substr(2, 9).toUpperCase(),
-      categoryIds: values.category.map((id) => parseInt(id, 10)),
-      brandId: parseInt(values.brand, 10),
-      options: values.options || [],
-      specifications: values.specifications || [],
+      sku: values.name
+        .toLowerCase()
+        .replaceAll(" ", "-")
+        .replaceAll(/[^a-z0-9-]/g, ""),
       price: parseFloat(values.price),
-      isDiscounted: parseFloat(values.discount) > 0.0,
-      discount: parseFloat(values.discount),
-      quantity: parseInt(values.quantity, 10),
-      isAvailable: true,
+      discount: values.discount ? parseFloat(values.discount) : 0,
+      quantity: parseInt(values.quantity),
+      isDiscounted: values.discount
+        ? parseFloat(values.discount) > 0
+        : false,
+      isAvailable: parseInt(values.quantity) > 0,
       isDeleted: false,
       isFeatured: false,
+      isPromoted: false,
+      categoryIds: values.category.map((category) => parseInt(category)),
+      brandId: parseInt(values.brand),
+      images: values.image || [],
+      deletedImageUrls: imagesToDelete,
+      existingImageUrls: keptExistingImageUrls,
+      options: values.options || [],
+      specifications: values.specifications || [],
     };
-
-    console.log("Product data:", product);
 
     try {
       let res;
       if (product) {
         if (product.id !== undefined) {
+          console.log("Updating product with images:", {
+            new: values.image?.length || 0,
+            kept: keptExistingImageUrls.length,
+            deleted: imagesToDelete.length
+          });
+          
           res = await updateProduct(product.id, productPost, token);
-          console.log("updating product" + values.category);
+          
           if (res && res.status === 200) {
             toast({
               title: "Product Updated",
@@ -300,6 +296,12 @@ export default function ProductForm({ product }: ProductFormProps) {
               render={({ field }) => (
                 <FormItem className="w-full">
                   <FormLabel>Images</FormLabel>
+                  {product && existingImages.length > 0 && (
+                    <div className="mb-4">
+                      <FormLabel>Current Images</FormLabel>
+                      {getVisualExistingImages()}
+                    </div>
+                  )}
                   <FormControl>
                     <FileUploader
                       value={field.value}
@@ -313,82 +315,68 @@ export default function ProductForm({ product }: ProductFormProps) {
               )}
             />
 
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Product Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter product name" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="category"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Category</FormLabel>
-                    <MultiSelect
-                      options={categories.map((category) => ({
-                        label: category.name,
-                        value: category.id?.toString() || "",
-                      }))}
-                      onValueChange={(value) => {
-                        field.onChange(value);
-                      }}
-                      // defaultValue={field.value}
-                      value={field.value}
-                      placeholder="Select Category"
-                      variant="inverted"
-                      animation={2}
-                      maxCount={4}
-                    />
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter product name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-              <FormField
-                control={form.control}
-                name="brand"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Brand</FormLabel>
+            <FormField
+              control={form.control}
+              name="category"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Categories</FormLabel>
+                  <FormControl>
+                    <MultiSelect
+                      options={categoriesOptions}
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      placeholder="Select categories"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="brand"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Brands</FormLabel>
+                  <FormControl>
                     <Select
-                      onValueChange={(value) => {
-                        field.onChange(value);
-                        // setBrandSelected(
-                        //   brands.find((brand) => brand.name === value) || null
-                        // );
-                      }}
+                      onValueChange={field.onChange}
                       value={field.value}
                     >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select brand" />
-                        </SelectTrigger>
-                      </FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a brand"/>
+                      </SelectTrigger>
                       <SelectContent>
                         {brands.map((brand) => (
-                          <SelectItem
-                            key={brand.id}
-                            value={brand.id?.toString() || ""}
-                          >
+                          <SelectItem key={brand.id} value={brand.id?.toString() || ""}>
                             {brand.name}
                           </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
               <FormField
                 control={form.control}
                 name="price"
@@ -398,7 +386,7 @@ export default function ProductForm({ product }: ProductFormProps) {
                     <FormControl>
                       <Input
                         type="number"
-                        step="0.1"
+                        step="0.01"
                         placeholder="Enter price"
                         {...field}
                       />
@@ -467,20 +455,21 @@ export default function ProductForm({ product }: ProductFormProps) {
               )}
             />
 
-            <div className="flex flex-col gap-4">
+            <div className="space-y-2">
               <FormLabel>Options</FormLabel>
-              {fields.map((field, index) => (
-                <div key={field.id} className="flex gap-4 items-center">
+              {optionsFields.map((field, index) => (
+                <div key={field.id} className="flex items-end gap-2">
                   <FormField
                     control={form.control}
                     name={`options.${index}.name`}
                     render={({ field }) => (
-                      <FormItem className="flex-1">
-                        <FormLabel>Option Name</FormLabel>
+                      <FormItem className="w-full">
                         <FormControl>
-                          <Input placeholder="Option Name" {...field} />
+                          <Input
+                            placeholder="Option name"
+                            {...field}
+                          />
                         </FormControl>
-                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -488,48 +477,52 @@ export default function ProductForm({ product }: ProductFormProps) {
                     control={form.control}
                     name={`options.${index}.value`}
                     render={({ field }) => (
-                      <FormItem className="flex-1">
-                        <FormLabel>Option Value</FormLabel>
+                      <FormItem className="w-full">
                         <FormControl>
-                          <Input placeholder="Option Value" {...field} />
+                          <Input
+                            placeholder="Option value"
+                            {...field}
+                          />
                         </FormControl>
-                        <FormMessage />
                       </FormItem>
                     )}
                   />
                   <Button
                     type="button"
-                    onClick={() => remove(index)}
-                    className="mt-8 text-red-500 flex items-center bg-transparent hover:bg-rose-200"
+                    variant="ghost"
+                    onClick={() => removeOption(index)}
                   >
-                    <TrashIcon className="h-5 w-5 hover:text-white" />
+                    <TrashIcon className="h-5 w-5" />
                   </Button>
                 </div>
               ))}
-              <button
+              <Button
                 type="button"
-                onClick={() => append({ name: "", value: "" })}
-                className="flex items-center gap-2 text-blue-500"
+                variant="outline"
+                size="sm"
+                className="mt-2"
+                onClick={() => appendOption({ name: "", value: "" })}
               >
-                <PlusIcon className="h-5 w-5" />
+                <PlusIcon className="mr-2 h-4 w-4" />
                 Add Option
-              </button>
+              </Button>
             </div>
 
-            <div className="flex flex-col gap-4">
+            <div className="space-y-2">
               <FormLabel>Specifications</FormLabel>
-              {form.watch("specifications")?.map((field, index) => (
-                <div key={index} className="flex gap-4 items-center">
+              {specificationsFields.map((field, index) => (
+                <div key={field.id} className="flex items-end gap-2">
                   <FormField
                     control={form.control}
                     name={`specifications.${index}.name`}
                     render={({ field }) => (
-                      <FormItem className="flex-1">
-                        <FormLabel>Specification Name</FormLabel>
+                      <FormItem className="w-full">
                         <FormControl>
-                          <Input placeholder="Specification Name" {...field} />
+                          <Input
+                            placeholder="Specification name"
+                            {...field}
+                          />
                         </FormControl>
-                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -537,47 +530,38 @@ export default function ProductForm({ product }: ProductFormProps) {
                     control={form.control}
                     name={`specifications.${index}.value`}
                     render={({ field }) => (
-                      <FormItem className="flex-1">
-                        <FormLabel>Specification Value</FormLabel>
+                      <FormItem className="w-full">
                         <FormControl>
-                          <Input placeholder="Specification Value" {...field} />
+                          <Input
+                            placeholder="Specification value"
+                            {...field}
+                          />
                         </FormControl>
-                        <FormMessage />
                       </FormItem>
                     )}
                   />
                   <Button
                     type="button"
-                    onClick={() =>
-                      form.setValue(
-                        "specifications",
-                        form
-                          .watch("specifications")
-                          ?.filter((_, i) => i !== index) || []
-                      )
-                    }
-                    className="mt-8 text-red-500 flex items-center bg-transparent hover:bg-rose-200"
+                    variant="ghost"
+                    onClick={() => removeSpecification(index)}
                   >
-                    <TrashIcon className="h-5 w-5 hover:text-white" />
+                    <TrashIcon className="h-5 w-5" />
                   </Button>
                 </div>
               ))}
-              <button
+              <Button
                 type="button"
-                onClick={() =>
-                  form.setValue("specifications", [
-                    ...(form.watch("specifications") || []),
-                    { name: "", value: "" },
-                  ])
-                }
-                className="flex items-center gap-2 text-blue-500"
+                variant="outline"
+                size="sm"
+                className="mt-2"
+                onClick={() => appendSpecification({ name: "", value: "" })}
               >
-                <PlusIcon className="h-5 w-5" />
+                <PlusIcon className="mr-2 h-4 w-4" />
                 Add Specification
-              </button>
+              </Button>
             </div>
 
-            <Button disabled={form.formState.isSubmitting} type="submit">{product ? <>Update</> : <>Create</>}</Button>
+            <Button type="submit">{product ? "Update" : "Create"}</Button>
           </form>
         </Form>
       </CardContent>
