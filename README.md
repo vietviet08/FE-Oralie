@@ -9,6 +9,12 @@
 
 A modern, full-featured e-commerce platform built with Next.js 14, TypeScript, and Tailwind CSS. Oralie provides a complete shopping experience with user authentication, product management, shopping cart functionality, and administrative dashboard.
 
+## 🚀 Demo
+
+Visit the live application: [https://oralie-demo.vercel.app](https://oralie-demo.vercel.app) *(if available)*
+
+> **Note**: For demo purposes, you may need Keycloak credentials. Please contact the maintainers for access.
+
 ## Table of Contents
 
 - [Features](#features)
@@ -19,7 +25,6 @@ A modern, full-featured e-commerce platform built with Next.js 14, TypeScript, a
 - [Usage](#usage)
 - [Project Structure](#project-structure)
 - [API Documentation](#api-documentation)
-- [Testing](#testing)
 - [Deployment](#deployment)
 - [Contributing](#contributing)
 - [License](#license)
@@ -131,17 +136,14 @@ cp .env.example .env.local
 Edit `.env.local` with your configuration:
 
 ```env
-# NextAuth Configuration
-NEXTAUTH_URL=http://localhost:3000
-NEXTAUTH_SECRET=your_nextauth_secret_here
-
-# Keycloak Configuration
-KEYCLOAK_ISSUER=https://your-keycloak-domain/auth/realms/your-realm
-KEYCLOAK_CLIENT_ID=your_client_id
-KEYCLOAK_CLIENT_SECRET=your_client_secret
-
 # API Configuration
 NEXT_PUBLIC_API_URL=http://localhost:8080/api
+
+# Keycloak Configuration
+NEXT_PUBLIC_KEYCLOAK_URL=https://your-keycloak-domain/auth
+
+# Application URL
+NEXT_PUBLIC_URL=http://localhost:3000
 ```
 
 ### 5. Run the Development Server
@@ -158,23 +160,19 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to see the a
 
 | Variable | Description | Required | Default |
 |----------|-------------|----------|---------|
-| `NEXTAUTH_URL` | The URL of your application | Yes | `http://localhost:3000` |
-| `NEXTAUTH_SECRET` | Secret for NextAuth.js | Yes | - |
-| `KEYCLOAK_ISSUER` | Keycloak realm issuer URL | Yes | - |
-| `KEYCLOAK_CLIENT_ID` | Keycloak client ID | Yes | - |
-| `KEYCLOAK_CLIENT_SECRET` | Keycloak client secret | Yes | - |
 | `NEXT_PUBLIC_API_URL` | Backend API URL | Yes | - |
+| `NEXT_PUBLIC_KEYCLOAK_URL` | Keycloak authentication URL | Yes | - |
+| `NEXT_PUBLIC_URL` | The URL of your application | Yes | `http://localhost:3000` |
 
 ### Keycloak Setup
 
-1. Create a new realm in your Keycloak instance
-2. Create a client with the following settings:
-   - Client ID: `oralie-frontend`
-   - Client Protocol: `openid-connect`
-   - Access Type: `confidential`
-   - Valid Redirect URIs: `http://localhost:3000/api/auth/callback/keycloak`
+1. Set up a Keycloak instance or use an existing one
+2. Create a new realm for your application
+3. Create a client with appropriate settings for your authentication needs
+4. Configure the `NEXT_PUBLIC_KEYCLOAK_URL` environment variable with your Keycloak URL
+5. Set up user roles as needed for your application
 
-3. Configure realm roles: `USER`, `ADMIN`
+For detailed Keycloak configuration, refer to the [Keycloak documentation](https://www.keycloak.org/documentation).
 
 ### Theme Configuration
 
@@ -210,7 +208,7 @@ npm run lint
 npm run build
 
 # Start production server
-npm run start
+npm start
 ```
 
 ### Key Features Usage
@@ -287,31 +285,6 @@ The application integrates with a REST API backend. Key endpoints include:
 - `GET /orders/:id` - Get order details
 
 For complete API documentation, visit: [API Documentation Link](#)
-
-## Testing
-
-### Running Tests
-
-```bash
-# Run unit tests
-npm run test
-
-# Run tests in watch mode
-npm run test:watch
-
-# Generate coverage report
-npm run test:coverage
-```
-
-### Test Structure
-
-```
-__tests__/
-├── components/           # Component tests
-├── pages/               # Page tests
-├── utils/               # Utility function tests
-└── __mocks__/           # Mock implementations
-```
 
 ## Deployment
 
@@ -422,7 +395,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ```
 MIT License
 
-Copyright (c) 2024 Oralie Team
+Copyright (c) 2026 Oralie Team
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
