@@ -140,7 +140,7 @@ Edit `.env.local` with your configuration:
 NEXT_PUBLIC_API_URL=http://localhost:8080/api
 
 # Keycloak Configuration
-NEX_PUBLIC_KEYCLOAK_URL=https://your-keycloak-domain/auth
+NEXT_PUBLIC_KEYCLOAK_URL=https://your-keycloak-domain/auth
 
 # Application URL
 NEXT_PUBLIC_URL=http://localhost:3000
@@ -161,7 +161,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to see the a
 | Variable | Description | Required | Default |
 |----------|-------------|----------|---------|
 | `NEXT_PUBLIC_API_URL` | Backend API URL | Yes | - |
-| `NEX_PUBLIC_KEYCLOAK_URL` | Keycloak authentication URL | Yes | - |
+| `NEXT_PUBLIC_KEYCLOAK_URL` | Keycloak authentication URL | Yes | - |
 | `NEXT_PUBLIC_URL` | The URL of your application | Yes | `http://localhost:3000` |
 
 ### Keycloak Setup
@@ -169,7 +169,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to see the a
 1. Set up a Keycloak instance or use an existing one
 2. Create a new realm for your application
 3. Create a client with appropriate settings for your authentication needs
-4. Configure the `NEX_PUBLIC_KEYCLOAK_URL` environment variable with your Keycloak URL
+4. Configure the `NEXT_PUBLIC_KEYCLOAK_URL` environment variable with your Keycloak URL
 5. Set up user roles as needed for your application
 
 For detailed Keycloak configuration, refer to the [Keycloak documentation](https://www.keycloak.org/documentation).
